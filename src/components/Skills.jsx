@@ -17,7 +17,7 @@ const Skills = () => {
   ];
 
   return (
-    <section id="skills" className="pt-36 pb-48 bg-background">
+    <section id="skills" className="pt-24 sm:pt-36 pb-32 sm:pb-48 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -25,9 +25,9 @@ const Skills = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-12 text-center">Technical Skills</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-8 sm:mb-12 text-center">Technical Skills</h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {categories.map((category, categoryIndex) => (
               <motion.div
                 key={category.id}
@@ -35,10 +35,10 @@ const Skills = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: categoryIndex * 0.1 }}
-                className="bg-card border border-border rounded-lg p-6 hover:border-secondary transition-colors"
+                className="bg-card border border-border rounded-lg p-4 sm:p-6 hover:border-secondary transition-colors"
               >
-                <h3 className="text-xl font-semibold text-primary mb-4">{category.title}</h3>
-                <div className="space-y-3">
+                <h3 className="text-lg sm:text-xl font-semibold text-primary mb-3 sm:mb-4">{category.title}</h3>
+                <div className="space-y-2 sm:space-y-3">
                   {category.skills.map((skill, skillIndex) => {
                     const Icon = getIcon(skill.icon);
                     return (
@@ -48,10 +48,10 @@ const Skills = () => {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: skillIndex * 0.05 }}
-                        className="flex items-center gap-3 text-secondary hover:text-primary transition-colors"
+                        className="flex items-center gap-2 sm:gap-3 text-secondary hover:text-primary transition-colors"
                       >
-                        <Icon size={20} className="text-secondary" />
-                        <span className="font-medium">{skill.name}</span>
+                        <Icon size={16} className="text-secondary shrink-0" />
+                        <span className="font-medium text-sm sm:text-base">{skill.name}</span>
                       </motion.div>
                     );
                   })}

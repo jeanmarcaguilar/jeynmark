@@ -112,35 +112,35 @@ const Hero = () => {
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(5,5,5,0.6) 0%, transparent 50%, rgba(5,5,5,0.3) 100%)' }} />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full" style={{ position: 'relative', zIndex: 10 }}>
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 w-full" style={{ position: 'relative', zIndex: 10 }}>
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-8"
+            className="space-y-6 sm:space-y-8"
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <p className="text-secondary text-lg mb-2">HELLO, I'M</p>
+              <p className="text-secondary text-base sm:text-lg mb-2">HELLO, I'M</p>
               
               {/* 
                 UPDATED NAME STYLING:
                 - 'whitespace-nowrap': Keeps text on one line.
                 - 'text-[clamp(...)]': Makes font responsive. It will be huge on desktop but shrink automatically on mobile so it never gets cut off.
               */}
-              <h1 className="font-bold text-primary mb-4 whitespace-nowrap text-[clamp(2rem,5vw,4rem)] leading-tight">
+              <h1 className="font-bold text-primary mb-4 whitespace-nowrap text-[clamp(1.5rem,8vw,4rem)] leading-tight">
                 {nameText}
                 <span className="animate-pulse text-primary">|</span>
               </h1>
               
               {/* ROLE TEXT - Smaller and cleaner */}
               <div className="flex items-center gap-2 h-8">
-                <p className="text-lg md:text-2xl text-secondary font-light">
+                <p className="text-base sm:text-lg md:text-2xl text-secondary font-light">
                   I'm a <span className="text-primary font-medium">{roleText}</span>
                   <span className="animate-pulse text-primary ml-1">|</span>
                 </p>
@@ -151,7 +151,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-secondary text-lg max-w-xl leading-relaxed"
+              className="text-secondary text-base sm:text-lg max-w-xl leading-relaxed"
             >
               
             </motion.p>
@@ -160,22 +160,22 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap gap-3 sm:gap-4"
             >
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={(e) => scrollToSection(e, 'projects')}
-                className="bg-primary text-background px-8 py-3 rounded-lg font-medium flex items-center gap-2 hover:bg-white transition-colors"
+                className="bg-primary text-background px-6 sm:px-8 py-3 rounded-lg font-medium flex items-center gap-2 hover:bg-white transition-colors text-sm sm:text-base"
               >
                 View My Projects
-                <ArrowRight size={20} />
+                <ArrowRight size={16} />
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={(e) => scrollToSection(e, 'contact')}
-                className="border border-border text-primary px-8 py-3 rounded-lg font-medium hover:bg-card transition-colors"
+                className="border border-border text-primary px-6 sm:px-8 py-3 rounded-lg font-medium hover:bg-card transition-colors text-sm sm:text-base"
               >
                 Contact Me
               </motion.button>
@@ -189,9 +189,9 @@ const Hero = () => {
               download
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-secondary text-background px-6 py-3 rounded-lg font-medium inline-flex items-center gap-2 hover:bg-white transition-colors"
+              className="bg-secondary text-background px-4 sm:px-6 py-3 rounded-lg font-medium inline-flex items-center gap-2 hover:bg-white transition-colors text-sm sm:text-base"
             >
-              <Download size={20} />
+              <Download size={16} />
               Download Resume
             </motion.a>
           </motion.div>

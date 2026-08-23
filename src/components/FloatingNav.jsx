@@ -27,10 +27,10 @@ const FloatingNav = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50"
+      className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-lg px-4"
     >
       {/* Main Capsule Container */}
-      <div className="relative flex items-center bg-card/80 backdrop-blur-xl border border-border rounded-full p-2 pl-4 pr-2 shadow-2xl shadow-black/50">
+      <div className="relative flex items-center bg-card/80 backdrop-blur-xl border border-border rounded-full p-2 pl-4 pr-2 shadow-2xl shadow-black/50 overflow-x-auto scrollbar-hide">
         
         {/* Background Effects Container - with overflow-hidden to contain effects */}
         <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
@@ -111,7 +111,7 @@ const FloatingNav = () => {
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex items-center gap-1 relative z-10">
+        <nav className="flex items-center gap-1 relative z-10 min-w-max">
           {navItems.map((item) => (
             <motion.a
               key={item.id}
@@ -119,7 +119,7 @@ const FloatingNav = () => {
               onClick={(e) => scrollToSection(e, item.id)}
               onHoverStart={() => setHoveredId(item.id)}
               onHoverEnd={() => setHoveredId(null)}
-              className="relative w-10 h-10 flex items-center justify-center rounded-full text-secondary hover:text-white transition-colors"
+              className="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-secondary hover:text-white transition-colors shrink-0"
             >
               {/* 6. Enhanced Liquid Pill with Ripple Effect - Monochrome */}
               <AnimatePresence>
@@ -141,13 +141,13 @@ const FloatingNav = () => {
                       transition={{ duration: 0.6, ease: "easeOut" }}
                     />
                     
-                    {/* Tooltip Label */}
+                    {/* Tooltip Label - Hidden on mobile */}
                     <motion.div
                       initial={{ opacity: 0, y: 10, scale: 0.8 }}
                       animate={{ opacity: 1, y: -40, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.8 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-card border border-border text-primary text-xs font-medium px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap z-20"
+                      className="hidden sm:block absolute top-0 left-1/2 transform -translate-x-1/2 bg-card border border-border text-primary text-xs font-medium px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap z-20"
                       style={{
                         boxShadow: '0 4px 20px rgba(0,0,0,0.5), 0 0 15px rgba(255,255,255,0.05)'
                       }}
@@ -162,7 +162,9 @@ const FloatingNav = () => {
               
               {/* Icon stays above the liquid pill */}
               <span className="relative z-10 flex items-center justify-center">
-                {item.icon}
+                <span className="w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
+                  {item.icon}
+                </span>
               </span>
             </motion.a>
           ))}
@@ -175,17 +177,19 @@ const FloatingNav = () => {
         <motion.button 
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          className="relative w-10 h-10 flex items-center justify-center rounded-full text-secondary hover:text-white hover:bg-white/10 transition-colors z-10"
+          className="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-secondary hover:text-white hover:bg-white/10 transition-colors z-10 shrink-0"
           title="Toggle Theme"
         >
-          <Moon size={20} />
+          <span className="w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
+            <Moon size={16} />
+          </span>
         </motion.button>
 
         {/* Profile Button */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="relative ml-2 bg-linear-to-br from-white via-gray-200 to-gray-400 text-black w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-lg z-10"
+          className="relative ml-2 bg-linear-to-br from-white via-gray-200 to-gray-400 text-black w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-[10px] sm:text-sm shadow-lg z-10 shrink-0"
           title="Profile"
         >
           JM

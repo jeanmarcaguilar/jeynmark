@@ -68,7 +68,7 @@ const ProjectCard = ({ project, onClick }) => {
       {/* Content container */}
       <div className="relative h-full flex flex-col">
         {/* Project Image */}
-        <div className="relative h-64 overflow-hidden">
+        <div className="relative h-48 sm:h-64 overflow-hidden">
           <div className="absolute inset-0 bg-linear-to-br from-border/60 to-card/40" />
           <motion.img
             src={project.image}
@@ -130,20 +130,20 @@ const ProjectCard = ({ project, onClick }) => {
         </div>
 
         {/* Project Content */}
-        <div className="p-7 flex-1 flex flex-col">
-          <h3 className="text-2xl font-bold text-primary mb-3 group-hover:text-primary transition-colors tracking-tight">
+        <div className="p-4 sm:p-7 flex-1 flex flex-col">
+          <h3 className="text-xl sm:text-2xl font-bold text-primary mb-3 group-hover:text-primary transition-colors tracking-tight">
             {project.title}
           </h3>
-          <p className="text-secondary text-sm mb-6 line-clamp-2 leading-relaxed">
+          <p className="text-secondary text-xs sm:text-sm mb-4 sm:mb-6 line-clamp-2 leading-relaxed">
             {project.description}
           </p>
 
           {/* Premium Technologies */}
-          <div className="flex flex-wrap gap-2 mb-6">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
             {project.technologies.slice(0, 4).map((tech, index) => (
               <motion.span
                 key={tech}
-                className="text-xs px-4 py-2 bg-hover/30 text-secondary rounded-xl border border-border/30 hover:border-primary/40 hover:text-primary/90 hover:bg-primary/10 transition-all duration-300 font-medium tracking-wide"
+                className="text-[10px] sm:text-xs px-2 sm:px-4 py-1.5 sm:py-2 bg-hover/30 text-secondary rounded-xl border border-border/30 hover:border-primary/40 hover:text-primary/90 hover:bg-primary/10 transition-all duration-300 font-medium tracking-wide"
                 initial={{ opacity: 0, scale: 0.8, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ delay: index * 0.08, duration: 0.4 }}
@@ -158,7 +158,7 @@ const ProjectCard = ({ project, onClick }) => {
             ))}
             {project.technologies.length > 4 && (
               <motion.span
-                className="text-xs px-4 py-2 bg-hover/30 text-secondary rounded-xl border border-border/30 font-medium tracking-wide"
+                className="text-[10px] sm:text-xs px-2 sm:px-4 py-1.5 sm:py-2 bg-hover/30 text-secondary rounded-xl border border-border/30 font-medium tracking-wide"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3, duration: 0.4 }}
@@ -169,7 +169,7 @@ const ProjectCard = ({ project, onClick }) => {
           </div>
 
           {/* Premium Links */}
-          <div className="flex gap-5 mt-auto">
+          <div className="flex gap-3 sm:gap-5 mt-auto">
             {project.github && project.github !== '#' && (
               <motion.a
                 href={project.github}
@@ -178,13 +178,13 @@ const ProjectCard = ({ project, onClick }) => {
                 whileHover={{ scale: 1.1, y: -3 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-2.5 text-sm text-secondary hover:text-primary transition-all duration-300 group/link"
+                className="flex items-center gap-2 sm:gap-2.5 text-xs sm:text-sm text-secondary hover:text-primary transition-all duration-300 group/link"
               >
                 <motion.div
-                  className="p-2 rounded-lg bg-hover/50 group-hover/link:bg-primary/10 transition-colors"
+                  className="p-1.5 sm:p-2 rounded-lg bg-hover/50 group-hover/link:bg-primary/10 transition-colors"
                   whileHover={{ rotate: 15 }}
                 >
-                  <Code2 size={16} />
+                  <Code2 size={14} />
                 </motion.div>
                 <span className="font-semibold">Source</span>
               </motion.a>
@@ -197,13 +197,13 @@ const ProjectCard = ({ project, onClick }) => {
                 whileHover={{ scale: 1.1, y: -3 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-2.5 text-sm text-secondary hover:text-primary transition-all duration-300 group/link"
+                className="flex items-center gap-2 sm:gap-2.5 text-xs sm:text-sm text-secondary hover:text-primary transition-all duration-300 group/link"
               >
                 <motion.div
-                  className="p-2 rounded-lg bg-hover/50 group-hover/link:bg-primary/10 transition-colors"
+                  className="p-1.5 sm:p-2 rounded-lg bg-hover/50 group-hover/link:bg-primary/10 transition-colors"
                   whileHover={{ rotate: -15 }}
                 >
-                  <ExternalLink size={16} />
+                  <ExternalLink size={14} />
                 </motion.div>
                 <span className="font-semibold">Live Demo</span>
               </motion.a>

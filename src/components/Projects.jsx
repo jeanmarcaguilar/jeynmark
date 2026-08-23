@@ -19,7 +19,7 @@ const Projects = () => {
   };
 
   return (
-    <section id="projects" className="py-32 pb-48 bg-background relative overflow-hidden">
+    <section id="projects" className="py-20 sm:py-32 pb-32 sm:pb-48 bg-background relative overflow-hidden">
       {/* Premium background effects */}
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-primary/3 to-transparent pointer-events-none"></div>
       
@@ -62,14 +62,14 @@ const Projects = () => {
         }}
       />
       
-      <div className="max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
         >
-          <div className="text-center mb-24">
+          <div className="text-center mb-16 sm:mb-24">
             <motion.div
               className="inline-block mb-6"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -118,7 +118,7 @@ const Projects = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8"
           >
             <AnimatePresence>
               {projects.map((project, index) => (

@@ -49,3 +49,18 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Hide scrollbar for horizontal scrolling elements */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  display: none;
+}
+
