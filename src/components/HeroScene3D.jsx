@@ -29,9 +29,9 @@ const TorusKnot = ({ isMobile }) => {
     meshRef.current.position.y = 0 + Math.sin(t * 0.4) * 0.3;
   });
   
-  const position = isMobile ? [2.5, 0, 0] : [6.0, 0, 0];
-  const scale = isMobile ? 0.5 : 1;
-  const args = isMobile ? [1.25, 0.29, 200, 32, 2, 3] : [2.5, 0.58, 200, 32, 2, 3];
+  const position = isMobile ? [3.0, 0, 0] : [6.0, 0, 0];
+  const scale = isMobile ? 0.8 : 1;
+  const args = isMobile ? [2.0, 0.46, 200, 32, 2, 3] : [2.5, 0.58, 200, 32, 2, 3];
   
   return (
     <mesh ref={meshRef} position={position} scale={scale}>
@@ -51,9 +51,9 @@ const Icosahedron = ({ isMobile }) => {
     meshRef.current.position.y = -0.5 + Math.cos(t * 0.35) * 0.2;
   });
   
-  const position = isMobile ? [-2.5, -0.5, 0] : [-6.0, -0.5, 0];
-  const scale = isMobile ? 0.5 : 1;
-  const args = isMobile ? [1.0, 1] : [2.0, 1];
+  const position = isMobile ? [-3.0, -0.5, 0] : [-6.0, -0.5, 0];
+  const scale = isMobile ? 0.8 : 1;
+  const args = isMobile ? [1.6, 1] : [2.0, 1];
   
   return (
     <mesh ref={meshRef} position={position} scale={scale}>
@@ -73,9 +73,9 @@ const Octahedron = ({ isMobile }) => {
     meshRef.current.position.y = 2.8 + Math.sin(t * 0.5 + 1) * 0.3;
   });
   
-  const position = isMobile ? [-1.0, 1.5, -1] : [-2.0, 2.8, -1];
-  const scale = isMobile ? 0.5 : 1;
-  const args = isMobile ? [0.5, 0] : [1.0, 0];
+  const position = isMobile ? [-1.5, 2.0, -1] : [-2.0, 2.8, -1];
+  const scale = isMobile ? 0.8 : 1;
+  const args = isMobile ? [0.8, 0] : [1.0, 0];
   
   return (
     <mesh ref={meshRef} position={position} scale={scale}>
@@ -95,9 +95,9 @@ const Dodecahedron = ({ isMobile }) => {
     meshRef.current.position.y = 2.5 + Math.cos(t * 0.45) * 0.25;
   });
   
-  const position = isMobile ? [3.0, 1.5, -0.5] : [7.0, 2.5, -0.5];
-  const scale = isMobile ? 0.5 : 1;
-  const args = isMobile ? [0.6, 0] : [1.2, 0];
+  const position = isMobile ? [3.5, 2.0, -0.5] : [7.0, 2.5, -0.5];
+  const scale = isMobile ? 0.8 : 1;
+  const args = isMobile ? [1.0, 0] : [1.2, 0];
   
   return (
     <mesh ref={meshRef} position={position} scale={scale}>
@@ -117,9 +117,9 @@ const Tetrahedron = ({ isMobile }) => {
     meshRef.current.position.y = -2.8 + Math.sin(t * 0.6 + 2) * 0.22;
   });
   
-  const position = isMobile ? [3.5, -1.5, -1] : [8.0, -2.8, -1];
-  const scale = isMobile ? 0.5 : 1;
-  const args = isMobile ? [0.45, 0] : [0.9, 0];
+  const position = isMobile ? [4.0, -2.0, -1] : [8.0, -2.8, -1];
+  const scale = isMobile ? 0.8 : 1;
+  const args = isMobile ? [0.72, 0] : [0.9, 0];
   
   return (
     <mesh ref={meshRef} position={position} scale={scale}>
@@ -138,9 +138,9 @@ const RingSmall = ({ isMobile }) => {
     meshRef.current.rotation.y = t * 0.05;
   });
   
-  const position = isMobile ? [3.5, 0.5, -1.5] : [7.5, 1.0, -1.5];
-  const scale = isMobile ? 0.5 : 1;
-  const args = isMobile ? [0.7, 0.011, 12, 80] : [1.4, 0.022, 12, 80];
+  const position = isMobile ? [4.0, 0.8, -1.5] : [7.5, 1.0, -1.5];
+  const scale = isMobile ? 0.8 : 1;
+  const args = isMobile ? [1.1, 0.018, 12, 80] : [1.4, 0.022, 12, 80];
   
   return (
     <mesh ref={meshRef} position={position} scale={scale}>
@@ -157,7 +157,7 @@ const HeroScene3D = () => {
   return (
     <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
       <Canvas
-        camera={{ position: [0, 0, isMobile ? 8 : 5], fov: isMobile ? 60 : 50 }}
+        camera={{ position: [0, 0, isMobile ? 6 : 5], fov: isMobile ? 65 : 50 }}
         gl={{ antialias: true, alpha: true }}
         style={{ background: 'transparent' }}
       >
