@@ -20,7 +20,7 @@ const About = () => {
 
   return (
     // Increased top padding from pt-32 to pt-48 to push the content further down
-    <section id="about" className="pt-20 sm:pt-28 pb-16 sm:pb-20 bg-linear-to-b from-background to-background/95">
+    <section id="about" className="pt-20 sm:pt-28 pb-16 sm:pb-20 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

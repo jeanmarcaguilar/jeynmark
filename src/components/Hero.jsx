@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Download, Home, User, Code, FolderOpen, Briefcase, Award, Mail, Moon } from 'lucide-react';
-import { useState, useEffect, Suspense } from 'react';
-import HeroScene3D from './HeroScene3D';
+import { useState, useEffect } from 'react';
 
 const Hero = () => {
   // --- Name Typing State ---
@@ -97,21 +96,6 @@ const Hero = () => {
     // REMOVED 'overflow-hidden' HERE TO PREVENT TEXT CUT-OFF
     <section id="home" className="min-h-screen flex items-center justify-center relative bg-background">
       
-      {/* 3D Background Scene */}
-      <Suspense fallback={null}>
-        <HeroScene3D />
-      </Suspense>
-
-      {/* Background Elements - Kept overflow-hidden here so grid doesn't spill out */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 2 }}>
-        {/* Subtle grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-size-[50px_50px]" />
-        {/* Dark vignette edges so text stays readable */}
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 40%, rgba(5,5,5,0.72) 100%)' }} />
-        {/* Left-side fade so left content area is always legible */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(5,5,5,0.6) 0%, transparent 50%, rgba(5,5,5,0.3) 100%)' }} />
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 w-full" style={{ position: 'relative', zIndex: 10 }}>
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Content */}
