@@ -111,54 +111,54 @@ const JavaScriptIcon = () => (
     </svg>
 )
 
-const DEFAULT_SLIDES = [
+const technologies = [
     {
         icon: <GithubIcon />,
-        title: "GitHub\nVersion\nControl",
+        name: "GitHub",
     },
     {
         icon: <GitIcon />,
-        title: "Git\nDistributed\nVersion",
+        name: "Git",
     },
     {
         icon: <HTML5Icon />,
-        title: "HTML5\nWeb\nStructure",
+        name: "HTML5",
     },
     {
         icon: <JavaScriptIcon />,
-        title: "JavaScript\nInteractive\nLogic",
+        name: "JavaScript",
     },
     {
         icon: <PHPIcon />,
-        title: "PHP\nServer\nScripting",
+        name: "PHP",
     },
     {
         icon: <LaravelIcon />,
-        title: "Laravel\nPHP\nFramework",
+        name: "Laravel",
     },
     {
         icon: <CSSIcon />,
-        title: "CSS\nStyling\nDesign",
+        name: "CSS",
     },
     {
         icon: <MySQLIcon />,
-        title: "MySQL\nDatabase\nManagement",
+        name: "MySQL",
     },
     {
         icon: <BootstrapIcon />,
-        title: "Bootstrap\nUI\nFramework",
+        name: "Bootstrap",
     },
     {
         icon: <ReactIcon />,
-        title: "React\nComponent\nFramework",
+        name: "React",
     },
     {
         icon: <TailwindIcon />,
-        title: "Tailwind\nUtility\nCSS",
+        name: "Tailwind CSS",
     },
 ]
 
-// Fixed internals (no longer exposed as controls).
+// Fixed internals for 3D carousel
 const PERSPECTIVE = 1700
 const SCALE_STEP = 0.16
 const MAX_VISIBLE = 0
@@ -183,38 +183,23 @@ function cssTransition(t) {
 }
 
 export default function Skills() {
-    const props = { ...COMPONENT_DEFAULTS }
     const {
-        slides = DEFAULT_SLIDES,
-        cardWidth = 557,
-        cardHeight = 420,
-        radius = 0,
+        cardWidth = 280,
+        cardHeight = 280,
+        radius = 28,
         tilt = 7,
         sideTilt = 7,
         gap = 18,
-        opacity = 0,
+        opacity = 40,
         transition,
         autoplay = true,
         autoplayDirection = "rightToLeft",
         showTitle = true,
-        titleFont,
-        titleColor = "#ffffff",
-        titlePosition,
-        style,
         speed = 1,
-    } = props
-
-    const tp = titlePosition || {}
-    const corner = tp.position || "bottomLeft"
-    const isTop = corner === "topLeft" || corner === "topRight"
-    const isRight = corner === "topRight" || corner === "bottomRight"
-    const padLeft = tp.paddingLeft ?? 22
-    const padRight = tp.paddingRight ?? 22
-    const padTop = tp.paddingTop ?? 24
-    const padBottom = tp.paddingBottom ?? 24
+    } = {}
 
     const isStatic = useIsStaticRenderer()
-    const list = slides && slides.length ? slides : DEFAULT_SLIDES
+    const list = technologies
     const n = list.length
 
     const loop = true
@@ -257,10 +242,7 @@ export default function Skills() {
         [isStatic, autoplay, n, lock]
     )
 
-    const delay =
-        transition && typeof transition.delay === "number"
-            ? transition.delay / speed
-            : 2.5 / speed
+    const delay = 2.5 / speed
     useEffect(() => {
         if (isStatic || !autoplay || n < 2) return
         const ms = Math.max(0.3, delay) * 1000
@@ -288,13 +270,10 @@ export default function Skills() {
     })
     const transitionCss = `transform ${dur}s ${ease}, opacity ${dur}s ${ease}`
 
-    const effectiveRadius =
-        (Math.max(0, Math.min(20, radius)) / 20) *
-        (Math.min(cardWidth, cardHeight) / 2)
+    const effectiveRadius = radius
     const dim = 1 - Math.max(0, Math.min(100, opacity)) / 100
 
     const rootStyle = {
-        ...(style || {}),
         position: "relative",
         width: "100%",
         height: "100%",
@@ -316,9 +295,9 @@ export default function Skills() {
                 <div className="text-center mb-12 sm:mb-16">
                     <div className="inline-block mb-4">
                         <div className="flex items-center gap-3">
-                            <div className="h-px w-12 bg-linear-to-r from-transparent to-primary/50" />
-                            <span className="text-primary/60 text-sm font-medium tracking-widest uppercase">Expertise</span>
-                            <div className="h-px w-12 bg-linear-to-l from-transparent to-primary/50" />
+                            <div className="h-px w-12 bg-linear-to-r from-transparent to-white/20" />
+                            <span className="text-white/60 text-sm font-medium tracking-widest uppercase">Expertise</span>
+                            <div className="h-px w-12 bg-linear-to-l from-transparent to-white/20" />
                         </div>
                     </div>
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
@@ -345,7 +324,7 @@ export default function Skills() {
                             transformStyle: "preserve-3d",
                         }}
                     >
-                        {list.map((slide, i) => {
+                        {list.map((tech, i) => {
                             let rel = i - active
                             if (loop) {
                                 if (rel > n / 2) rel -= n
@@ -360,7 +339,6 @@ export default function Skills() {
                             const ry = -rel * tilt
                             const rz = rel * sideTilt
                             const rx = rel * rel * 5
-                            const icon = slide.icon || null
 
                             const outerCardStyle = {
                                 position: "absolute",
@@ -378,19 +356,6 @@ export default function Skills() {
                                     visible && !isStatic && !autoplay ? "auto" : "none",
                             }
 
-                            const innerCardStyle = {
-                                position: "absolute",
-                                inset: 0,
-                                borderRadius: effectiveRadius,
-                                overflow: "hidden",
-                                background: "#000000",
-                                boxShadow: isActive 
-                                    ? "0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)" 
-                                    : "0 15px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03)",
-                                transformStyle: "preserve-3d",
-                                transition: `box-shadow ${dur}s ${ease}`,
-                            }
-
                             return (
                                 <div
                                     key={i}
@@ -398,50 +363,59 @@ export default function Skills() {
                                     onClick={
                                         isStatic ? undefined : () => handleCardClick(i)
                                     }
-                                    aria-label={slide.title}
+                                    aria-label={tech.name}
                                     aria-hidden={!visible}
                                 >
-                                    {/* Inner Card content container */}
-                                    <div style={innerCardStyle}>
-                                        {/* Subtle inner glow effect */}
+                                    {/* Neumorphic Card */}
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            inset: 0,
+                                            borderRadius: "12px",
+                                            overflow: "hidden",
+                                            background: "linear-gradient(145deg, #25262b 0%, #101114 100%)",
+                                            border: "1px solid rgba(255, 255, 255, 0.16)",
+                                            boxShadow: isActive 
+                                                ? "-10px -10px 22px rgba(255, 255, 255, 0.035), 12px 14px 26px rgba(0, 0, 0, 0.72), 0 0 28px rgba(105, 90, 255, 0.12)"
+                                                : "-10px -10px 22px rgba(255, 255, 255, 0.02), 12px 14px 26px rgba(0, 0, 0, 0.6), 0 0 15px rgba(105, 90, 255, 0.08)",
+                                            transformStyle: "preserve-3d",
+                                            transition: `box-shadow ${dur}s ${ease}`,
+                                            padding: "28px",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        {/* Inner Logo Surface */}
                                         <div
                                             style={{
-                                                position: "absolute",
-                                                inset: 0,
-                                                background: isActive 
-                                                    ? "radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.08) 0%, transparent 50%)"
-                                                    : "radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 50%)",
-                                                transition: `opacity ${dur}s ${ease}`,
+                                                minHeight: "100%",
+                                                display: "grid",
+                                                placeItems: "center",
+                                                borderRadius: "12px",
+                                                background: "radial-gradient(circle, rgba(100, 88, 210, 0.18) 0%, rgba(255, 255, 255, 0.045) 42%, rgba(0, 0, 0, 0.12) 100%)",
+                                                boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 -10px 20px rgba(0, 0, 0, 0.22)",
+                                                width: "100%",
                                             }}
-                                        />
-                                        
-                                        {icon ? (
+                                        >
                                             <div
                                                 style={{
-                                                    position: "absolute",
-                                                    inset: 0,
+                                                    width: "112px",
+                                                    height: "112px",
                                                     display: "flex",
                                                     alignItems: "center",
                                                     justifyContent: "center",
-                                                    padding: "40px",
+                                                    filter: isActive 
+                                                        ? "drop-shadow(0 0 20px rgba(105, 90, 255, 0.3))"
+                                                        : "drop-shadow(0 0 10px rgba(105, 90, 255, 0.15))",
+                                                    transition: `filter ${dur}s ${ease}, transform ${dur}s ${ease}`,
+                                                    transform: isActive ? "scale(1.05)" : "scale(1)",
                                                 }}
                                             >
-                                                <div
-                                                    style={{
-                                                        width: "100%",
-                                                        height: "100%",
-                                                        color: "#ffffff",
-                                                        filter: isActive 
-                                                            ? "drop-shadow(0 0 20px rgba(255, 255, 255, 0.3))"
-                                                            : "drop-shadow(0 0 10px rgba(255, 255, 255, 0.1))",
-                                                        transition: `filter ${dur}s ${ease}, transform ${dur}s ${ease}`,
-                                                        transform: isActive ? "scale(1.05)" : "scale(1)",
-                                                    }}
-                                                >
-                                                    {icon}
-                                                </div>
+                                                {tech.icon}
                                             </div>
-                                        ) : null}
+                                        </div>
 
                                         {/* Dim overlay for inactive cards */}
                                         <div
@@ -452,6 +426,7 @@ export default function Skills() {
                                                 opacity: isActive ? 0 : dim,
                                                 transition: `opacity ${dur}s ${ease}`,
                                                 pointerEvents: "none",
+                                                borderRadius: effectiveRadius,
                                             }}
                                         />
                                     </div>
@@ -460,28 +435,27 @@ export default function Skills() {
                         })}
                     </div>
 
-                    {/* Titles rendered separately to avoid transform effects */}
+                    {/* Title displayed below active card */}
                     {showTitle && (
                         <div
                             style={{
                                 position: "absolute",
                                 left: "50%",
                                 transform: "translateX(-50%)",
-                                top: "calc(50% + 125px)",
+                                top: "calc(50% + 80px)",
                                 textAlign: "center",
                                 pointerEvents: "none",
-                                width: "350px",
+                                width: "280px",
                                 zIndex: 10,
                             }}
                         >
                             <div
                                 style={{
-                                    background: "rgba(0, 0, 0, 0.6)",
-                                    backdropFilter: "blur(10px)",
+                                    background: "linear-gradient(145deg, #25262b 0%, #101114 100%)",
                                     borderRadius: "12px",
                                     padding: "16px 24px",
-                                    border: "1px solid rgba(255, 255, 255, 0.1)",
-                                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                                    border: "1px solid rgba(255, 255, 255, 0.16)",
+                                    boxShadow: "-10px -10px 22px rgba(255, 255, 255, 0.035), 12px 14px 26px rgba(0, 0, 0, 0.72), 0 0 28px rgba(105, 90, 255, 0.12)",
                                 }}
                             >
                                 <span
@@ -491,14 +465,10 @@ export default function Skills() {
                                         fontWeight: 600,
                                         lineHeight: "1.4em",
                                         letterSpacing: "0.02em",
-                                        whiteSpace: "pre-line",
-                                        ...(titleFont || {}),
-                                        color: "#ffffff",
-                                        fontSize: titleFont?.fontSize ? `${parseInt(titleFont.fontSize) * 0.75}px` : "18px",
                                         textShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
                                     }}
                                 >
-                                    {list[active].title}
+                                    {list[active].name}
                                 </span>
                             </div>
                         </div>
@@ -507,85 +477,4 @@ export default function Skills() {
             </div>
         </section>
     )
-}
-
-const COMPONENT_DEFAULTS = {
-    slides: [
-        {
-            icon: <GithubIcon />,
-            title: "GitHub",
-        },
-        {
-            icon: <GitIcon />,
-            title: "Git",
-        },
-        {
-            icon: <HTML5Icon />,
-            title: "HTML5",
-        },
-        {
-            icon: <JavaScriptIcon />,
-            title: "JavaScript",
-        },
-        {
-            icon: <PHPIcon />,
-            title: "PHP",
-        },
-        {
-            icon: <LaravelIcon />,
-            title: "Laravel",
-        },
-        {
-            icon: <CSSIcon />,
-            title: "CSS",
-        },
-        {
-            icon: <MySQLIcon />,
-            title: "MySQL",
-        },
-        {
-            icon: <BootstrapIcon />,
-            title: "Bootstrap",
-        },
-        {
-            icon: <ReactIcon />,
-            title: "React",
-        },
-        {
-            icon: <TailwindIcon />,
-            title: "Tailwind\nCss",
-        },
-    ],
-    cardWidth: 280,
-    cardHeight: 280,
-    radius: 12,
-    tilt: 15,
-    sideTilt: 10,
-    gap: 20,
-    opacity: 50,
-    autoplay: true,
-    autoplayDirection: "rightToLeft",
-    transition: {
-        type: "tween",
-        duration: 0.6,
-        delay: 6,
-        ease: [0.22, 1, 0.36, 1],
-    },
-    showTitle: true,
-    titleFont: {
-        fontFamily: "Inter",
-        variant: "Bold",
-        fontSize: "42px",
-        letterSpacing: "-0.01em",
-        lineHeight: "1.2em",
-    },
-    titleColor: "#ffffff",
-    titlePosition: {
-        position: "bottomLeft",
-        paddingLeft: 22,
-        paddingRight: 22,
-        paddingTop: 24,
-        paddingBottom: 24,
-    },
-    speed: 3,
 }

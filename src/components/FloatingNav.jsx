@@ -19,7 +19,7 @@ const FloatingNav = () => {
     { id: 'skills', label: 'Skills', icon: <Code size={20} /> },  
     { id: 'projects', label: 'Projects', icon: <FolderOpen size={20} /> },
     { id: 'experience', label: 'Experience', icon: <Briefcase size={20} /> },
-    { id: 'education', label: 'Education', icon: <Award size={20} /> },
+    { id: 'certificates', label: 'Certificates', icon: <Award size={20} /> },
     { id: 'contact', label: 'Contact', icon: <Mail size={20} /> },
   ];
 
