@@ -49,11 +49,11 @@ function App() {
           <div style={{ position: 'relative', zIndex: 10 }}>
             <Hero />
             <About />
+            <Skills />
           </div>
         </div>
 
         {/* Other sections with normal background */}
-        <Skills />
         <Projects />
         <Experience />
         <Education />

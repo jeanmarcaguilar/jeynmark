@@ -64,3 +64,28 @@ html {
   display: none;
 }
 
+/* Hide scrollbar for skills section */
+#skills {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#skills::-webkit-scrollbar {
+  display: none;
+}
+
+/* Glassmorphism utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
