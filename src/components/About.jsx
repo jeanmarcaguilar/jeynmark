@@ -1,149 +1,143 @@
 import { motion } from 'framer-motion';
-import { User, Lightbulb, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import profileImg from '../assets/images/profile.jpg';
 
 const About = () => {
-  // Animation variants for staggered children
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
+  const scrollToSection = (e, sectionId) => {
+    e.preventDefault();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
-    // Increased top padding from pt-32 to pt-48 to push the content further down
-    <section id="about" className="pt-20 sm:pt-28 pb-16 sm:pb-20 bg-transparent">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-primary mb-16 sm:mb-24">
-            About Me
-          </h2>
+    <section id="about" className="pt-12 pb-20 sm:pt-16 sm:pb-28 bg-[#050505] text-white relative overflow-hidden select-none">
+      {/* Background Radial Glow */}
+      <div className="absolute top-1/2 left-0 w-125 h-125 bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none" />
 
-          <div className="grid md:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
-            {/* Left Column: Visual Element */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="flex justify-center relative order-2 md:order-1"
-            >
-              <div className="relative group">
-                {/* Outer Glow/Gradient */}
-                <div className="absolute inset-0 bg-linear-to-br from-primary/20 to-transparent rounded-full blur-3xl opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
-                
-                {/* Main Circle Container */}
-                <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full bg-linear-to-br from-border to-card flex items-center justify-center relative z-10 shadow-xl">
-                  <div className="w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 rounded-full bg-card flex items-center justify-center border border-border overflow-hidden">
-                     {/* Placeholder for actual image if available, otherwise Icon */}
-                     <User size={80} className="text-secondary opacity-80" />
-                  </div>
-                </div>
-
-                {/* Decorative Orbiting Elements */}
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-8 h-8 sm:w-12 sm:h-12 border border-primary/30 rounded-full z-0"
-                />
-                <motion.div
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                  className="absolute -bottom-2 sm:-bottom-4 -left-2 sm:-left-4 w-6 h-6 sm:w-8 sm:h-8 bg-primary/10 rounded-full z-0"
-                />
-                 <motion.div
-                  animate={{ rotate: 180 }}
-                  transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                  className="absolute top-1/2 -right-4 sm:-right-8 w-4 h-4 sm:w-6 sm:h-6 border border-dashed border-secondary rounded-full z-0"
-                />
-              </div>
-            </motion.div>
-
-            {/* Right Column: Narrative & Values */}
-            <div className="space-y-8 sm:space-y-10 order-1 md:order-2">
-              {/* Main Bio */}
-              <div className="space-y-4">
-                <p className="text-secondary text-sm sm:text-base md:text-lg leading-relaxed">
-                  I’m an Information Technology graduate driven by a curiosity for how things work 
-                  and a passion for making them work better. My journey isn't just about writing code; 
-                  it’s about crafting digital experiences that are intuitive, reliable, and meaningful.
-                </p>
-                <p className="text-secondary text-sm sm:text-base md:text-lg leading-relaxed">
-                  I believe that great software is born from empathy—understanding the user's needs 
-                  before writing a single line of logic. Whether I'm designing a responsive interface 
-                  or architecting a database, my goal is always clarity and efficiency.
-                </p>
-              </div>
-
-              {/* Core Values / Approach Section */}
-              <div className="pt-6 sm:pt-8 border-t border-border">
-                <h3 className="text-lg sm:text-xl font-semibold text-primary mb-4 sm:mb-6">My Core Principles</h3>
-                <motion.div 
-                  variants={containerVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
-                >
-                  {/* Value 1 */}
-                  <motion.div 
-                    variants={itemVariants}
-                    className="flex flex-col items-center text-center p-4 sm:p-5 rounded-xl bg-card/50 border border-border hover:border-primary/50 hover:bg-card/70 transition-all duration-300"
-                  >
-                    <Lightbulb className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-2 sm:mb-3" />
-                    <h4 className="font-medium text-primary text-xs sm:text-sm">Problem Solver</h4>
-                    <p className="text-[10px] sm:text-xs text-secondary mt-1 sm:mt-2 leading-relaxed">Analytical thinking first, code second.</p>
-                  </motion.div>
-
-                  {/* Value 2 */}
-                  <motion.div 
-                    variants={itemVariants}
-                    className="flex flex-col items-center text-center p-4 sm:p-5 rounded-xl bg-card/50 border border-border hover:border-primary/50 hover:bg-card/70 transition-all duration-300"
-                  >
-                    <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-2 sm:mb-3" />
-                    <h4 className="font-medium text-primary text-xs sm:text-sm">Reliable</h4>
-                    <p className="text-[10px] sm:text-xs text-secondary mt-1 sm:mt-2 leading-relaxed">Building systems that last and scale.</p>
-                  </motion.div>
-
-                  {/* Value 3 */}
-                  <motion.div 
-                    variants={itemVariants}
-                    className="flex flex-col items-center text-center p-4 sm:p-5 rounded-xl bg-card/50 border border-border hover:border-primary/50 hover:bg-card/70 transition-all duration-300"
-                  >
-                    <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-2 sm:mb-3" />
-                    <h4 className="font-medium text-primary text-xs sm:text-sm">Adaptive</h4>
-                    <p className="text-[10px] sm:text-xs text-secondary mt-1 sm:mt-2 leading-relaxed">Continuously learning and evolving.</p>
-                  </motion.div>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-
-          {/* Divider between About and Technical Skills */}
-          <motion.div 
-            initial={{ opacity: 0, width: 0 }}
-            whileInView={{ opacity: 1, width: "100%" }}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Top Grid: About Info + Profile Headshot */}
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* Left Column: Bio */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-12 sm:mt-16 pt-6 sm:pt-8"
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-7 space-y-6"
           >
-            <div className="h-px bg-linear-to-r from-transparent via-border to-transparent"></div>
+            {/* Status Pill */}
+            <div>
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-[#00FF9D] text-xs font-code tracking-wide shadow-[0_0_15px_rgba(0,255,157,0.12)]">
+                <span className="w-2 h-2 rounded-full bg-[#00FF9D] animate-pulse" />
+                Open for new opportunities
+              </span>
+            </div>
+
+            {/* Title */}
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold text-white tracking-tight">
+              About Me
+            </h2>
+
+            {/* Bio Paragraphs */}
+            <div className="font-code text-zinc-400 text-sm sm:text-base leading-relaxed space-y-4 max-w-xl">
+              <p>
+                As a <span className="text-white font-medium">Full Stack Developer</span>,
+              </p>
+              <p>
+                I focus on the synergy between <span className="text-white font-medium">clean architecture</span> and <span className="text-white font-medium">thoughtful interfaces</span>.
+              </p>
+              <p>
+                I specialize in building digital products that are not just functional but <span className="text-emerald-400 font-medium">robust</span>, <span className="text-emerald-400 font-medium">scalable</span>, and crafted to deliver exceptional experiences from <span className="text-white font-medium">API to UI</span>.
+              </p>
+            </div>
           </motion.div>
-        </motion.div>
+
+          {/* Right Column: Headshot Photo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="lg:col-span-5 flex justify-center lg:justify-end"
+          >
+            <div className="relative group max-w-md w-full rounded-3xl overflow-hidden border border-zinc-800/80 bg-zinc-900/50 shadow-2xl transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_30px_rgba(0,255,157,0.1)]">
+              <img 
+                src={profileImg} 
+                alt="Jean Marc Aguilar Profile" 
+                className="w-full h-85 sm:h-100 object-cover object-top transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-60 pointer-events-none" />
+            </div>
+          </motion.div>
+
+        </div>
+
+        {/* Divider */}
+        <div className="w-full h-px bg-zinc-800/80 my-16 sm:my-20" />
+
+        {/* Bottom Grid: Education & Stack */}
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
+          
+          {/* Education Block */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-4 p-6 sm:p-8 rounded-2xl bg-zinc-950/40 border border-zinc-900 hover:border-zinc-800 transition-colors"
+          >
+            <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white tracking-tight">
+              Education
+            </h3>
+            <p className="font-code text-zinc-400 text-sm sm:text-base leading-relaxed max-w-md">
+              My foundation is a <span className="text-white font-medium">BS in Information Technology</span>, which solidified my grasp of modern engineering standards and design thinking — letting me transition smoothly into a production-ready professional.
+            </p>
+            <div className="pt-2">
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={(e) => scrollToSection(e, 'projects')}
+                className="bg-zinc-950/90 border border-zinc-800 hover:border-zinc-500 text-white font-code text-xs sm:text-sm px-6 py-2.5 rounded-full inline-flex items-center gap-2 transition-all hover:bg-zinc-900 shadow-lg cursor-pointer"
+              >
+                View Projects
+                <ArrowUpRight size={16} strokeWidth={2.5} />
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* Stack Block */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="space-y-4 p-6 sm:p-8 rounded-2xl bg-zinc-950/40 border border-zinc-900 hover:border-zinc-800 transition-colors"
+          >
+            <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white tracking-tight">
+              Stack
+            </h3>
+            <p className="font-code text-zinc-400 text-sm sm:text-base leading-relaxed max-w-md">
+              I operate across the full product lifecycle using <span className="text-emerald-400 font-medium">React</span>, <span className="text-emerald-400 font-medium">Node.js</span>, <span className="text-emerald-400 font-medium">TypeScript</span>, and modern CSS frameworks like <span className="text-white font-medium">Tailwind</span>. My philosophy prioritizes performance, accessibility, and modular design end-to-end.
+            </p>
+            <div className="pt-2">
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={(e) => scrollToSection(e, 'skills')}
+                className="bg-zinc-950/90 border border-zinc-800 hover:border-zinc-500 text-white font-code text-xs sm:text-sm px-6 py-2.5 rounded-full inline-flex items-center gap-2 transition-all hover:bg-zinc-900 shadow-lg cursor-pointer"
+              >
+                View Stack
+                <ArrowUpRight size={16} strokeWidth={2.5} />
+              </motion.button>
+            </div>
+          </motion.div>
+
+        </div>
+
       </div>
     </section>
   );
