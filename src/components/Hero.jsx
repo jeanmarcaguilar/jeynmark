@@ -22,11 +22,11 @@ const Hero = () => {
       {/* Dynamic Background Glows — enhanced green aurora */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {/* Primary aurora glow — upper center */}
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-emerald-500/[0.12] rounded-full blur-[180px]" />
+        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-225 h-150 bg-emerald-500/12 rounded-full blur-[180px]" />
         {/* Secondary glow — center right */}
-        <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-emerald-500/[0.08] rounded-full blur-[140px]" />
+        <div className="absolute top-1/4 right-1/4 w-125 h-125 bg-emerald-500/8 rounded-full blur-[140px]" />
         {/* Tertiary subtle glow — bottom left */}
-        <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-emerald-500/[0.05] rounded-full blur-[120px]" />
+        <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-emerald-500/5 rounded-full blur-[120px]" />
       </div>
 
       {/* Main Right Content Area */}
@@ -40,7 +40,7 @@ const Hero = () => {
               transition={{ duration: 0.7 }}
               className="lg:col-span-5 flex justify-center w-full"
             >
-              <div className="relative w-full max-w-md xl:max-w-[460px] aspect-square rounded-2xl border border-emerald-500/30 bg-[#07130c]/70 backdrop-blur-md p-6 flex flex-col justify-between overflow-hidden shadow-[0_0_40px_rgba(0,255,157,0.08)]">
+              <div className="relative w-full max-w-md xl:max-w-115 aspect-square rounded-2xl border border-emerald-500/30 bg-[#07130c]/70 backdrop-blur-md p-6 flex flex-col justify-between overflow-hidden shadow-[0_0_40px_rgba(0,255,157,0.08)]">
 
                 {/* Radar Lines Background */}
                 <div className="absolute inset-0 pointer-events-none flex items-center justify-center">

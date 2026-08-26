@@ -221,6 +221,20 @@ html {
    Featured Projects — Premium Horizontal Cards
    ══════════════════════════════════════════════ */
 
+/* Scoped Aesthetic Typography for Projects Section */
+#projects {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#projects .font-heading,
+#projects h2,
+#projects h3,
+#projects h4,
+#projects button,
+#projects a {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 /* Portfolio pill badge */
 .portfolio-pill {
   display: inline-flex;

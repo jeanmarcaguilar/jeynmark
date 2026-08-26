@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Bookmark, ArrowRight } from 'lucide-react';
+import { Lock, ArrowUpRight } from 'lucide-react';
 
 const ProjectCard = ({ project, index, onClick }) => {
   const cardRef = useRef(null);
@@ -52,92 +52,79 @@ const ProjectCard = ({ project, index, onClick }) => {
       whileHover={{ y: -6 }}
       transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
       onClick={() => onClick?.(project)}
-      className="project-card-horizontal group cursor-pointer"
+      className="relative rounded-2xl border border-zinc-800 bg-[#0d0d0e]/90 hover:border-zinc-700/80 p-4 flex flex-col gap-4 overflow-hidden group cursor-pointer shadow-lg hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-300"
     >
       {/* Mouse-following spotlight */}
       <motion.div
-        className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
         style={{ background: spotlightBackground }}
       />
 
-      {/* Top edge highlight line */}
-      <div className="absolute top-0 left-[10%] right-[10%] h-px bg-linear-to-r from-transparent via-white/[0.07] to-transparent group-hover:via-white/12 transition-all duration-700" />
-
-      {/* Card layout: image left, info right */}
-      <div className="flex flex-col md:flex-row h-full relative z-10">
-        {/* Project Screenshot */}
-        <div className="project-card-image-wrapper md:w-[48%] w-full shrink-0">
-          <div className="relative h-full overflow-hidden m-3 md:m-3 md:mr-0 rounded-xl">
-            {/* Subtle inner shadow over image */}
-            <div className="absolute inset-0 z-10 pointer-events-none rounded-xl"
-              style={{
-                boxShadow: 'inset 0 0 30px rgba(0,0,0,0.3)',
-              }}
-            />
-            
-            <motion.img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] rounded-xl"
-              style={{ minHeight: '220px' }}
-              loading="lazy"
-            />
-            
-            {/* Bottom fade overlay on mobile */}
-            <div className="absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-[#0a0a0b] to-transparent md:hidden rounded-b-xl" />
-          </div>
+      {/* Top browser bar/header */}
+      <div className="flex items-center justify-between z-10 w-full px-1">
+        {/* Traffic window controls */}
+        <div className="flex gap-1.5 items-center">
+          <span className="w-2 h-2 rounded-full bg-zinc-800" />
+          <span className="w-2 h-2 rounded-full bg-zinc-800" />
+          <span className="w-2 h-2 rounded-full bg-zinc-800" />
         </div>
 
-        {/* Project Information */}
-        <div className="md:w-[52%] w-full p-5 md:p-7 md:pl-6 flex flex-col justify-center relative">
-          {/* Bookmark icon top-right */}
-          <div className="absolute top-3 right-3 md:top-5 md:right-5">
-            <motion.div
-              whileHover={{ scale: 1.2, y: -2 }}
-              transition={{ duration: 0.2 }}
-              className="text-[#27272a] group-hover:text-[#52525b] transition-colors duration-500"
+        {/* Address bar mockup */}
+        <div className="flex items-center gap-1.5 px-4 py-1 rounded-md bg-[#070708] border border-zinc-800/40 text-[10px] text-zinc-500 font-medium max-w-[50%] truncate select-none">
+          <Lock size={8} className="text-zinc-600" />
+          <span className="truncate">{project.title.toLowerCase()}.dev</span>
+        </div>
+
+        {/* Number indicator */}
+        <div className="px-2 py-0.5 rounded text-[10px] font-bold font-mono text-[#00FF9D] bg-[#00FF9D]/10 border border-[#00FF9D]/20">
+          {project.number}
+        </div>
+      </div>
+
+      {/* Screenshot Container */}
+      <div className="relative z-10 w-full aspect-video overflow-hidden rounded-xl border border-zinc-800/40 bg-zinc-950">
+        <div className="absolute inset-0 z-10 pointer-events-none rounded-xl shadow-[inset_0_0_20px_rgba(0,0,0,0.4)]" />
+        <motion.img
+          src={project.image}
+          alt={project.title}
+          className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02] rounded-xl"
+          loading="lazy"
+        />
+      </div>
+
+      {/* Content description & details */}
+      <div className="flex flex-col gap-3 z-10 px-1 mt-1">
+        <h3 className="text-xl font-bold text-white tracking-tight leading-none group-hover:text-[#00FF9D] transition-colors duration-300">
+          {project.title}
+        </h3>
+
+        <p className="text-zinc-400 text-xs sm:text-[13px] leading-relaxed line-clamp-2">
+          {project.description}
+        </p>
+
+        {/* Technology Badges */}
+        <div className="flex flex-wrap gap-1.5 my-1">
+          {project.technologies.slice(0, 4).map((tech) => (
+            <span
+              key={tech}
+              className="px-2.5 py-1 rounded-md text-[10px] font-semibold text-zinc-400 bg-zinc-900 border border-zinc-800/80 hover:border-zinc-700/80 hover:text-zinc-200 transition-colors duration-300"
             >
-              <Bookmark size={18} strokeWidth={1.5} />
-            </motion.div>
-          </div>
-
-          {/* Project number */}
-          <span className="text-[#3f3f46] text-xs font-mono font-semibold tracking-[0.2em] mb-2 block">
-            {project.number}
-          </span>
-
-          {/* Project title */}
-          <h3 className="text-xl md:text-2xl font-bold text-white mb-2.5 tracking-tight leading-tight">
-            {project.title}
-          </h3>
-
-          {/* Description */}
-          <p className="text-[#a1a1aa] text-[0.82rem] leading-relaxed mb-4 line-clamp-3">
-            {project.description}
-          </p>
-
-          {/* Technology badges */}
-          <div className="flex flex-wrap gap-1.5 mb-5">
-            {project.technologies.map((tech) => (
-              <span key={tech} className="tech-badge">
-                {tech}
-              </span>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <motion.a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-2 text-[0.82rem] text-[#71717a] group-hover:text-white transition-colors duration-300 font-medium tracking-wide group/cta w-fit"
-            whileHover={{ x: 3 }}
-          >
-            <span>View Project</span>
-            <ArrowRight size={14} className="transition-transform duration-300 group-hover/cta:translate-x-1" />
-          </motion.a>
+              {tech}
+            </span>
+          ))}
         </div>
+
+        {/* Action Link CTA */}
+        <a
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="flex items-center gap-1 text-[11px] font-semibold text-zinc-400 group-hover:text-emerald-400 transition-colors duration-300 w-fit mt-1 group/cta"
+        >
+          <span>View Project</span>
+          <ArrowUpRight size={12} className="transition-transform duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5 text-zinc-500 group-hover/cta:text-emerald-400" />
+        </a>
       </div>
     </motion.div>
   );

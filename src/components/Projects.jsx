@@ -3,13 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { projects } from '../data/projects';
 import ProjectCard from './ProjectCard';
 import ProjectModal from './ProjectModal';
-import { Globe, Code2, Link, Wrench, Layers } from 'lucide-react';
+import { LayoutGrid, Globe, Code2, Wrench } from 'lucide-react';
 
 const FILTERS = [
-  { label: 'All Projects', value: 'all', icon: Layers },
+  { label: 'All Projects', value: 'all', icon: LayoutGrid },
   { label: 'Web Development', value: 'Web Development', icon: Globe },
   { label: 'Full Stack', value: 'Full Stack', icon: Code2 },
-  { label: 'Blockchain', value: 'Blockchain', icon: Link },
   { label: 'Tools', value: 'Tools', icon: Wrench },
 ];
 
@@ -60,72 +59,37 @@ const Projects = () => {
         }}
       />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* ─── Section Header ─── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16 sm:mb-20"
-        >
+        <div className="text-center mb-12">
           {/* Portfolio pill */}
-          <motion.div
-            className="inline-block mb-6"
-            initial={{ opacity: 0, scale: 0.85 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <span className="portfolio-pill">
-              ✦ PORTFOLIO
-            </span>
-          </motion.div>
 
           {/* Main heading */}
           <motion.h2
-            className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-5 tracking-tight"
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5 tracking-tight font-heading"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            style={{ fontFamily: "'Inter', 'Manrope', sans-serif" }}
           >
             Featured Projects
           </motion.h2>
 
-          {/* Glow divider */}
-          <motion.div
-            className="flex items-center justify-center gap-2 mb-6"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.4 }}
-          >
-            <div className="w-16 h-px bg-linear-to-r from-transparent to-white/20" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/50" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
-            <div className="w-16 h-px bg-linear-to-l from-transparent to-white/20" />
-          </motion.div>
-
           {/* Subtitle */}
           <motion.p
-            className="text-[#a1a1aa] text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+            className="text-[#a1a1aa] text-xs max-w-xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            A curated collection of my recent work showcasing creativity, technical
-            excellence, and innovative problem-solving across various domains and
-            technologies.
+            A curated collection of recent work — spanning product design, full-stack builds, and the occasional experiment.
           </motion.p>
-        </motion.div>
+        </div>
 
         {/* ─── Category Filters ─── */}
         <motion.div
-          className="flex items-center justify-center sm:justify-end gap-2 mb-6 sm:mb-8 flex-wrap sm:flex-nowrap overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4"
+          className="flex flex-row items-center justify-center gap-3 mb-14 mt-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -138,12 +102,15 @@ const Projects = () => {
               <motion.button
                 key={filter.value}
                 onClick={() => setActiveFilter(filter.value)}
-                whileHover={{ scale: 1.04, y: -1 }}
-                whileTap={{ scale: 0.97 }}
-                className={`filter-pill ${isActive ? 'filter-pill-active' : ''}`}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide border cursor-pointer transition-all duration-300 backdrop-blur-sm ${isActive
+                    ? 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10 shadow-[0_0_25px_rgba(16,185,129,0.15)]'
+                    : 'border-zinc-700/60 text-zinc-400 bg-zinc-900/40 hover:text-zinc-200 hover:border-zinc-600/80 hover:bg-zinc-800/60'
+                  }`}
               >
-                <Icon size={10} strokeWidth={1.5} />
-                <span className="whitespace-nowrap text-xs sm:text-xs">{filter.label}</span>
+                <Icon size={13} className={isActive ? 'text-emerald-400' : 'text-zinc-500'} strokeWidth={2} />
+                <span>{filter.label}</span>
               </motion.button>
             );
           })}
@@ -153,7 +120,7 @@ const Projects = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeFilter}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
             initial="hidden"
             animate="visible"
             exit="hidden"
