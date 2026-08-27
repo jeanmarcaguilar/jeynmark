@@ -1,26 +1,23 @@
 export const experience = [
   {
-    year: "2025–2026",
-    title: "Senior Year - Full Stack Development",
-    company: "College Final Year",
-    description: "Focused on advanced web development projects using React, PHP, and MySQL. Completed capstone project and portfolio development. Mastered modern frameworks and deployment strategies."
+    year: "December 2025 - March 2026",
+    title: "On-the-job Training IT / Technical Support",
+    company: "Philippine Red Cross - QC Chapter",
+    description: "Minimized workstation downtime for staff, improved internal software stability through QA testing, and enhanced the visual reach of chapter announcements. Troubleshot hardware/network connectivity issues, logged software bugs for the dev team, and designed promotional materials (pubmats).",
+    color: "indigo"
   },
   {
-    year: "2024–2025",
-    title: "Junior Year - Advanced Programming",
-    company: "College Third Year",
-    description: "Deepened knowledge in software engineering principles, database management, and backend development. Built complex applications and learned API integration."
+    year: "2025 - 2026",
+    title: "Full Stack Developer",
+    company: "School Management System III - Capstone.",
+    description: "Developed the web application using the Laravel Framework, PHP, JSON, Node.js, and RESTful APIs while structuring the centralized database and user access controls.",
+    color: "teal"
   },
   {
-    year: "2023–2024",
-    title: "Sophomore Year - Web Fundamentals",
-    company: "College Second Year",
-    description: "Expanded skills in HTML, CSS, JavaScript, and responsive design. Developed intermediate web projects and learned version control with Git."
-  },
-  {
-    year: "2022–2023",
-    title: "Freshman Year - Programming Foundations",
-    company: "College First Year",
-    description: "Started the journey in computer science and information technology. Learned programming fundamentals, algorithms, and basic web development concepts."
+    year: "2025 - 2026",
+    title: "Full Stack Developer",
+    company: "Barangay Management System - BMS",
+    description: "Built mobile-first interfaces using Tailwind CSS and HTML, integrated RESTful APIs, and handled backend workflows with PHP and Node.js.",
+    color: "orange"
   }
 ];

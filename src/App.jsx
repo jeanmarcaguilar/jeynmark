@@ -20,7 +20,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-[#050505] text-white">
       <Sidebar />
-      <div className="flex-grow min-w-0 flex flex-col relative">
+      <div className="grow min-w-0 flex flex-col relative">
         <main className="flex-1">
           {/* Wrapper for Hero and About with shared sticky background */}
           <div className="relative">

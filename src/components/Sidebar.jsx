@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 const Sidebar = () => {
   const [activeNav, setActiveNav] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const navItems = [
     { id: 'home', label: 'HOME' },
@@ -12,7 +13,6 @@ const Sidebar = () => {
     { id: 'skills', label: 'SKILLS' },
     { id: 'projects', label: 'PROJECTS' },
     { id: 'experience', label: 'EXPERIENCE' },
-    { id: 'certificates', label: 'CERTIFICATES' },
     { id: 'contact', label: 'CONTACT' },
   ];
 
@@ -20,6 +20,7 @@ const Sidebar = () => {
     e.preventDefault();
     setActiveNav(sectionId);
     setMobileMenuOpen(false);
+    setIsScrolling(true);
     const element = document.getElementById(sectionId);
     if (element) {
       // Offset for sticky header on mobile
@@ -29,31 +30,75 @@ const Sidebar = () => {
         top: elementPosition - offset,
         behavior: 'smooth',
       });
+      
+      // Listen for scroll to complete and then reset the scrolling state
+      const checkScrollComplete = () => {
+        const currentScroll = window.scrollY;
+        const targetScroll = elementPosition - offset;
+        const isNearTarget = Math.abs(currentScroll - targetScroll) < 10;
+        
+        if (isNearTarget) {
+          setIsScrolling(false);
+          window.removeEventListener('scroll', checkScrollComplete);
+        }
+      };
+      
+      // Fallback timeout in case scroll doesn't complete as expected
+      const fallbackTimeout = setTimeout(() => {
+        setIsScrolling(false);
+        window.removeEventListener('scroll', checkScrollComplete);
+      }, 2000);
+      
+      window.addEventListener('scroll', checkScrollComplete);
     }
   };
 
   // Scrollspy logic to automatically update active section on scroll
   useEffect(() => {
     const handleScroll = () => {
+      // Don't update active section during programmatic scrolling
+      if (isScrolling) return;
+
       const offset = window.innerWidth < 1024 ? 120 : 200;
       const scrollPosition = window.scrollY + offset;
+
+      // Find the section that's currently in view
+      let currentSection = 'home';
+      let maxIntersection = 0;
 
       for (const item of navItems) {
         const element = document.getElementById(item.id);
         if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveNav(item.id);
-            break;
+          const rect = element.getBoundingClientRect();
+          const offsetTop = rect.top + window.scrollY;
+          const offsetHeight = rect.height;
+          const sectionBottom = offsetTop + offsetHeight;
+
+          // Check if section is currently in viewport
+          const sectionStartInView = scrollPosition >= offsetTop && scrollPosition < sectionBottom;
+          
+          // Calculate how much of the section is visible in the viewport
+          const viewportTop = window.scrollY;
+          const viewportBottom = window.scrollY + window.innerHeight;
+          const visibleTop = Math.max(offsetTop, viewportTop);
+          const visibleBottom = Math.min(sectionBottom, viewportBottom);
+          const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+
+          // Prioritize sections that are actually in view and have more visible area
+          if (sectionStartInView && visibleHeight > maxIntersection) {
+            maxIntersection = visibleHeight;
+            currentSection = item.id;
           }
         }
       }
+
+      setActiveNav(currentSection);
     };
 
     window.addEventListener('scroll', handleScroll);
     handleScroll(); // Trigger initially
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isScrolling]);
 
   return (
     <>
