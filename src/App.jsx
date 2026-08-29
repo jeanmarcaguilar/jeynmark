@@ -5,7 +5,6 @@ import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Experience from './components/Experience';
-import Education from './components/Education';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import { Suspense } from 'react';
@@ -56,7 +55,6 @@ function App() {
           <div style={{ position: 'relative', zIndex: 10 }}>
             <Projects />
             <Experience />
-            <Education />
             <Contact />
           </div>
         </main>

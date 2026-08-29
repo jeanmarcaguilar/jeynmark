@@ -1,27 +1,79 @@
-import { useState, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects } from '../data/projects';
 import ProjectCard from './ProjectCard';
 import ProjectModal from './ProjectModal';
-import { LayoutGrid, Globe, Code2, Wrench } from 'lucide-react';
-
-const FILTERS = [
-  { label: 'All Projects', value: 'all', icon: LayoutGrid },
-  { label: 'Web Development', value: 'Web Development', icon: Globe },
-  { label: 'Full Stack', value: 'Full Stack', icon: Code2 },
-  { label: 'Tools', value: 'Tools', icon: Wrench },
-];
 
 const Projects = () => {
-  const [activeFilter, setActiveFilter] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselRef = useRef(null);
 
-  const filteredProjects = useMemo(() => {
-    if (activeFilter === 'all') return projects;
-    return projects.filter(
-      (p) => p.categories?.includes(activeFilter) || p.category === activeFilter
-    );
-  }, [activeFilter]);
+  const goToSlide = useCallback((index) => {
+    setCurrentIndex(index);
+    if (carouselRef.current) {
+      const slides = carouselRef.current.children;
+      if (slides[index]) {
+        const slidePosition = slides[index].offsetLeft;
+        carouselRef.current.scrollTo({
+          left: slidePosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }, []);
+
+  const goToNext = useCallback(() => {
+    const newIndex = currentIndex < projects.length - 1 ? currentIndex + 1 : 0;
+    goToSlide(newIndex);
+  }, [currentIndex, goToSlide]);
+
+  // Auto-rotate carousel
+  useEffect(() => {
+    if (projects.length > 1) {
+      const interval = setInterval(() => {
+        goToNext();
+      }, 5000); // Rotate every 5 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [currentIndex, projects.length, goToNext]);
+
+  const handleScroll = useCallback(() => {
+    if (carouselRef.current) {
+      const slides = carouselRef.current.children;
+      const scrollPosition = carouselRef.current.scrollLeft;
+      let newIndex = 0;
+      
+      for (let i = 0; i < slides.length; i++) {
+        const slidePosition = slides[i].offsetLeft;
+        if (scrollPosition >= slidePosition - slides[i].offsetWidth / 2) {
+          newIndex = i;
+        }
+      }
+      
+      setCurrentIndex(newIndex);
+    }
+  }, []);
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (carousel) {
+      carousel.addEventListener('scroll', handleScroll);
+      return () => carousel.removeEventListener('scroll', handleScroll);
+    }
+  }, [projects.length, handleScroll, goToSlide]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === ' ') {
+        e.preventDefault();
+        setIsPaused(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <section
@@ -87,40 +139,9 @@ const Projects = () => {
           </motion.p>
         </div>
 
-        {/* ─── Category Filters ─── */}
-        <motion.div
-          className="flex flex-row items-center justify-center gap-3 mb-14 mt-8"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          {FILTERS.map((filter) => {
-            const isActive = activeFilter === filter.value;
-            const Icon = filter.icon;
-            return (
-              <motion.button
-                key={filter.value}
-                onClick={() => setActiveFilter(filter.value)}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide border cursor-pointer transition-all duration-300 backdrop-blur-sm ${isActive
-                    ? 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10 shadow-[0_0_25px_rgba(16,185,129,0.15)]'
-                    : 'border-zinc-700/60 text-zinc-400 bg-zinc-900/40 hover:text-zinc-200 hover:border-zinc-600/80 hover:bg-zinc-800/60'
-                  }`}
-              >
-                <Icon size={13} className={isActive ? 'text-emerald-400' : 'text-zinc-500'} strokeWidth={2} />
-                <span>{filter.label}</span>
-              </motion.button>
-            );
-          })}
-        </motion.div>
-
-        {/* ─── Projects Grid ─── */}
+        {/* ─── Projects Carousel ─── */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={activeFilter}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
             initial="hidden"
             animate="visible"
             exit="hidden"
@@ -135,31 +156,46 @@ const Projects = () => {
               },
             }}
           >
-            {filteredProjects.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                index={index}
-                onClick={setSelectedProject}
-              />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+            {/* Carousel Container */}
+            <div className="relative overflow-hidden">
+              {/* Carousel Track */}
+              <div
+                ref={carouselRef}
+                role="region"
+                aria-roledescription="carousel"
+                aria-label="Featured projects"
+                className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide"
+                style={{
+                  scrollSnapType: 'x mandatory',
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none'
+                }}
+              >
+                {projects.map((project, index) => (
+                  <motion.div
+                    key={project.id}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`${index + 1} of ${projects.length}`}
+                    className="shrink-0 w-full"
+                    style={{ scrollSnapAlign: 'center' }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.08 }}
+                  >
+                    <div className="max-w-3xl mx-auto px-4">
+                      <ProjectCard
+                        project={project}
+                        index={index}
+                        onClick={setSelectedProject}
+                      />
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
 
-        {/* Empty state */}
-        <AnimatePresence>
-          {filteredProjects.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="text-center py-20"
-            >
-              <p className="text-[#52525b] text-lg">
-                No projects found for this category.
-              </p>
-            </motion.div>
-          )}
+            </div>
+          </motion.div>
         </AnimatePresence>
       </div>
 

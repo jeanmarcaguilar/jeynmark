@@ -86,5 +86,137 @@ export const projects = [
     image: "/projects/taskmaster.jpg",
     github: "https://github.com/jeanmarcaguilar/taskmaster",
     demo: "#"
+  },
+  {
+    id: 5,
+    number: "05",
+    title: "CloudPulse",
+    description: "Real-time microservice observability and infrastructure health monitoring dashboard with metric alert pipelines.",
+    fullDescription: "CloudPulse provides DevOps teams with instant telemetry, automated container monitoring, and anomaly detection. Built for high-availability cloud infrastructure with instant alerts and latency profiling.",
+    category: "DevOps",
+    categories: ["Cloud", "Full Stack", "DevOps"],
+    technologies: ["Next.js", "TypeScript", "Docker", "Redis", "Node.js"],
+    features: [
+      "Real-time node & pod health telemetry",
+      "Automated incident alert notifications",
+      "Latency profiling & memory leak detection",
+      "Interactive SVG time-series graphs",
+      "Customizable metric threshold triggers"
+    ],
+    challenges: "Handling high-frequency WebSocket data streams without impacting UI render performance.",
+    learned: "Implemented virtualized data pipelines and optimized client-side state buffering.",
+    image: "/projects/devflow.jpg",
+    github: "https://github.com/jeanmarcaguilar/cloudpulse",
+    demo: "#"
+  },
+  {
+    id: 6,
+    number: "06",
+    title: "OmniChat AI",
+    description: "Intelligent customer engagement assistant powered by vector retrieval-augmented generation and semantic memory.",
+    fullDescription: "OmniChat AI enables businesses to deploy context-aware conversational bots across multiple channels. It parses knowledge bases into vector embeddings to answer customer queries with high precision.",
+    category: "AI / ML",
+    categories: ["Artificial Intelligence", "Full Stack"],
+    technologies: ["React", "Python", "FastAPI", "OpenAI", "PostgreSQL"],
+    features: [
+      "Semantic knowledge retrieval (RAG)",
+      "Multi-channel message routing",
+      "Conversation summarization & sentiment scoring",
+      "Human-in-the-loop escalation mode",
+      "Interactive prompt engineering playground"
+    ],
+    challenges: "Balancing API response latency with deep contextual document retrieval accuracy.",
+    learned: "Mastered vector indexing, prompt chaining, and asynchronous streaming APIs.",
+    image: "/projects/blockcart.jpg",
+    github: "https://github.com/jeanmarcaguilar/omnichat-ai",
+    demo: "#"
+  },
+  {
+    id: 7,
+    number: "07",
+    title: "FinTrack",
+    description: "Comprehensive personal finance management tool featuring budget forecasting, investment analytics, and expense categorization.",
+    fullDescription: "FinTrack empowers individuals to gain clarity over their financial health with automated bank transaction syncing, asset allocation modeling, and predictive monthly burn-rate calculations.",
+    category: "Fintech",
+    categories: ["Web Development", "Fintech", "Full Stack"],
+    technologies: ["React", "TypeScript", "Tailwind CSS", "Express", "PostgreSQL"],
+    features: [
+      "Automated recurring expense categorization",
+      "Investment portfolio risk & yield breakdown",
+      "Multi-currency conversion with live FX rates",
+      "Exportable financial reports & balance sheets",
+      "Secure encrypted credential vaults"
+    ],
+    challenges: "Ensuring stringent client-side data encryption and zero-knowledge storage architecture.",
+    learned: "Strengthened knowledge of cryptographic standards, relational normalization, and financial math.",
+    image: "/projects/parksense.jpg",
+    github: "https://github.com/jeanmarcaguilar/fintrack",
+    demo: "#"
+  },
+  {
+    id: 8,
+    number: "08",
+    title: "MediSync",
+    description: "Healthcare appointment scheduler and electronic patient health record (EHR) platform for clinics.",
+    fullDescription: "MediSync streamlines patient intake, medical prescription dispatch, doctor schedule allocation, and automated SMS reminders for modern medical facilities and outpatient clinics.",
+    category: "Healthcare",
+    categories: ["Full Stack", "Web Development"],
+    technologies: ["Laravel", "React", "MySQL", "Tailwind CSS", "REST API"],
+    features: [
+      "Automated doctor calendar booking system",
+      "Digital prescription creation & PDF generator",
+      "Patient medical history timeline",
+      "Role-based access for nurses, doctors, & admins",
+      "HIPAA-compliant audit logs"
+    ],
+    challenges: "Building robust role-based permission matrices across complex multi-branch clinics.",
+    learned: "Architected scalable database relations in MySQL with strict access control policies.",
+    image: "/projects/taskmaster.jpg",
+    github: "https://github.com/jeanmarcaguilar/medisync",
+    demo: "#"
+  },
+  {
+    id: 9,
+    number: "09",
+    title: "CodeStream",
+    description: "Collaborative browser-based IDE with real-time pairing, syntax highlighting, and live code execution.",
+    fullDescription: "CodeStream brings developers together with low-latency multiplayer coding sessions, embedded terminal output, and instant shareable code sandbox links.",
+    category: "Developer Tools",
+    categories: ["Web Development", "Tools", "Full Stack"],
+    technologies: ["React", "WebSockets", "Node.js", "Monaco Editor", "Docker"],
+    features: [
+      "Multiplayer live cursor & editing synchronization",
+      "Sandboxed remote code execution in isolated containers",
+      "Integrated audio & text chat channels",
+      "One-click Git repository cloning",
+      "Theme customization & extension marketplace"
+    ],
+    challenges: "Handling operational transform conflict resolution for simultaneous multi-user code edits.",
+    learned: "Implemented CRDT algorithms and optimized WebSocket broadcast pipelines.",
+    image: "/projects/devflow.jpg",
+    github: "https://github.com/jeanmarcaguilar/codestream",
+    demo: "#"
+  },
+  {
+    id: 10,
+    number: "10",
+    title: "NexusCommerce",
+    description: "High-performance headless e-commerce storefront with instantaneous page loads and localized checkout.",
+    fullDescription: "NexusCommerce is built for enterprise retail brands requiring lightning-fast search, server-side caching, inventory synchronization, and custom checkout experiences with global payment gateways.",
+    category: "E-Commerce",
+    categories: ["Web Development", "E-Commerce", "Full Stack"],
+    technologies: ["Next.js", "GraphQL", "PostgreSQL", "Stripe", "Redis"],
+    features: [
+      "Instant faceted product search & filtering",
+      "Edge-rendered product catalog with dynamic ISR",
+      "Multi-region tax calculation & Stripe Checkout",
+      "Real-time inventory reserve locks",
+      "Comprehensive merchant sales analytics dashboard"
+    ],
+    challenges: "Preventing race conditions during flash-sale inventory depletion events.",
+    learned: "Leveraged Redis distributed locks and optimized GraphQL query caching.",
+    image: "/projects/blockcart.jpg",
+    github: "https://github.com/jeanmarcaguilar/nexuscommerce",
+    demo: "#"
   }
 ];

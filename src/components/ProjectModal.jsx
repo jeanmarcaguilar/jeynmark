@@ -49,7 +49,7 @@ const ProjectModal = ({ project, onClose }) => {
           }}
         >
           {/* Top edge highlight */}
-          <div className="absolute top-0 left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="absolute top-0 left-[15%] right-[15%] h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
 
           {/* Scrollable content */}
           <div className="overflow-y-auto max-h-[88vh] modal-scroll">
@@ -63,8 +63,8 @@ const ProjectModal = ({ project, onClose }) => {
                   className="w-full h-full object-cover object-top"
                 />
                 {/* Gradient overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0b] via-[#0a0a0b]/60 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0b]/30 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0b] via-[#0a0a0b]/60 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-r from-[#0a0a0b]/30 to-transparent" />
               </div>
 
               {/* Close button */}
@@ -125,7 +125,7 @@ const ProjectModal = ({ project, onClose }) => {
               </motion.div>
 
               {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent mb-7" />
+              <div className="h-px bg-linear-to-r from-transparent via-white/6 to-transparent mb-7" />
 
               {/* Features */}
               <motion.div
@@ -154,7 +154,7 @@ const ProjectModal = ({ project, onClose }) => {
                       transition={{ delay: 0.25 + i * 0.05 }}
                       className="flex items-start gap-3 text-[#a1a1aa] text-[0.82rem] leading-relaxed"
                     >
-                      <span className="w-1 h-1 rounded-full bg-white/25 mt-2 flex-shrink-0" />
+                      <span className="w-1 h-1 rounded-full bg-white/25 mt-2 shrink-0" />
                       <span>{feature}</span>
                     </motion.li>
                   ))}
@@ -162,7 +162,7 @@ const ProjectModal = ({ project, onClose }) => {
               </motion.div>
 
               {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent mb-7" />
+              <div className="h-px bg-linear-to-r from-transparent via-white/6 to-transparent mb-7" />
 
               {/* Technology Stack */}
               <motion.div
@@ -241,7 +241,7 @@ const ProjectModal = ({ project, onClose }) => {
               </div>
 
               {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent mb-6" />
+              <div className="h-px bg-linear-to-r from-transparent via-white/6 to-transparent mb-6" />
 
               {/* Action buttons */}
               <motion.div

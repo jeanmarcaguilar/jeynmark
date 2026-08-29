@@ -96,6 +96,19 @@ html {
   display: none;
 }
 
+/* Carousel snap scrolling */
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-mandatory {
+  scroll-snap-type: mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
 /* Hide scrollbar for skills section */
 #skills {
   -ms-overflow-style: none;
