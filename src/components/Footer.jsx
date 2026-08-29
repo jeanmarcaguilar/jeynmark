@@ -1,86 +1,49 @@
 import { motion } from 'framer-motion';
-import { Code2, Link2, Mail, ArrowUp } from 'lucide-react';
+import { Code2, Globe, Mail, Heart } from 'lucide-react';
 
 const Footer = () => {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
-    <footer className="py-8 bg-background border-t border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+    <footer className="w-full py-4 bg-background border-t border-border text-[11px] leading-tight">
+      <div className="w-full px-6 sm:px-10 lg:px-16">
+        {/* Bottom Bar Only */}
+        <div className="flex items-center justify-between gap-4 text-secondary">
           {/* Copyright */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-secondary text-sm"
-          >
-            © 2026 Jean Marc Aguilar
-          </motion.div>
-
-          {/* Built with */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-secondary text-sm"
-          >
-            Built with React
-          </motion.div>
+          <div className="flex items-center gap-1 text-[10px]">
+            <span>© {new Date().getFullYear()} Jean Marc Aguilar</span>
+            <span>•</span>
+            <span className="flex items-center gap-0.5">
+              Made with <Heart size={10} className="text-red-500 fill-red-500 mx-0.5" />
+            </span>
+          </div>
 
           {/* Social Links */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="flex items-center gap-4"
-          >
+          <div className="flex items-center gap-4 text-[10px]">
             <a
               href="https://github.com/jeanmarcaguilar"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-secondary hover:text-primary transition-colors"
-              aria-label="GitHub"
+              className="hover:text-primary transition-colors flex items-center gap-1"
             >
-              <Code2 size={20} />
+              <Code2 size={12} />
+              <span>GitHub</span>
             </a>
             <a
               href="https://linkedin.com/in/jeanmarcaguilar"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-secondary hover:text-primary transition-colors"
-              aria-label="LinkedIn"
+              className="hover:text-primary transition-colors flex items-center gap-1"
             >
-              <Link2 size={20} />
+              <Globe size={12} />
+              <span>LinkedIn</span>
             </a>
             <a
               href="mailto:jeanmarc.aguilar@example.com"
-              className="text-secondary hover:text-primary transition-colors"
-              aria-label="Email"
+              className="hover:text-primary transition-colors flex items-center gap-1"
             >
-              <Mail size={20} />
+              <Mail size={12} />
+              <span>Email</span>
             </a>
-          </motion.div>
-
-          {/* Back to Top */}
-          <motion.button
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            onClick={scrollToTop}
-            whileHover={{ y: -2 }}
-            whileTap={{ y: 0 }}
-            className="flex items-center gap-2 text-secondary hover:text-primary transition-colors text-sm"
-            aria-label="Back to top"
-          >
-            Back to top
-            <ArrowUp size={16} />
-          </motion.button>
+          </div>
         </div>
       </div>
     </footer>

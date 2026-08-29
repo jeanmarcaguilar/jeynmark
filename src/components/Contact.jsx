@@ -138,7 +138,6 @@ const Contact = () => {
           transition={{ duration: 0.6 }}
           className="mb-12 sm:mb-16"
         >
-          {/* Subtitle tag */}
           {/* Heading */}
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-extrabold text-white tracking-tight text-center">
             Let's Work Together

@@ -109,10 +109,10 @@ const Hero = () => {
               {/* Background Giant Outline Text */}
               <div className="absolute -top-24 -left-6 pointer-events-none select-none opacity-75 hidden sm:block z-0">
                 <div className="text-8xl lg:text-[9rem] xl:text-[11.5rem] font-black font-mono tracking-tighter uppercase text-stroke-bg whitespace-nowrap">
-                  JEAN MARC
+                  
                 </div>
                 <div className="text-8xl lg:text-[9rem] xl:text-[11.5rem] font-black font-mono tracking-tighter uppercase text-stroke-bg whitespace-nowrap leading-[0.85]">
-                  AGUILAR
+                  
                 </div>
               </div>
 

@@ -1,49 +1,219 @@
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, GitCommit, RefreshCw } from 'lucide-react';
 import profileImg from '../assets/images/profile.jpg';
 
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+const GITHUB_USERNAME = import.meta.env.VITE_GITHUB_USERNAME || 'jeanmarcaguilar';
+const YEAR = new Date().getFullYear();
+
+const COLOR_LEVELS = [
+  'bg-zinc-900',      // 0 – none
+  'bg-emerald-950',   // 1 – low
+  'bg-emerald-800',   // 2 – medium
+  'bg-emerald-600',   // 3 – high
+  'bg-emerald-400',   // 4 – very high
+];
+
+const LEVEL_MAP = {
+  NONE: 0,
+  FIRST_QUARTILE: 1,
+  SECOND_QUARTILE: 2,
+  THIRD_QUARTILE: 3,
+  FOURTH_QUARTILE: 4,
+};
+
+const GH_QUERY = `
+  query($login: String!, $from: DateTime!, $to: DateTime!) {
+    user(login: $login) {
+      contributionsCollection(from: $from, to: $to) {
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays {
+              date
+              contributionCount
+              contributionLevel
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/** Build Sun-aligned grid from API weeks data */
+function buildGrid(weeks, year) {
+  const today = new Date();
+  today.setHours(23, 59, 59, 999); // include the full current day
+
+  // Flatten API days into a lookup map
+  const dayMap = {};
+  weeks.forEach(week =>
+    week.contributionDays.forEach(d => { dayMap[d.date] = d; })
+  );
+
+  // Start: Sunday before Jan 1 of year
+  const startDate = new Date(year, 0, 1);
+  startDate.setDate(startDate.getDate() - startDate.getDay());
+
+  // End: Saturday after Dec 31 of year
+  const endDate = new Date(year, 11, 31);
+  endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+
+  const days = [];
+  let cur = new Date(startDate);
+
+  while (cur <= endDate) {
+    const y   = cur.getFullYear();
+    const mo  = String(cur.getMonth() + 1).padStart(2, '0');
+    const d   = String(cur.getDate()).padStart(2, '0');
+    const key = `${y}-${mo}-${d}`;
+
+    const isCurrentYear  = y === year;
+    const isPastOrToday  = isCurrentYear && cur <= today;
+    const apiDay         = dayMap[key];
+    const level          = apiDay ? (LEVEL_MAP[apiDay.contributionLevel] ?? 0) : 0;
+
+    days.push({
+      date:  new Date(cur),
+      count: apiDay?.contributionCount ?? 0,
+      level: isPastOrToday ? COLOR_LEVELS[level] : 'bg-zinc-900/30',
+    });
+
+    cur.setDate(cur.getDate() + 1);
+  }
+
+  return days;
+}
+
+/** Compute pixel-accurate month label positions */
+function buildMonthHeaders(days, year) {
+  const names      = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const totalWeeks = Math.ceil(days.length / 7);
+  const headers    = [];
+
+  for (let w = 0; w < totalWeeks; w++) {
+    const wStart = days[w * 7].date;
+    const wEnd   = days[w * 7 + 6].date;
+
+    for (let m = 0; m < 12; m++) {
+      const first = new Date(year, m, 1);
+      if (first >= wStart && first <= wEnd) {
+        headers.push({ name: names[m], colStart: w + 1 });
+      }
+    }
+  }
+
+  return headers;
+}
+
+/** Shimmer skeleton for while loading */
+function ContribSkeleton() {
+  return (
+    <div className="flex items-start gap-1.5 animate-pulse">
+      <div className="shrink-0 w-7" style={{ height: 95 }} />
+      <div className="flex flex-col gap-1">
+        <div className="h-4 w-64 rounded bg-zinc-800/60" />
+        <div className="grid grid-rows-7 grid-flow-col" style={{ gap: 3 }}>
+          {Array.from({ length: 53 * 7 }).map((_, i) => (
+            <div
+              key={i}
+              className="rounded-[2px] bg-zinc-800/40"
+              style={{ width: 11, height: 11 }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const About = () => {
+  const [weeks,        setWeeks]        = useState(null);   // raw API weeks
+  const [totalContrib, setTotalContrib] = useState(null);
+  const [loading,      setLoading]      = useState(true);
+  const [error,        setError]        = useState(false);
+
   const scrollToSection = (e, sectionId) => {
     e.preventDefault();
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const fetchContributions = async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const res = await fetch('https://api.github.com/graphql', {
+        method:  'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          Authorization:   `Bearer ${GITHUB_TOKEN}`,
+        },
+        body: JSON.stringify({
+          query: GH_QUERY,
+          variables: {
+            login: GITHUB_USERNAME,
+            from:  `${YEAR}-01-01T00:00:00Z`,
+            to:    `${YEAR}-12-31T23:59:59Z`,
+          },
+        }),
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      if (json.errors) throw new Error(json.errors[0]?.message);
+
+      const cal = json.data.user.contributionsCollection.contributionCalendar;
+      setWeeks(cal.weeks);
+      setTotalContrib(cal.totalContributions);
+    } catch (err) {
+      console.error('GitHub contributions fetch failed:', err);
+      setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  return (
-    <section id="about" className="pt-12 pb-20 sm:pt-16 sm:pb-28 bg-[#050505] text-white relative overflow-hidden select-none">
-      {/* Background Radial Glow */}
-      <div className="absolute top-1/2 left-0 w-125 h-125 bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none" />
+  useEffect(() => { fetchContributions(); }, []);
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+  // Build grid & month headers only when API data changes
+  const { contributionData, monthHeaders } = useMemo(() => {
+    if (!weeks) return { contributionData: [], monthHeaders: [] };
+    const days = buildGrid(weeks, YEAR);
+    return { contributionData: days, monthHeaders: buildMonthHeaders(days, YEAR) };
+  }, [weeks]);
+
+  return (
+    <section id="about" className="py-10 sm:py-16 bg-[#050505] text-white relative overflow-hidden select-none">
+      {/* Background Radial Glow */}
+      <div className="absolute top-1/2 left-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
         {/* Top Grid: About Info + Profile Headshot */}
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
+        <div className="grid lg:grid-cols-12 gap-8 items-center">
+
           {/* Left Column: Bio */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="lg:col-span-7 space-y-6"
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-7 space-y-4"
           >
-            {/* Status Pill */}
             <div>
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-[#00FF9D] text-xs font-code tracking-wide shadow-[0_0_15px_rgba(0,255,157,0.12)]">
-                <span className="w-2 h-2 rounded-full bg-[#00FF9D] animate-pulse" />
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-[#00FF9D] text-[11px] font-code tracking-wide shadow-[0_0_12px_rgba(0,255,157,0.1)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00FF9D] animate-pulse" />
                 Open for new opportunities
               </span>
             </div>
 
-            {/* Title */}
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-heading font-extrabold text-white tracking-tight">
               About Me
             </h2>
 
-            {/* Bio Paragraphs */}
-            <div className="font-code text-zinc-400 text-sm sm:text-base leading-relaxed space-y-4 max-w-xl">
+            <div className="font-code text-zinc-400 text-xs sm:text-sm leading-relaxed space-y-3 max-w-lg">
               <p>
                 As a <span className="text-white font-medium">Full Stack Developer</span>,
               </p>
@@ -61,50 +231,166 @@ const About = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             className="lg:col-span-5 flex justify-center lg:justify-end"
           >
-            <div className="relative group max-w-md w-full rounded-3xl overflow-hidden border border-zinc-800/80 bg-zinc-900/50 shadow-2xl transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_30px_rgba(0,255,157,0.1)]">
-              <img 
-                src={profileImg} 
-                alt="Jean Marc Aguilar Profile" 
-                className="w-full h-85 sm:h-100 object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            <div className="relative group max-w-xs w-full rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-900/50 shadow-xl transition-all duration-300 hover:border-emerald-500/40">
+              <img
+                src={profileImg}
+                alt="Jean Marc Aguilar Profile"
+                className="w-full h-56 sm:h-64 object-cover object-top transition-transform duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-60 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 pointer-events-none" />
             </div>
           </motion.div>
 
         </div>
 
-        {/* Divider */}
-        <div className="w-full h-px bg-zinc-800/80 my-16 sm:my-20" />
+        {/* GitHub Contribution Heatmap */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mt-8 p-4 sm:p-5 rounded-2xl bg-zinc-950/40 border border-zinc-900 space-y-3 w-fit mx-auto"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between text-zinc-300 text-xs font-code font-medium gap-8">
+            <div className="flex items-center gap-2">
+              <GitCommit size={14} className="text-emerald-400" />
+              <span>
+                GitHub Contributions
+                <span className="text-emerald-400 font-semibold ml-1">({YEAR})</span>
+                {totalContrib !== null && (
+                  <span className="text-zinc-500 ml-2 font-normal">
+                    — {totalContrib.toLocaleString()} total
+                  </span>
+                )}
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              {/* Refresh button */}
+              <button
+                onClick={fetchContributions}
+                title="Refresh contributions"
+                disabled={loading}
+                className="text-zinc-600 hover:text-emerald-400 transition-colors disabled:opacity-40 cursor-pointer"
+              >
+                <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
+              </button>
+              <a
+                href={`https://github.com/${GITHUB_USERNAME}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] text-zinc-500 hover:text-emerald-400 transition-colors"
+              >
+                @{GITHUB_USERNAME}
+              </a>
+            </div>
+          </div>
+
+          {/* Grid Container */}
+          <div className="py-1">
+            {loading ? (
+              <ContribSkeleton />
+            ) : error ? (
+              /* Error state */
+              <div className="flex flex-col items-center justify-center gap-2 py-6 text-zinc-600 font-code text-xs">
+                <span>Failed to load contribution data.</span>
+                <button
+                  onClick={fetchContributions}
+                  className="text-emerald-500 hover:text-emerald-400 transition-colors underline underline-offset-2"
+                >
+                  Try again
+                </button>
+              </div>
+            ) : (
+              /* Calendar */
+              <div className="flex items-start gap-1.5">
+
+                {/* Day-of-week labels — precisely positioned per row */}
+                {/* Cell stride: 11px cell + 3px gap = 14px per row */}
+                {/* Sun=row0(top=0), Mon=row1(top=14), Wed=row3(top=42), Fri=row5(top=70) */}
+                <div
+                  className="relative shrink-0 w-7 text-[9px] text-zinc-600 font-code select-none"
+                  style={{ height: 11 * 7 + 3 * 6 }}
+                >
+                  <span className="absolute" style={{ top: 14 }}>Mon</span>
+                  <span className="absolute" style={{ top: 42 }}>Wed</span>
+                  <span className="absolute" style={{ top: 70 }}>Fri</span>
+                </div>
+
+                {/* Month labels + cell grid */}
+                <div className="flex flex-col gap-1">
+
+                  {/* Month header row — left offset = (colStart-1) × 14px stride */}
+                  <div className="relative h-4 text-[10px] text-zinc-500 font-code">
+                    {monthHeaders.map((m) => (
+                      <span
+                        key={m.name}
+                        className="absolute whitespace-nowrap"
+                        style={{ left: (m.colStart - 1) * 14 }}
+                      >
+                        {m.name}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Contribution cells */}
+                  <div className="grid grid-rows-7 grid-flow-col" style={{ gap: 3 }}>
+                    {contributionData.map((item, idx) => (
+                      <div
+                        key={idx}
+                        title={`${item.date.toDateString()}${item.count > 0 ? ` — ${item.count} contribution${item.count !== 1 ? 's' : ''}` : ''}`}
+                        className={`rounded-[2px] ${item.level} hover:ring-1 hover:ring-emerald-400 transition-all`}
+                        style={{ width: 11, height: 11 }}
+                      />
+                    ))}
+                  </div>
+
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Legend */}
+          <div className="flex items-center justify-end gap-1.5 text-[10px] text-zinc-500 font-code pt-1">
+            <span>Less</span>
+            <span className="w-2 h-2 rounded-[2px] bg-zinc-900" />
+            <span className="w-2 h-2 rounded-[2px] bg-emerald-950" />
+            <span className="w-2 h-2 rounded-[2px] bg-emerald-800" />
+            <span className="w-2 h-2 rounded-[2px] bg-emerald-600" />
+            <span className="w-2 h-2 rounded-[2px] bg-emerald-400" />
+            <span>More</span>
+          </div>
+        </motion.div>
 
         {/* Bottom Grid: Education & Stack */}
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
-          
+        <div className="grid md:grid-cols-2 gap-6 mt-6">
+
           {/* Education Block */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="space-y-4 p-6 sm:p-8 rounded-2xl bg-zinc-950/40 border border-zinc-900 hover:border-zinc-800 transition-colors"
+            transition={{ duration: 0.5 }}
+            className="space-y-4 p-5 rounded-2xl bg-zinc-950/40 border border-zinc-900 hover:border-zinc-800 transition-colors"
           >
-            <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white tracking-tight">
+            <h3 className="text-xl font-heading font-bold text-white tracking-tight">
               Education
             </h3>
-            <p className="font-code text-zinc-400 text-sm sm:text-base leading-relaxed max-w-md">
+            <p className="font-code text-zinc-400 text-xs sm:text-sm leading-relaxed">
               My foundation is a <span className="text-white font-medium">BS in Information Technology</span>, which solidified my grasp of modern engineering standards and design thinking — letting me transition smoothly into a production-ready professional.
             </p>
-            <div className="pt-2">
+            <div>
               <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={(e) => scrollToSection(e, 'projects')}
-                className="bg-zinc-950/90 border border-zinc-800 hover:border-zinc-500 text-white font-code text-xs sm:text-sm px-6 py-2.5 rounded-full inline-flex items-center gap-2 transition-all hover:bg-zinc-900 shadow-lg cursor-pointer"
+                className="bg-zinc-950 border border-zinc-800 hover:border-zinc-600 text-white font-code text-xs px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-all cursor-pointer"
               >
                 View Projects
-                <ArrowUpRight size={16} strokeWidth={2.5} />
+                <ArrowUpRight size={14} strokeWidth={2.5} />
               </motion.button>
             </div>
           </motion.div>
@@ -114,24 +400,24 @@ const About = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="space-y-4 p-6 sm:p-8 rounded-2xl bg-zinc-950/40 border border-zinc-900 hover:border-zinc-800 transition-colors"
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="space-y-4 p-5 rounded-2xl bg-zinc-950/40 border border-zinc-900 hover:border-zinc-800 transition-colors"
           >
-            <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white tracking-tight">
+            <h3 className="text-xl font-heading font-bold text-white tracking-tight">
               Stack
             </h3>
-            <p className="font-code text-zinc-400 text-sm sm:text-base leading-relaxed max-w-md">
+            <p className="font-code text-zinc-400 text-xs sm:text-sm leading-relaxed">
               I operate across the full product lifecycle using <span className="text-emerald-400 font-medium">React</span>, <span className="text-emerald-400 font-medium">Node.js</span>, <span className="text-emerald-400 font-medium">TypeScript</span>, and modern CSS frameworks like <span className="text-white font-medium">Tailwind</span>. My philosophy prioritizes performance, accessibility, and modular design end-to-end.
             </p>
-            <div className="pt-2">
+            <div>
               <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={(e) => scrollToSection(e, 'skills')}
-                className="bg-zinc-950/90 border border-zinc-800 hover:border-zinc-500 text-white font-code text-xs sm:text-sm px-6 py-2.5 rounded-full inline-flex items-center gap-2 transition-all hover:bg-zinc-900 shadow-lg cursor-pointer"
+                className="bg-zinc-950 border border-zinc-800 hover:border-zinc-600 text-white font-code text-xs px-4 py-2 rounded-full inline-flex items-center gap-1.5 transition-all cursor-pointer"
               >
                 View Stack
-                <ArrowUpRight size={16} strokeWidth={2.5} />
+                <ArrowUpRight size={14} strokeWidth={2.5} />
               </motion.button>
             </div>
           </motion.div>
