@@ -65,18 +65,18 @@ function buildGrid(weeks, year) {
   let cur = new Date(startDate);
 
   while (cur <= endDate) {
-    const y   = cur.getFullYear();
-    const mo  = String(cur.getMonth() + 1).padStart(2, '0');
-    const d   = String(cur.getDate()).padStart(2, '0');
+    const y = cur.getFullYear();
+    const mo = String(cur.getMonth() + 1).padStart(2, '0');
+    const d = String(cur.getDate()).padStart(2, '0');
     const key = `${y}-${mo}-${d}`;
 
-    const isCurrentYear  = y === year;
-    const isPastOrToday  = isCurrentYear && cur <= today;
-    const apiDay         = dayMap[key];
-    const level          = apiDay ? (LEVEL_MAP[apiDay.contributionLevel] ?? 0) : 0;
+    const isCurrentYear = y === year;
+    const isPastOrToday = isCurrentYear && cur <= today;
+    const apiDay = dayMap[key];
+    const level = apiDay ? (LEVEL_MAP[apiDay.contributionLevel] ?? 0) : 0;
 
     days.push({
-      date:  new Date(cur),
+      date: new Date(cur),
       count: apiDay?.contributionCount ?? 0,
       level: isPastOrToday ? COLOR_LEVELS[level] : 'bg-zinc-900/30',
     });
@@ -89,13 +89,13 @@ function buildGrid(weeks, year) {
 
 /** Compute pixel-accurate month label positions */
 function buildMonthHeaders(days, year) {
-  const names      = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const totalWeeks = Math.ceil(days.length / 7);
-  const headers    = [];
+  const headers = [];
 
   for (let w = 0; w < totalWeeks; w++) {
     const wStart = days[w * 7].date;
-    const wEnd   = days[w * 7 + 6].date;
+    const wEnd = days[w * 7 + 6].date;
 
     for (let m = 0; m < 12; m++) {
       const first = new Date(year, m, 1);
@@ -111,7 +111,7 @@ function buildMonthHeaders(days, year) {
 /** Shimmer skeleton for while loading */
 function ContribSkeleton() {
   return (
-    <div className="flex items-start gap-1.5 animate-pulse">
+    <div className="flex items-start gap-1.5 animate-pulse min-w-max">
       <div className="shrink-0 w-7" style={{ height: 95 }} />
       <div className="flex flex-col gap-1">
         <div className="h-4 w-64 rounded bg-zinc-800/60" />
@@ -130,10 +130,10 @@ function ContribSkeleton() {
 }
 
 const About = () => {
-  const [weeks,        setWeeks]        = useState(null);   // raw API weeks
+  const [weeks, setWeeks] = useState(null);   // raw API weeks
   const [totalContrib, setTotalContrib] = useState(null);
-  const [loading,      setLoading]      = useState(true);
-  const [error,        setError]        = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const scrollToSection = (e, sectionId) => {
     e.preventDefault();
@@ -145,17 +145,17 @@ const About = () => {
     setError(false);
     try {
       const res = await fetch('https://api.github.com/graphql', {
-        method:  'POST',
+        method: 'POST',
         headers: {
-          'Content-Type':  'application/json',
-          Authorization:   `Bearer ${GITHUB_TOKEN}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
         },
         body: JSON.stringify({
           query: GH_QUERY,
           variables: {
             login: GITHUB_USERNAME,
-            from:  `${YEAR}-01-01T00:00:00Z`,
-            to:    `${YEAR}-12-31T23:59:59Z`,
+            from: `${YEAR}-01-01T00:00:00Z`,
+            to: `${YEAR}-12-31T23:59:59Z`,
           },
         }),
       });
@@ -252,17 +252,17 @@ const About = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mt-8 p-4 sm:p-5 rounded-2xl bg-zinc-950/40 border border-zinc-900 space-y-3 w-fit mx-auto"
+          className="mt-8 p-4 sm:p-5 rounded-2xl bg-zinc-950/40 border border-zinc-900 space-y-3 w-full max-w-full mx-auto"
         >
           {/* Header */}
-          <div className="flex items-center justify-between text-zinc-300 text-xs font-code font-medium gap-8">
+          <div className="flex flex-wrap items-center justify-between text-zinc-300 text-xs font-code font-medium gap-2 sm:gap-8">
             <div className="flex items-center gap-2">
-              <GitCommit size={14} className="text-emerald-400" />
+              <GitCommit size={14} className="text-emerald-400 shrink-0" />
               <span>
                 GitHub Contributions
                 <span className="text-emerald-400 font-semibold ml-1">({YEAR})</span>
                 {totalContrib !== null && (
-                  <span className="text-zinc-500 ml-2 font-normal">
+                  <span className="text-zinc-500 ml-2 font-normal hidden sm:inline">
                     — {totalContrib.toLocaleString()} total
                   </span>
                 )}
@@ -290,7 +290,7 @@ const About = () => {
           </div>
 
           {/* Grid Container */}
-          <div className="py-1">
+          <div className="py-1 overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
             {loading ? (
               <ContribSkeleton />
             ) : error ? (
@@ -306,7 +306,7 @@ const About = () => {
               </div>
             ) : (
               /* Calendar */
-              <div className="flex items-start gap-1.5">
+              <div className="flex items-start gap-1.5 min-w-max pb-2">
 
                 {/* Day-of-week labels — precisely positioned per row */}
                 {/* Cell stride: 11px cell + 3px gap = 14px per row */}
