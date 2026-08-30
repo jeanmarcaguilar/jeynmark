@@ -1,9 +1,12 @@
+// ==========================================
+// FILE 2: src/components/About.jsx
+// ==========================================
+
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, GitCommit, RefreshCw } from 'lucide-react';
 import profileImg from '../assets/images/profile.jpg';
 
-const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
 const GITHUB_USERNAME = import.meta.env.VITE_GITHUB_USERNAME || 'jeanmarcaguilar';
 const YEAR = new Date().getFullYear();
 
@@ -45,19 +48,16 @@ const GH_QUERY = `
 /** Build Sun-aligned grid from API weeks data */
 function buildGrid(weeks, year) {
   const today = new Date();
-  today.setHours(23, 59, 59, 999); // include the full current day
+  today.setHours(23, 59, 59, 999);
 
-  // Flatten API days into a lookup map
   const dayMap = {};
   weeks.forEach(week =>
     week.contributionDays.forEach(d => { dayMap[d.date] = d; })
   );
 
-  // Start: Sunday before Jan 1 of year
   const startDate = new Date(year, 0, 1);
   startDate.setDate(startDate.getDate() - startDate.getDay());
 
-  // End: Saturday after Dec 31 of year
   const endDate = new Date(year, 11, 31);
   endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
 
@@ -65,18 +65,18 @@ function buildGrid(weeks, year) {
   let cur = new Date(startDate);
 
   while (cur <= endDate) {
-    const y = cur.getFullYear();
-    const mo = String(cur.getMonth() + 1).padStart(2, '0');
-    const d = String(cur.getDate()).padStart(2, '0');
+    const y   = cur.getFullYear();
+    const mo  = String(cur.getMonth() + 1).padStart(2, '0');
+    const d   = String(cur.getDate()).padStart(2, '0');
     const key = `${y}-${mo}-${d}`;
 
-    const isCurrentYear = y === year;
-    const isPastOrToday = isCurrentYear && cur <= today;
-    const apiDay = dayMap[key];
-    const level = apiDay ? (LEVEL_MAP[apiDay.contributionLevel] ?? 0) : 0;
+    const isCurrentYear  = y === year;
+    const isPastOrToday  = isCurrentYear && cur <= today;
+    const apiDay         = dayMap[key];
+    const level          = apiDay ? (LEVEL_MAP[apiDay.contributionLevel] ?? 0) : 0;
 
     days.push({
-      date: new Date(cur),
+      date:  new Date(cur),
       count: apiDay?.contributionCount ?? 0,
       level: isPastOrToday ? COLOR_LEVELS[level] : 'bg-zinc-900/30',
     });
@@ -89,13 +89,13 @@ function buildGrid(weeks, year) {
 
 /** Compute pixel-accurate month label positions */
 function buildMonthHeaders(days, year) {
-  const names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const names      = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const totalWeeks = Math.ceil(days.length / 7);
-  const headers = [];
+  const headers    = [];
 
   for (let w = 0; w < totalWeeks; w++) {
     const wStart = days[w * 7].date;
-    const wEnd = days[w * 7 + 6].date;
+    const wEnd   = days[w * 7 + 6].date;
 
     for (let m = 0; m < 12; m++) {
       const first = new Date(year, m, 1);
@@ -130,10 +130,10 @@ function ContribSkeleton() {
 }
 
 const About = () => {
-  const [weeks, setWeeks] = useState(null);   // raw API weeks
+  const [weeks,        setWeeks]        = useState(null);
   const [totalContrib, setTotalContrib] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [loading,      setLoading]      = useState(true);
+  const [error,        setError]        = useState(false);
 
   const scrollToSection = (e, sectionId) => {
     e.preventDefault();
@@ -144,23 +144,28 @@ const About = () => {
     setLoading(true);
     setError(false);
     try {
-      const res = await fetch('https://api.github.com/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${GITHUB_TOKEN}`,
-        },
-        body: JSON.stringify({
-          query: GH_QUERY,
-          variables: {
-            login: GITHUB_USERNAME,
-            from: `${YEAR}-01-01T00:00:00Z`,
-            to: `${YEAR}-12-31T23:59:59Z`,
-          },
-        }),
-      });
+      // Direct client GraphQL fetch during local dev, Vercel endpoint in production
+      const endpoint = import.meta.env.DEV && import.meta.env.VITE_GITHUB_TOKEN
+        ? 'https://api.github.com/graphql'
+        : '/api/github-contributions';
 
+      const options = import.meta.env.DEV && import.meta.env.VITE_GITHUB_TOKEN
+        ? {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
+            },
+            body: JSON.stringify({
+              query: GH_QUERY,
+              variables: { login: GITHUB_USERNAME, from: `${YEAR}-01-01T00:00:00Z`, to: `${YEAR}-12-31T23:59:59Z` }
+            }),
+          }
+        : { method: 'GET' };
+
+      const res = await fetch(endpoint, options);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      
       const json = await res.json();
       if (json.errors) throw new Error(json.errors[0]?.message);
 
@@ -177,7 +182,6 @@ const About = () => {
 
   useEffect(() => { fetchContributions(); }, []);
 
-  // Build grid & month headers only when API data changes
   const { contributionData, monthHeaders } = useMemo(() => {
     if (!weeks) return { contributionData: [], monthHeaders: [] };
     const days = buildGrid(weeks, YEAR);
@@ -186,15 +190,12 @@ const About = () => {
 
   return (
     <section id="about" className="py-10 sm:py-16 bg-[#050505] text-white relative overflow-hidden select-none">
-      {/* Background Radial Glow */}
       <div className="absolute top-1/2 left-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* Top Grid: About Info + Profile Headshot */}
+        {/* Top Grid: Bio + Headshot */}
         <div className="grid lg:grid-cols-12 gap-8 items-center">
-
-          {/* Left Column: Bio */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -226,7 +227,6 @@ const About = () => {
             </div>
           </motion.div>
 
-          {/* Right Column: Headshot Photo */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -243,7 +243,6 @@ const About = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 pointer-events-none" />
             </div>
           </motion.div>
-
         </div>
 
         {/* GitHub Contribution Heatmap */}
@@ -269,7 +268,6 @@ const About = () => {
               </span>
             </div>
             <div className="flex items-center gap-3">
-              {/* Refresh button */}
               <button
                 onClick={fetchContributions}
                 title="Refresh contributions"
@@ -294,7 +292,6 @@ const About = () => {
             {loading ? (
               <ContribSkeleton />
             ) : error ? (
-              /* Error state */
               <div className="flex flex-col items-center justify-center gap-2 py-6 text-zinc-600 font-code text-xs">
                 <span>Failed to load contribution data.</span>
                 <button
@@ -305,12 +302,7 @@ const About = () => {
                 </button>
               </div>
             ) : (
-              /* Calendar */
               <div className="flex items-start gap-1.5 min-w-max pb-2">
-
-                {/* Day-of-week labels — precisely positioned per row */}
-                {/* Cell stride: 11px cell + 3px gap = 14px per row */}
-                {/* Sun=row0(top=0), Mon=row1(top=14), Wed=row3(top=42), Fri=row5(top=70) */}
                 <div
                   className="relative shrink-0 w-7 text-[9px] text-zinc-600 font-code select-none"
                   style={{ height: 11 * 7 + 3 * 6 }}
@@ -320,10 +312,7 @@ const About = () => {
                   <span className="absolute" style={{ top: 70 }}>Fri</span>
                 </div>
 
-                {/* Month labels + cell grid */}
                 <div className="flex flex-col gap-1">
-
-                  {/* Month header row — left offset = (colStart-1) × 14px stride */}
                   <div className="relative h-4 text-[10px] text-zinc-500 font-code">
                     {monthHeaders.map((m) => (
                       <span
@@ -336,7 +325,6 @@ const About = () => {
                     ))}
                   </div>
 
-                  {/* Contribution cells */}
                   <div className="grid grid-rows-7 grid-flow-col" style={{ gap: 3 }}>
                     {contributionData.map((item, idx) => (
                       <div
@@ -347,7 +335,6 @@ const About = () => {
                       />
                     ))}
                   </div>
-
                 </div>
               </div>
             )}
@@ -367,8 +354,6 @@ const About = () => {
 
         {/* Bottom Grid: Education & Stack */}
         <div className="grid md:grid-cols-2 gap-6 mt-6">
-
-          {/* Education Block */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -395,7 +380,6 @@ const About = () => {
             </div>
           </motion.div>
 
-          {/* Stack Block */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -421,7 +405,6 @@ const About = () => {
               </motion.button>
             </div>
           </motion.div>
-
         </div>
 
       </div>
