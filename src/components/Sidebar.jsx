@@ -111,8 +111,8 @@ const Sidebar = () => {
     const distFromCenter = Math.abs(offset);
     const scale = distFromCenter === 0 ? 1 : Math.max(0.7, 1 - distFromCenter * 0.08);
 
-    // Opacity: active item = 1 (fully opaque), all other items = 0.55 (clearly visible and clickable)
-    const opacity = distFromCenter === 0 ? 1 : 0.55;
+    // Symmetric Opacity: active = 1, 1 neighbor above/below = 0.5, 2+ steps away = 0
+    const opacity = distFromCenter === 0 ? 1 : distFromCenter === 1 ? 0.5 : 0;
 
     return { y, scale, opacity };
   };
@@ -148,7 +148,7 @@ const Sidebar = () => {
         </div>
 
         {/* ── Wheel Navigation ── */}
-        <div className="flex-1 relative flex items-center justify-start pl-16 pb-100">
+        <div className="flex-1 relative flex items-center justify-start pl-16 pb-55">
           {/* Nav items in a straight vertical line */}
           <div className="relative flex flex-col items-start" style={{ height: '360px' }}>
             {navItems.map((item, index) => {
@@ -163,6 +163,7 @@ const Sidebar = () => {
                   style={{
                     left: '0px',
                     top: '50%',
+                    pointerEvents: opacity === 0 ? 'none' : 'auto',
                   }}
                   animate={{
                     y: y,
