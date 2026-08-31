@@ -401,3 +401,107 @@ html {
   }
 }
 
+/* ══════════════════════════════════════════════
+   Vertical Carousel / Wheel Navigation
+   ══════════════════════════════════════════════ */
+
+/* Glow pulse keyframe for active ring */
+@keyframes wheelGlowPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 15px rgba(0, 255, 157, 0.4),
+      0 0 30px rgba(0, 255, 157, 0.2),
+      0 0 50px rgba(0, 255, 157, 0.1),
+      inset 0 0 10px rgba(0, 255, 157, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(0, 255, 157, 0.5),
+      0 0 40px rgba(0, 255, 157, 0.25),
+      0 0 60px rgba(0, 255, 157, 0.12),
+      inset 0 0 15px rgba(0, 255, 157, 0.2);
+  }
+}
+
+/* Individual nav icon circle */
+.wheel-nav-item {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.wheel-nav-item:hover {
+  border-color: rgba(0, 255, 157, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 255, 157, 0.06);
+}
+
+/* Active state — large, glowing ring */
+.wheel-nav-active {
+  width: 64px;
+  height: 64px;
+  border: 2.5px solid #00FF9D;
+  background: rgba(0, 255, 157, 0.08);
+  color: #00FF9D;
+  animation: wheelGlowPulse 3s ease-in-out infinite;
+}
+
+.wheel-nav-active:hover {
+  border-color: #00FF9D;
+  color: #00FF9D;
+  background: rgba(0, 255, 157, 0.12);
+}
+
+/* Active label pill next to the active item */
+.wheel-nav-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #050706;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(0, 255, 157, 0.08);
+}
+
+/* Horizontal indicator notch next to active */
+.wheel-nav-notch {
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
+  background: #00FF9D;
+  box-shadow: 0 0 10px rgba(0, 255, 157, 0.6);
+}
+
+/* The curved arc SVG track */
+.wheel-arc-track {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.wheel-arc-track path {
+  fill: none;
+  stroke: rgba(0, 255, 157, 0.12);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 157, 0.08));
+}
+
