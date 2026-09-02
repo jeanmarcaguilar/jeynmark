@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Code2, ExternalLink, Sparkles, Target, Lightbulb, ArrowUpRight } from 'lucide-react';
+import { ExpandableList, FeatureGrid } from './ProjectInsights';
 
 const ProjectModal = ({ project, onClose }) => {
   if (!project) return null;
@@ -145,20 +146,7 @@ const ProjectModal = ({ project, onClose }) => {
                   </div>
                   <h4 className="text-sm font-semibold text-white/80 tracking-wide">Features</h4>
                 </div>
-                <ul className="space-y-2.5 pl-1">
-                  {project.features.map((feature, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.25 + i * 0.05 }}
-                      className="flex items-start gap-3 text-[#a1a1aa] text-[0.82rem] leading-relaxed"
-                    >
-                      <span className="w-1 h-1 rounded-full bg-white/25 mt-2 shrink-0" />
-                      <span>{feature}</span>
-                    </motion.li>
-                  ))}
-                </ul>
+                <FeatureGrid features={project.features} />
               </motion.div>
 
               {/* Divider */}
@@ -188,13 +176,13 @@ const ProjectModal = ({ project, onClose }) => {
               </motion.div>
 
               {/* Challenges & Learnings - side by side on desktop */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8 items-stretch">
                 {/* Challenges */}
                 <motion.div
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.35 }}
-                  className="rounded-xl p-5"
+                  className="rounded-xl p-5 flex flex-col"
                   style={{
                     background: 'rgba(255, 255, 255, 0.02)',
                     border: '1px solid rgba(255, 255, 255, 0.05)',
@@ -211,7 +199,7 @@ const ProjectModal = ({ project, onClose }) => {
                     </div>
                     <h4 className="text-xs font-semibold text-white/70 tracking-wider uppercase">Challenges</h4>
                   </div>
-                  <p className="text-[#71717a] text-[0.78rem] leading-relaxed">{project.challenges}</p>
+                  <ExpandableList items={project.challenges} initialCount={3} />
                 </motion.div>
 
                 {/* What I Learned */}
@@ -219,7 +207,7 @@ const ProjectModal = ({ project, onClose }) => {
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="rounded-xl p-5"
+                  className="rounded-xl p-5 flex flex-col"
                   style={{
                     background: 'rgba(255, 255, 255, 0.02)',
                     border: '1px solid rgba(255, 255, 255, 0.05)',
@@ -236,7 +224,7 @@ const ProjectModal = ({ project, onClose }) => {
                     </div>
                     <h4 className="text-xs font-semibold text-white/70 tracking-wider uppercase">What I Learned</h4>
                   </div>
-                  <p className="text-[#71717a] text-[0.78rem] leading-relaxed">{project.learned}</p>
+                  <ExpandableList items={project.learned} initialCount={3} numbered />
                 </motion.div>
               </div>
 

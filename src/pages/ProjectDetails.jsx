@@ -3,9 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, ArrowUpRight, Code2, ExternalLink,
-  Sparkles, Target, Lightbulb, CheckCircle2, ChevronLeft, ChevronRight
+  Sparkles, Target, Lightbulb, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { projects } from '../data/projects';
+import { ExpandableList, FeatureGrid } from '../components/ProjectInsights';
 
 /* ─── Interactive Image Carousel ─────────────────────────── */
 const ProjectImageCarousel = ({ project }) => {
@@ -226,7 +227,7 @@ const ProjectDetails = () => {
             ))}
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-heading font-extrabold text-white tracking-tight leading-tight mb-4">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-heading font-extrabold text-white tracking-tight leading-tight mb-4">
             {project.title}
           </h1>
 
@@ -251,7 +252,7 @@ const ProjectDetails = () => {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="p-6 sm:p-8 rounded-2xl bg-zinc-950/60 border border-zinc-900 space-y-4"
             >
-              <h2 className="text-xl font-heading font-bold text-white tracking-tight flex items-center gap-2">
+              <h2 className="text-lg font-heading font-bold text-white tracking-tight flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />
                 Project Overview
               </h2>
@@ -265,30 +266,24 @@ const ProjectDetails = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.35 }}
-              className="p-6 sm:p-8 rounded-2xl bg-zinc-950/60 border border-zinc-900 space-y-6"
+              className="p-6 sm:p-8 rounded-2xl bg-zinc-950/60 border border-zinc-900 space-y-5"
             >
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
-                  <Sparkles size={16} />
-                </div>
-                <h2 className="text-xl font-heading font-bold text-white tracking-tight">
-                  Key Features
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {project.features?.map((feature, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-xl bg-zinc-900/40 border border-white/5 flex items-start gap-3 hover:border-emerald-500/30 transition-colors"
-                  >
-                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
-                    <span className="text-xs sm:text-sm text-zinc-300 font-code leading-relaxed">
-                      {feature}
-                    </span>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
+                    <Sparkles size={16} />
                   </div>
-                ))}
+                  <h2 className="text-xl font-heading font-bold text-white tracking-tight">
+                    Key Features
+                  </h2>
+                </div>
+                {project.features?.length > 0 && (
+                  <span className="text-[10px] font-code text-zinc-500 tracking-wider uppercase">
+                    {project.features.length} items
+                  </span>
+                )}
               </div>
+              <FeatureGrid key={`features-${project.id}`} features={project.features} />
             </motion.section>
 
             {/* Challenges & Learnings */}
@@ -296,11 +291,11 @@ const ProjectDetails = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch"
             >
               {/* Challenges */}
-              <div className="p-6 rounded-2xl bg-zinc-950/60 border border-zinc-900 space-y-3 hover:border-zinc-800 transition-colors">
-                <div className="flex items-center gap-2.5">
+              <div className="p-6 rounded-2xl bg-zinc-950/60 border border-zinc-900 flex flex-col hover:border-emerald-500/20 transition-colors">
+                <div className="flex items-center gap-2.5 mb-4">
                   <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
                     <Target size={14} />
                   </div>
@@ -308,25 +303,12 @@ const ProjectDetails = () => {
                     Challenges
                   </h3>
                 </div>
-                {Array.isArray(project.challenges) ? (
-                  <ul className="space-y-2.5 pl-1">
-                    {project.challenges.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-zinc-400 font-code leading-relaxed">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-xs sm:text-sm text-zinc-400 font-code leading-relaxed">
-                    {project.challenges}
-                  </p>
-                )}
+                <ExpandableList key={`challenges-${project.id}`} items={project.challenges} initialCount={4} />
               </div>
 
               {/* What I Learned */}
-              <div className="p-6 rounded-2xl bg-zinc-950/60 border border-zinc-900 space-y-3 hover:border-zinc-800 transition-colors">
-                <div className="flex items-center gap-2.5">
+              <div className="p-6 rounded-2xl bg-zinc-950/60 border border-zinc-900 flex flex-col hover:border-emerald-500/20 transition-colors">
+                <div className="flex items-center gap-2.5 mb-4">
                   <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
                     <Lightbulb size={14} />
                   </div>
@@ -334,20 +316,7 @@ const ProjectDetails = () => {
                     What I Learned
                   </h3>
                 </div>
-                {Array.isArray(project.learned) ? (
-                  <ul className="space-y-2.5 pl-1">
-                    {project.learned.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-zinc-400 font-code leading-relaxed">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-xs sm:text-sm text-zinc-400 font-code leading-relaxed">
-                    {project.learned}
-                  </p>
-                )}
+                <ExpandableList key={`learned-${project.id}`} items={project.learned} initialCount={4} numbered />
               </div>
             </motion.div>
 

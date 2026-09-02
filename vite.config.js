@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fetchGithubContributions } from './lib/githubContributions.js'
+import { fetchSpotifyNowPlaying } from './lib/spotifyNowPlaying.js'
 
 function githubContributionsPlugin(env) {
   let memoryCache = null
@@ -54,12 +55,64 @@ function githubContributionsPlugin(env) {
   }
 }
 
+function spotifyNowPlayingPlugin(env) {
+  let memoryCache = null
+  let memoryCachedAt = 0
+  const MEMORY_TTL_MS = 8 * 1000
+
+  const handle = async (req, res, next) => {
+    const pathname = req.url?.split('?')[0]
+    if (pathname !== '/api/spotify-now-playing') {
+      next()
+      return
+    }
+
+    try {
+      if (memoryCache && Date.now() - memoryCachedAt < MEMORY_TTL_MS) {
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json')
+        res.setHeader('Cache-Control', 'public, max-age=8')
+        res.end(JSON.stringify(memoryCache))
+        return
+      }
+
+      const { status, body } = await fetchSpotifyNowPlaying({
+        clientId: env.SPOTIFY_CLIENT_ID,
+        clientSecret: env.SPOTIFY_CLIENT_SECRET,
+        refreshToken: env.SPOTIFY_REFRESH_TOKEN,
+      })
+      if (status === 200) {
+        memoryCache = body
+        memoryCachedAt = Date.now()
+      }
+      res.statusCode = status
+      res.setHeader('Content-Type', 'application/json')
+      res.setHeader('Cache-Control', body?.configured === false ? 'no-store' : 'public, max-age=8')
+      res.end(JSON.stringify(body))
+    } catch (error) {
+      res.statusCode = 500
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify({ error: error.message }))
+    }
+  }
+
+  return {
+    name: 'spotify-now-playing-api',
+    configureServer(server) {
+      server.middlewares.use(handle)
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(handle)
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    plugins: [react(), githubContributionsPlugin(env)],
+    plugins: [react(), githubContributionsPlugin(env), spotifyNowPlayingPlugin(env)],
     server: {
       port: 5173,
       open: true

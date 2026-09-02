@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import SpotifyNowPlaying from './SpotifyNowPlaying';
 
 const Hero = () => {
-  const spotifyTrackUrl = "https://open.spotify.com/embed/track/4cOdK2wGLETKBW3PvgPWqT?utm_source=generator&theme=0";
 
   const scrollToSection = (e, sectionId) => {
     e.preventDefault();
@@ -74,7 +74,7 @@ const Hero = () => {
           >
             <div className="border-r border-zinc-800/80 pr-8 sm:pr-14 text-center">
               <div className="text-3xl sm:text-5xl font-extrabold text-white flex items-center justify-center">
-                5<span className="text-[#00FF9D]">+</span>
+                4<span className="text-[#00FF9D]"></span>
               </div>
               <div className="text-xs sm:text-sm font-mono text-zinc-400 tracking-widest uppercase mt-2">
                 YEARS EXP.
@@ -83,7 +83,7 @@ const Hero = () => {
 
             <div className="border-r border-zinc-800/80 pr-8 sm:pr-14 text-center">
               <div className="text-3xl sm:text-5xl font-extrabold text-white flex items-center justify-center">
-                40<span className="text-[#00FF9D]">+</span>
+                10<span className="text-[#00FF9D]"></span>
               </div>
               <div className="text-xs sm:text-sm font-mono text-zinc-400 tracking-widest uppercase mt-2">
                 PROJECTS
@@ -135,19 +135,7 @@ const Hero = () => {
             transition={{ duration: 0.7, delay: 0.5 }}
             className="w-full max-w-md mx-auto pt-4"
           >
-            <div className="bg-[#07130c]/90 backdrop-blur-xl border border-emerald-500/30 rounded-2xl p-2.5 shadow-[0_0_35px_rgba(0,255,157,0.12)]">
-              <iframe
-                style={{ borderRadius: '12px' }}
-                src={spotifyTrackUrl}
-                width="100%"
-                height="80"
-                frameBorder="0"
-                allowFullScreen=""
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-                title="Spotify Music Player"
-              />
-            </div>
+            <SpotifyNowPlaying />
           </motion.div>
 
         </div>

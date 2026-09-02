@@ -34,7 +34,7 @@ const FeaturedCard = ({ project, onSelect }) => (
     </div>
 
     {/* Screenshot */}
-    <div className="relative aspect-16/10 overflow-hidden">
+    <div className="relative aspect-16/9 overflow-hidden">
       <img
         src={project.image}
         alt={project.title}
@@ -45,7 +45,7 @@ const FeaturedCard = ({ project, onSelect }) => (
     </div>
 
     {/* Info strip */}
-    <div className="relative px-5 sm:px-6 pt-4 pb-5">
+    <div className="relative px-6 sm:px-8 pt-5 pb-6">
       {/* FEATURED badge */}
       <span className="inline-block mb-2 text-[10px] font-bold tracking-[0.2em] text-emerald-400 font-code">
         FEATURED
@@ -61,9 +61,9 @@ const FeaturedCard = ({ project, onSelect }) => (
         {project.description}
       </p>
 
-      {/* Tech tags */}
+      {/* Tech tags — full list from projects.js */}
       <div className="flex flex-wrap gap-2">
-        {project.technologies.slice(0, 4).map((tech) => (
+        {project.technologies.map((tech) => (
           <span
             key={tech}
             className="px-3 py-1 rounded-full text-[11px] font-code font-medium text-emerald-300 bg-emerald-500/10 border border-emerald-400/20 group-hover:border-emerald-400/40 transition-colors duration-300"
@@ -83,7 +83,7 @@ const SideCard = ({ project, rotateY, onClick }) => (
     style={{ transform: `rotateY(${rotateY}deg) scale(0.92)` }}
     onClick={onClick}
   >
-    <div className="relative aspect-16/10 overflow-hidden">
+    <div className="relative aspect-16/9 overflow-hidden">
       <img
         src={project.image}
         alt={project.title}
@@ -98,7 +98,7 @@ const SideCard = ({ project, rotateY, onClick }) => (
       </h3>
       <p className="text-zinc-500 text-xs leading-relaxed line-clamp-2">{project.description}</p>
       <div className="flex flex-wrap gap-1 mt-2">
-        {project.technologies.slice(0, 3).map((t) => (
+        {project.technologies.map((t) => (
           <span
             key={t}
             className="text-[9px] font-code text-zinc-500 border border-white/8 px-1.5 py-0.5 rounded-full"
@@ -203,7 +203,7 @@ const Projects = () => {
         }}
       />
 
-      <div className="max-w-5xl mx-auto w-full px-4 sm:px-8 lg:px-10 relative z-10">
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 relative z-10">
         {/* ── Header ── */}
         <div className="text-center mb-14 sm:mb-20">
 
@@ -238,7 +238,7 @@ const Projects = () => {
             type="button"
             onClick={goPrev}
             aria-label="Previous project"
-            className="absolute left-0 sm:-left-2 lg:-left-6 z-30 w-10 h-10 flex items-center justify-center rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-zinc-300 hover:text-emerald-400 hover:border-emerald-400/30 transition-all duration-200 shadow-lg"
+            className="absolute left-0 sm:-left-1 lg:-left-4 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-zinc-300 hover:text-emerald-400 hover:border-emerald-400/30 transition-all duration-200 shadow-lg"
           >
             <ChevronLeft size={18} />
           </button>
@@ -248,18 +248,18 @@ const Projects = () => {
             type="button"
             onClick={goNext}
             aria-label="Next project"
-            className="absolute right-0 sm:-right-2 lg:-right-6 z-30 w-10 h-10 flex items-center justify-center rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-zinc-300 hover:text-emerald-400 hover:border-emerald-400/30 transition-all duration-200 shadow-lg"
+            className="absolute right-0 sm:-right-1 lg:-right-4 z-30 w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-zinc-300 hover:text-emerald-400 hover:border-emerald-400/30 transition-all duration-200 shadow-lg"
           >
             <ChevronRight size={18} />
           </button>
 
           {/* Stage */}
-          <div className="relative w-full max-w-5xl mx-auto flex items-center justify-center px-4 sm:px-8">
+          <div className="relative w-full mx-auto flex items-center justify-center px-2 sm:px-4">
 
             {/* Prev card */}
             <motion.div
               key={`prev-${prevIdx}`}
-              className="absolute left-4 sm:left-8 w-[35%] sm:w-[32%] hidden sm:block"
+              className="absolute left-0 sm:left-2 w-[38%] lg:w-[34%] hidden sm:block"
               initial={{ opacity: 0, x: '-10%' }}
               animate={{ opacity: 0.45, x: '0%' }}
               transition={{ duration: 0.55, ease: [0.32, 0.72, 0, 1] }}
@@ -269,7 +269,7 @@ const Projects = () => {
             </motion.div>
 
             {/* Center (featured) card */}
-            <div className="relative z-10 w-full sm:w-[50%] max-w-xl mx-auto">
+            <div className="relative z-10 w-full sm:w-[62%] lg:w-[58%] max-w-3xl mx-auto">
               <AnimatePresence mode="popLayout" custom={direction}>
                 <motion.div
                   key={currentIndex}
@@ -290,7 +290,7 @@ const Projects = () => {
             {/* Next card */}
             <motion.div
               key={`next-${nextIdx}`}
-              className="absolute right-4 sm:right-8 w-[35%] sm:w-[32%] hidden sm:block"
+              className="absolute right-0 sm:right-2 w-[38%] lg:w-[34%] hidden sm:block"
               initial={{ opacity: 0, x: '10%' }}
               animate={{ opacity: 0.45, x: '0%' }}
               transition={{ duration: 0.55, ease: [0.32, 0.72, 0, 1] }}

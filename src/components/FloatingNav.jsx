@@ -229,7 +229,7 @@ const FloatingNav = () => {
           <div className="flex items-center gap-3">
             {[
               { href: 'https://github.com/jeanmarcaguilar', icon: GithubIcon,   label: 'GitHub'   },
-              { href: 'https://linkedin.com/in/jeanmarcaguilar', icon: LinkedinIcon, label: 'LinkedIn' },
+              { href: 'https://www.linkedin.com/in/jiim/', icon: LinkedinIcon, label: 'LinkedIn' },
               { href: '#contact', icon: Mail, label: 'Email', onClick: (e) => scrollTo(e, 'contact') },
             ].map(({ href, icon: Icon, label, onClick }) => (
               <a

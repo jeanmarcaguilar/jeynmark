@@ -24,8 +24,21 @@ export const projects = [
       "MySQL database integration",
       "Secure CRUD operations"
     ],
-    challenges: "Designing a database structure that properly connects vehicles, parking spaces, and transactions. Implementing accurate parking fee calculations based on duration and parking rates. Managing parking-space availability dynamically during check-in and check-out. Preventing duplicate or conflicting parking transactions. Creating a responsive interface that remains easy to use across different screen sizes. Handling data validation and maintaining consistency between the frontend and backend. Integrating PHP, MySQL, JavaScript, and API-based data handling into a single application.",
-    learned: "Developing ParkSense strengthened my understanding of full-stack web development and real-world system design. I learned how to structure relational databases, implement CRUD operations using PHP and MySQL, process and validate user input, manage application state, and develop automated business logic such as parking fee calculation. I also gained practical experience in designing responsive interfaces, connecting frontend components with backend services, handling database relationships, debugging application issues, and organizing a complete web application for maintainability and future expansion.",
+    challenges: [
+      "Relating vehicles, spaces, and transactions in one database",
+      "Calculating fees accurately from duration and rates",
+      "Updating space availability on check-in and check-out",
+      "Preventing duplicate or conflicting parking sessions",
+      "Keeping the UI usable on both desktop and mobile",
+      "Validating data so frontend and backend stay in sync"
+    ],
+    learned: [
+      "How to design relational data for a real business workflow",
+      "CRUD, validation, and state handling with PHP and MySQL",
+      "Building automated logic such as parking fee calculation",
+      "Connecting a responsive UI to backend services",
+      "Structuring a full-stack app so it stays maintainable"
+    ],
     image: "/projects/parksense/p.png",
     images: [
       "/projects/parksense/p.png",
@@ -62,8 +75,20 @@ export const projects = [
       "Secure data management",
       "Database-driven record keeping"
     ],
-    challenges: "Designing an efficient visitor registration workflow using QR codes. Connecting QR code scans with accurate visitor records. Preventing duplicate or incomplete visitor registrations. Managing visitor check-in and check-out records. Organizing administrative and visitor data within a structured database. Protecting sensitive visitor and organizational information. Creating a simple registration process that visitors can easily use from their mobile devices. Ensuring the system remains responsive and accessible across different devices.",
-    learned: "Developing the Microfinance Administrative System improved my understanding of building business-oriented web applications and implementing digital workflows. I learned how to integrate QR codes into a visitor management process, connect scanned QR codes to database records, and design systems that reduce manual administrative tasks. The project also strengthened my skills in PHP, MySQL, CRUD operations, data validation, database management, responsive interface development, and user-focused system design. Most importantly, I learned how technology can be used to transform traditional administrative processes into more organized, efficient, and trackable digital workflows.",
+    challenges: [
+      "Mapping QR scans to the correct visitor records",
+      "Preventing duplicate or incomplete registrations",
+      "Tracking check-in and check-out without gaps",
+      "Protecting sensitive visitor and org data",
+      "Making mobile registration simple for first-time visitors"
+    ],
+    learned: [
+      "How to wire QR codes into a visitor workflow",
+      "Connecting scans to database records reliably",
+      "Reducing manual admin work with a digital process",
+      "PHP, MySQL, validation, and responsive UI in one system",
+      "Turning paper-based admin tasks into a trackable workflow"
+    ],
     image: "/projects/admin/a.jpg",
     images: [
       "/projects/admin/a.jpg",
@@ -94,8 +119,21 @@ export const projects = [
       "REST API Integration — Connect the application with external services and automation workflows.",
       "Responsive Interface — Designed to provide a clean and accessible experience across desktop and mobile devices."
     ],
-    challenges: "Designing an efficient ticket workflow that could handle different types of IT support requests. Creating reliable automation workflows while preventing duplicate or unnecessary actions. Connecting the web application with n8n through REST APIs and handling data between different systems. Managing different ticket states and ensuring that automated actions occur at the correct stage. Designing a simple interface that allows IT staff to quickly identify important tickets and take action. Handling errors and unexpected data during automated workflow execution. Maintaining a clear separation between the application's frontend, backend, API, and automation processes.",
-    learned: "Workflow Automation — Learned how to design automated IT support workflows using n8n and trigger actions based on specific events. API Integration — Gained practical experience working with REST APIs and connecting different applications and services. Backend Development — Improved my understanding of server-side logic, request handling, and application architecture. Ticket Management Systems — Learned how helpdesk platforms structure tickets, priorities, assignments, and status lifecycles. Automation Logic — Developed a better understanding of conditions, branching, triggers, and automated actions. Error Handling — Learned how to identify and handle failures within both application logic and automation workflows. System Architecture — Improved my ability to separate frontend, backend, database, API, and automation responsibilities. Problem Solving — Strengthened my ability to break down repetitive business processes and convert them into automated workflows.",
+    challenges: [
+      "Modeling a ticket flow for many kinds of IT requests",
+      "Preventing duplicate or noisy automation actions",
+      "Syncing the app with n8n over REST APIs",
+      "Firing automations only at the right ticket stage",
+      "Surfacing urgent tickets quickly for IT staff",
+      "Keeping frontend, backend, API, and n8n clearly separated"
+    ],
+    learned: [
+      "Designing n8n workflows triggered by real support events",
+      "Connecting services through REST APIs",
+      "How helpdesk tickets, priorities, and statuses actually work",
+      "Conditions, branching, and failure handling in automations",
+      "Splitting UI, backend, and workflow responsibilities cleanly"
+    ],
     image: "/projects/autodesk/a.png",
     images: [
       "/projects/autodesk/a.png",
@@ -135,8 +173,20 @@ export const projects = [
       "Admin management dashboard",
       "CRUD functionality"
     ],
-    challenges: "Designing a reliable system for connecting QR codes with registered items. Generating unique QR codes for every registered object. Ensuring scanned QR codes correctly redirect users to the appropriate item information. Protecting users' personal information while still providing enough information for item recovery. Managing different item statuses such as registered, lost, found, and returned. Implementing validation to prevent duplicate or invalid item records. Creating a simple and responsive interface that can be easily accessed from mobile devices.",
-    learned: "Developing the Lost Object Kit strengthened my understanding of how QR code technology can be integrated into real-world web applications. I learned how to generate and manage unique QR codes, connect QR-based identifiers to database records, implement CRUD operations using PHP and MySQL, and design workflows for tracking the status of lost and found items. The project also improved my understanding of data validation, user privacy, database relationships, responsive design, and creating practical technology solutions that address everyday problems.",
+    challenges: [
+      "Generating a unique QR code for every registered item",
+      "Routing scans to the right recovery page",
+      "Sharing recovery info without exposing private details",
+      "Tracking registered, lost, found, and returned states",
+      "Blocking duplicate or invalid item records"
+    ],
+    learned: [
+      "How QR identifiers map to database records",
+      "CRUD and validation with PHP and MySQL",
+      "Designing a lost-and-found status workflow",
+      "Balancing user privacy with useful recovery info",
+      "Building a mobile-friendly flow for everyday use"
+    ],
     image: "/projects/look/o.jpg",
     images: [
       "/projects/look/l.jpg",
@@ -176,8 +226,20 @@ export const projects = [
       "Responsive design",
       "Database-driven content management"
     ],
-    challenges: "Designing an intuitive booking process that visitors can easily understand. Organizing tourist destinations, tour guides, schedules, and bookings into a structured system. Preventing conflicting or duplicate tour bookings. Managing tour guide availability and schedules. Creating an interface that makes local destinations easy to discover and explore. Ensuring accurate booking status and visitor information. Designing the database relationships between destinations, guides, schedules, and bookings. Making the platform responsive and accessible across desktop and mobile devices.",
-    learned: "Developing the SJDM Local Tour Guide & Booking System strengthened my understanding of building service-oriented web applications and implementing real-world booking workflows. I learned how to design relational database structures for destinations, tour guides, schedules, and bookings while implementing CRUD operations and data validation. The project also improved my skills in creating user-friendly interfaces, managing booking states, handling availability, organizing dynamic content, and designing responsive web applications. Most importantly, I gained experience in transforming a local tourism concept into a practical digital platform that can make destinations and tour services more accessible to visitors.",
+    challenges: [
+      "Making the booking steps easy for first-time visitors",
+      "Modeling destinations, guides, schedules, and bookings",
+      "Preventing conflicting or duplicate tour bookings",
+      "Keeping guide availability in sync with the calendar",
+      "Helping visitors discover destinations quickly on mobile"
+    ],
+    learned: [
+      "Designing a booking workflow around real visitor needs",
+      "Relational modeling for tours, guides, and schedules",
+      "CRUD, validation, and booking-status handling",
+      "Managing availability without double-booking",
+      "Turning a local tourism idea into a usable platform"
+    ],
     image: "/projects/sjdm/b.jpg",
     images: [
       "/projects/sjdm/b.jpg",
@@ -219,25 +281,19 @@ export const projects = [
       "No traditional database required"
     ],
     challenges: [
-      "Designing reliable workflows without a traditional backend database",
-      "Maintaining consistent inventory data across external data sources",
+      "Running reliable workflows without a traditional database",
+      "Keeping inventory data consistent across Sheets and APIs",
       "Preventing duplicate procurement requests",
-      "Creating accurate low-stock and reorder conditions",
-      "Handling missing or invalid inventory information",
-      "Designing workflows that can recover from failed nodes or API requests",
-      "Connecting multiple services while maintaining a clean automation flow",
-      "Ensuring automated procurement actions are triggered only when specific business conditions are met"
+      "Setting accurate low-stock and reorder conditions",
+      "Recovering from failed nodes or API calls",
+      "Firing procurement only when business rules are met"
     ],
     learned: [
-      "How to design end-to-end business automation workflows using n8n",
-      "How to integrate multiple external services through APIs and webhooks",
-      "How to process and transform JSON data inside automation workflows",
-      "How to implement conditional business logic for inventory and procurement",
-      "How to create automated notifications and approval processes",
-      "How to build automation systems without depending on a traditional database",
-      "How to handle workflow errors, invalid data, and failed API requests",
-      "How automation can reduce repetitive manual tasks and improve operational efficiency",
-      "How to structure real-world procurement processes into reusable and maintainable workflows"
+      "End-to-end inventory automation with n8n",
+      "Connecting Sheets, email, and chat via APIs and webhooks",
+      "Conditional logic for stock and procurement",
+      "Error handling when data or APIs fail",
+      "Building operations flows without a custom backend"
     ],
     image: "/projects/smart/s.png",
     images: [
@@ -287,8 +343,21 @@ export const projects = [
       "Secure document and receipt uploads",
       "Responsive dashboard interface"
     ],
-    challenges: "Designing relationships between vehicles, drivers, trips, maintenance, fuel, and accident records while maintaining database integrity. Implementing a realistic trip request and vehicle assignment workflow with appropriate status transitions. Preventing conflicting vehicle and driver assignments during active trips. Building accurate fuel consumption, mileage, and operating-cost calculations. Implementing automated monitoring for insurance, registration, license, and maintenance expiration dates. Creating role-based permissions so users can only access functionality appropriate to their responsibilities. Maintaining historical fleet data without accidentally removing important records. Designing a scalable Laravel architecture that keeps complex business logic out of controllers and Blade views. Handling secure uploads for vehicle documents, receipts, and accident evidence. Presenting large amounts of fleet information through a clean, responsive, and easy-to-use dashboard.",
-    learned: "How to design and implement a complete Laravel application around real-world business workflows. How to build complex relational database structures using Laravel migrations and Eloquent relationships. How to implement authentication, authorization, middleware, and role-based access control. How to use Form Requests and Laravel validation to create secure and reliable forms. How to separate complex business logic into reusable service classes. How to implement automated tasks using Laravel Scheduler. How to build notification systems for maintenance and document expiration. How to manage and securely store uploaded files using Laravel Storage. How to calculate and analyze fleet metrics such as mileage, fuel consumption, maintenance costs, and vehicle utilization. How to create dashboards that transform database records into useful operational insights. How to maintain historical records and audit trails for business-critical data. How to design a scalable, maintainable, and professional Laravel application suitable for real-world use.",
+    challenges: [
+      "Relating vehicles, drivers, trips, fuel, and maintenance safely",
+      "Trip request and assignment with correct status transitions",
+      "Blocking conflicting vehicle or driver assignments",
+      "Accurate fuel, mileage, and operating-cost calculations",
+      "Role-based access for admins, managers, and drivers",
+      "Keeping Laravel business logic out of controllers and views"
+    ],
+    learned: [
+      "Building Laravel around real fleet operations, not just CRUD",
+      "Eloquent relationships, policies, and Form Requests",
+      "Service classes, scheduler jobs, and notifications",
+      "Secure file storage for documents and receipts",
+      "Turning fleet records into dashboard insights"
+    ],
     image: "/projects/fleet/f.png",
     images: [
       "/projects/fleet/f.png",

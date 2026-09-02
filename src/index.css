@@ -15,6 +15,20 @@
   animation: marquee 25s linear infinite;
 }
 
+@keyframes eq-bar {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+
+.eq-bar {
+  height: 8px;
+  animation: eq-bar 0.9s ease-in-out infinite;
+}
+
+.eq-bar-1 { animation-delay: 0s; }
+.eq-bar-2 { animation-delay: 0.18s; }
+.eq-bar-3 { animation-delay: 0.36s; }
+
 * {
   border-color: #27272A;
 }
