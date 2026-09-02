@@ -17,13 +17,13 @@ const Hero = () => {
     <section id="home" className="min-h-screen bg-[#050505] text-white flex flex-col justify-center relative overflow-hidden select-none">
       {/* Dynamic Background Glows */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-emerald-500/12 rounded-full blur-[180px]" />
-        <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-emerald-500/8 rounded-full blur-[140px]" />
-        <div className="absolute bottom-20 left-1/4 w-[400px] h-[400px] bg-emerald-500/5 rounded-full blur-[120px]" />
+        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-250 h-175 bg-emerald-500/12 rounded-full blur-[180px]" />
+        <div className="absolute top-1/4 right-1/4 w-150 h-150 bg-emerald-500/8 rounded-full blur-[140px]" />
+        <div className="absolute bottom-20 left-1/4 w-100 h-100 bg-emerald-500/5 rounded-full blur-[120px]" />
       </div>
 
       {/* Main Content Area */}
-      <div className="w-full flex-1 flex flex-col justify-center relative z-10 px-4 sm:px-6 py-12 lg:pl-8 lg:pr-32 xl:pr-48">
+      <div className="w-full flex-1 flex flex-col justify-center relative z-10 px-4 sm:px-6 py-12">
         <div className="w-full max-w-5xl mx-auto flex flex-col items-center text-center space-y-8 md:space-y-10">
 
           {/* Massive Single Line Name */}

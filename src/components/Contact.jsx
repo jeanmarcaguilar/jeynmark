@@ -234,7 +234,7 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Your name"
-                  className={`w-full px-4 py-3 bg-[#050c08]/90 border rounded-lg font-mono text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#00FF9D] focus:ring-1 focus:ring-[#00FF9D] transition-all ${errors.name ? 'border-red-500' : 'border-emerald-500/25'
+                  className={`w-full px-4 py-3 bg-[#050c08]/90 border rounded-lg font-mono text-sm placeholder:text-zinc-600 focus:outline-none focus:border-[#00FF9D] focus:ring-1 focus:ring-[#00FF9D] transition-all ${errors.name ? 'border-red-500' : 'border-emerald-500/25'
                     }`}
                 />
                 {errors.name && <p className="font-mono text-red-400 text-xs mt-1">{errors.name}</p>}
@@ -252,7 +252,7 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="your.email@example.com"
-                  className={`w-full px-4 py-3 bg-[#050c08]/90 border rounded-lg font-mono text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#00FF9D] focus:ring-1 focus:ring-[#00FF9D] transition-all ${errors.email ? 'border-red-500' : 'border-emerald-500/25'
+                  className={`w-full px-4 py-3 bg-[#050c08]/90 border rounded-lg font-mono text-sm placeholder:text-zinc-600 focus:outline-none focus:border-[#00FF9D] focus:ring-1 focus:ring-[#00FF9D] transition-all ${errors.email ? 'border-red-500' : 'border-emerald-500/25'
                     }`}
                 />
                 {errors.email && <p className="font-mono text-red-400 text-xs mt-1">{errors.email}</p>}
@@ -270,7 +270,7 @@ const Contact = () => {
                   value={formData.subject}
                   onChange={handleChange}
                   placeholder="Project inquiry"
-                  className={`w-full px-4 py-3 bg-[#050c08]/90 border rounded-lg font-mono text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#00FF9D] focus:ring-1 focus:ring-[#00FF9D] transition-all ${errors.subject ? 'border-red-500' : 'border-emerald-500/25'
+                  className={`w-full px-4 py-3 bg-[#050c08]/90 border rounded-lg font-mono text-sm placeholder:text-zinc-600 focus:outline-none focus:border-[#00FF9D] focus:ring-1 focus:ring-[#00FF9D] transition-all ${errors.subject ? 'border-red-500' : 'border-emerald-500/25'
                     }`}
                 />
                 {errors.subject && <p className="font-mono text-red-400 text-xs mt-1">{errors.subject}</p>}
@@ -288,7 +288,7 @@ const Contact = () => {
                   onChange={handleChange}
                   rows={4}
                   placeholder="Tell me about your project..."
-                  className={`w-full px-4 py-3 bg-[#050c08]/90 border rounded-lg font-mono text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#00FF9D] focus:ring-1 focus:ring-[#00FF9D] resize-none transition-all ${errors.message ? 'border-red-500' : 'border-emerald-500/25'
+                  className={`w-full px-4 py-3 bg-[#050c08]/90 border rounded-lg font-mono text-sm placeholder:text-zinc-600 focus:outline-none focus:border-[#00FF9D] focus:ring-1 focus:ring-[#00FF9D] resize-none transition-all ${errors.message ? 'border-red-500' : 'border-emerald-500/25'
                     }`}
                 />
                 {errors.message && <p className="font-mono text-red-400 text-xs mt-1">{errors.message}</p>}
