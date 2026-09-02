@@ -34,7 +34,7 @@ const FeaturedCard = ({ project, onSelect }) => (
     </div>
 
     {/* Screenshot */}
-    <div className="relative aspect-16/9 overflow-hidden">
+    <div className="relative aspect-video overflow-hidden">
       <img
         src={project.image}
         alt={project.title}
@@ -83,7 +83,7 @@ const SideCard = ({ project, rotateY, onClick }) => (
     style={{ transform: `rotateY(${rotateY}deg) scale(0.92)` }}
     onClick={onClick}
   >
-    <div className="relative aspect-16/9 overflow-hidden">
+    <div className="relative aspect-video overflow-hidden">
       <img
         src={project.image}
         alt={project.title}

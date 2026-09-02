@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Code2, Globe, Mail, Heart } from 'lucide-react';
 
 const Footer = () => {

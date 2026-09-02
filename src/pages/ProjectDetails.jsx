@@ -81,7 +81,7 @@ const ProjectImageCarousel = ({ project }) => {
         )}
 
         {/* Image Stage */}
-        <div className="relative aspect-[16/9] sm:aspect-[21/9] overflow-hidden bg-zinc-950">
+        <div className="relative aspect-video sm:aspect-21/9 overflow-hidden bg-zinc-950">
           <AnimatePresence mode="wait">
             <motion.img
               key={activeImgIndex}
@@ -95,7 +95,7 @@ const ProjectImageCarousel = ({ project }) => {
               className="w-full h-full object-cover object-top"
             />
           </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-80 pointer-events-none" />
+          <div className="absolute inset-0 bg-linear-to-t from-[#050505] via-transparent to-transparent opacity-80 pointer-events-none" />
         </div>
       </motion.div>
 
@@ -170,8 +170,8 @@ const ProjectDetails = () => {
       className="min-h-screen bg-[#050505] text-white pb-24 relative overflow-hidden"
     >
       {/* Ambient background glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-emerald-500/[0.03] blur-[150px] pointer-events-none" />
-      <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-emerald-500/[0.02] blur-[140px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-250 h-125 bg-emerald-500/3 blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/3 right-0 w-125 h-125 bg-emerald-500/2 blur-[140px] pointer-events-none" />
 
       {/* Grid texture overlay */}
       <div
@@ -192,7 +192,7 @@ const ProjectDetails = () => {
           <button
             type="button"
             onClick={() => navigate('/', { state: { scrollTo: 'projects' } })}
-            className="group inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] text-zinc-300 hover:text-emerald-400 hover:border-emerald-400/40 hover:bg-emerald-400/10 transition-all duration-300 text-xs font-code cursor-pointer"
+            className="group inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-white/3 text-zinc-300 hover:text-emerald-400 hover:border-emerald-400/40 hover:bg-emerald-400/10 transition-all duration-300 text-xs font-code cursor-pointer"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform duration-300" />
             <span>Back to Portfolio</span>
@@ -357,7 +357,7 @@ const ProjectDetails = () => {
                     href={project.demo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-zinc-200 hover:text-emerald-400 hover:border-emerald-400/40 hover:bg-emerald-400/10 text-xs font-code font-semibold transition-all group"
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-white/4 border border-white/10 text-zinc-200 hover:text-emerald-400 hover:border-emerald-400/40 hover:bg-emerald-400/10 text-xs font-code font-semibold transition-all group"
                   >
                     <span className="flex items-center gap-2">
                       <ExternalLink size={16} />
@@ -366,7 +366,7 @@ const ProjectDetails = () => {
                     <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </a>
                 ) : (
-                  <div className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/5 text-zinc-500 text-xs font-code">
+                  <div className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-white/2 border border-white/5 text-zinc-500 text-xs font-code">
                     <span>Live Demo Coming Soon</span>
                   </div>
                 )}
@@ -412,7 +412,7 @@ const ProjectDetails = () => {
             onClick={() => navigate(`/project/${prevProject.id}`)}
             className="group p-5 rounded-2xl bg-zinc-950/40 border border-zinc-900 hover:border-emerald-500/40 hover:bg-zinc-900/40 transition-all duration-300 flex items-center gap-4 text-left cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-zinc-400 group-hover:text-emerald-400 group-hover:border-emerald-400/30 transition-colors shrink-0">
+            <div className="w-10 h-10 rounded-full bg-white/4 border border-white/10 flex items-center justify-center text-zinc-400 group-hover:text-emerald-400 group-hover:border-emerald-400/30 transition-colors shrink-0">
               <ChevronLeft size={18} />
             </div>
             <div className="min-w-0">
@@ -439,7 +439,7 @@ const ProjectDetails = () => {
                 {nextProject.title}
               </span>
             </div>
-            <div className="w-10 h-10 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-zinc-400 group-hover:text-emerald-400 group-hover:border-emerald-400/30 transition-colors shrink-0">
+            <div className="w-10 h-10 rounded-full bg-white/4 border border-white/10 flex items-center justify-center text-zinc-400 group-hover:text-emerald-400 group-hover:border-emerald-400/30 transition-colors shrink-0">
               <ChevronRight size={18} />
             </div>
           </button>

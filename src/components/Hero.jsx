@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import SpotifyNowPlaying from './SpotifyNowPlaying';
+import { ViewerCount } from './ViewerCount';
 
 const Hero = () => {
 
@@ -70,7 +71,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="flex items-center justify-center gap-8 sm:gap-14 pt-2"
+            className="flex flex-wrap items-center justify-center gap-8 sm:gap-10 md:gap-14 pt-2"
           >
             <div className="border-r border-zinc-800/80 pr-8 sm:pr-14 text-center">
               <div className="text-3xl sm:text-5xl font-extrabold text-white flex items-center justify-center">
@@ -90,7 +91,7 @@ const Hero = () => {
               </div>
             </div>
 
-            <div className="text-center">
+            <div className="border-r border-zinc-800/80 pr-8 sm:pr-10 md:pr-14 text-center">
               <div className="text-3xl sm:text-5xl font-extrabold text-white flex items-center justify-center">
                 15<span className="text-[#00FF9D]">+</span>
               </div>
@@ -98,6 +99,8 @@ const Hero = () => {
                 TECHNOLOGIES
               </div>
             </div>
+
+            <ViewerCount />
           </motion.div>
 
           {/* Action Buttons */}

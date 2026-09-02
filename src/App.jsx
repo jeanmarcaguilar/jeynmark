@@ -8,6 +8,7 @@ import Projects from './components/Projects';
 import Experience from './components/Experience';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import { LiveViewersProvider } from './components/ViewerCount';
 import HeroScene3D from './components/HeroScene3D';
 import ProjectDetails from './pages/ProjectDetails';
 
@@ -51,6 +52,7 @@ function App() {
   }, []);
 
   return (
+    <LiveViewersProvider>
     <div className="min-h-screen flex flex-col bg-[#050505] text-white">
       <FloatingNav />
       <div className="grow min-w-0 flex flex-col relative lg:pl-[180px] xl:pl-[200px]">
@@ -63,6 +65,7 @@ function App() {
         <Footer />
       </div>
     </div>
+    </LiveViewersProvider>
   );
 }
 
