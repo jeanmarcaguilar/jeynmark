@@ -115,13 +115,29 @@ const Contact = () => {
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitSuccess(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-      setTimeout(() => setSubmitSuccess(false), 5000);
-    }, 1500);
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitSuccess(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => setSubmitSuccess(false), 5000);
+      } else {
+        setErrors({ submit: data.error || 'Failed to send message. Please try again.' });
+      }
+    } catch (error) {
+      setErrors({ submit: 'Network error. Please check your connection and try again.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -326,6 +342,18 @@ const Contact = () => {
                 >
                   <span className="w-2 h-2 rounded-full bg-[#00FF9D] animate-ping shrink-0" />
                   <span>Message sent successfully! I'll get back to you soon.</span>
+                </motion.div>
+              )}
+
+              {/* Submit Error Message */}
+              {errors.submit && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-3.5 bg-red-950/60 border border-red-500/40 rounded-xl text-red-400 font-mono text-xs flex items-center gap-2 shadow-[0_0_15px_rgba(239,68,68,0.15)]"
+                >
+                  <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                  <span>{errors.submit}</span>
                 </motion.div>
               )}
             </form>
