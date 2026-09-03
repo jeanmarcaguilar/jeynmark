@@ -4,20 +4,22 @@ import { X, Code2, ExternalLink, Sparkles, Target, Lightbulb, ArrowUpRight } fro
 import { ExpandableList, FeatureGrid } from './ProjectInsights';
 
 const ProjectModal = ({ project, onClose }) => {
-  if (!project) return null;
-
   // Lock body scroll when modal is open
   useEffect(() => {
+    if (!project) return;
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
-  }, []);
+  }, [project]);
 
   // Close on escape key
   useEffect(() => {
+    if (!project) return;
     const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [onClose]);
+  }, [project, onClose]);
+
+  if (!project) return null;
 
   return (
     <AnimatePresence>

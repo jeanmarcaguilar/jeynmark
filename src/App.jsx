@@ -11,6 +11,7 @@ import Footer from './components/Footer';
 import { LiveViewersProvider } from './components/ViewerCount';
 import HeroScene3D from './components/HeroScene3D';
 import ProjectDetails from './pages/ProjectDetails';
+import { useVisitorAnalytics } from './hooks/useVisitorAnalytics';
 
 const HomePage = () => (
   <>
@@ -47,6 +48,8 @@ const HomePage = () => (
 );
 
 function App() {
+  useVisitorAnalytics();
+
   useEffect(() => {
     document.title = 'Jean Marc Aguilar | Full Stack Developer';
   }, []);

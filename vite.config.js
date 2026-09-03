@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import { fetchGithubContributions } from './lib/githubContributions.js'
 import { fetchSpotifyNowPlaying } from './lib/spotifyNowPlaying.js'
 import { isValidId, readJsonBody, updateLiveViewers } from './lib/liveViewers.js'
+import { processVisitorAnalytics } from './lib/visitorAnalytics.js'
 
 function githubContributionsPlugin(env) {
   let memoryCache = null
@@ -162,12 +163,53 @@ function liveViewersPlugin(env) {
   }
 }
 
+function visitorAnalyticsPlugin(env) {
+  const handle = async (req, res, next) => {
+    const pathname = req.url?.split('?')[0]
+    if (pathname !== '/api/visitor-analytics') {
+      next()
+      return
+    }
+
+    if (req.method !== 'POST') {
+      res.statusCode = 405
+      res.setHeader('Allow', 'POST')
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify({ error: 'Method not allowed' }))
+      return
+    }
+
+    try {
+      const payload = await readJsonBody(req)
+      const { status, body } = await processVisitorAnalytics({ req, env, payload })
+      res.statusCode = status
+      res.setHeader('Content-Type', 'application/json')
+      res.setHeader('Cache-Control', 'no-store')
+      res.end(JSON.stringify(body))
+    } catch (error) {
+      res.statusCode = 500
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify({ error: error.message }))
+    }
+  }
+
+  return {
+    name: 'visitor-analytics-api',
+    configureServer(server) {
+      server.middlewares.use(handle)
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(handle)
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    plugins: [react(), githubContributionsPlugin(env), spotifyNowPlayingPlugin(env), liveViewersPlugin(env)],
+    plugins: [react(), githubContributionsPlugin(env), spotifyNowPlayingPlugin(env), liveViewersPlugin(env), visitorAnalyticsPlugin(env)],
     server: {
       port: 5173,
       open: true,
