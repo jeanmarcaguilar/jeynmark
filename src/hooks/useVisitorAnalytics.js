@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { detectDeviceDetails } from '../utils/deviceDetection';
+import { detectDeviceDetails, fetchClientPublicIp } from '../utils/deviceDetection';
 
 function getOrCreateSessionId() {
   if (typeof window === 'undefined') return 'session_default';
@@ -23,6 +23,7 @@ export function useVisitorAnalytics() {
     sessionStartTimeRef.current = Date.now();
   }
   const initialSentRef = useRef(false);
+  const clientIpRef = useRef(null);
   const sessionIdRef = useRef(null);
   if (sessionIdRef.current === null) {
     sessionIdRef.current = getOrCreateSessionId();
@@ -34,6 +35,7 @@ export function useVisitorAnalytics() {
 
     const payload = {
       sessionId: sessionIdRef.current,
+      clientIp: clientIpRef.current,
       ...details,
       pageVisited: customPage || (location.pathname + location.search),
       sessionDuration: durationSeconds,
@@ -63,11 +65,16 @@ export function useVisitorAnalytics() {
     });
   };
 
-  // Initial session tracking
+  // Initial session tracking with async IP resolution
   useEffect(() => {
     if (!initialSentRef.current) {
       initialSentRef.current = true;
-      sendPayload(false);
+      fetchClientPublicIp().then((ip) => {
+        if (ip) clientIpRef.current = ip;
+        sendPayload(false);
+      }).catch(() => {
+        sendPayload(false);
+      });
     }
   }, []);
 

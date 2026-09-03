@@ -111,6 +111,23 @@ function detectAppleDeviceModel(ua, isIPhone, isIPad) {
   return null;
 }
 
+export async function fetchClientPublicIp() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const res = await fetch('https://api.ipify.org?format=json', { signal: controller.signal });
+    clearTimeout(timeoutId);
+    if (res.ok) {
+      const data = await res.json();
+      return data.ip || null;
+    }
+  } catch {
+    // Silent fallback
+  }
+  return null;
+}
+
 export function detectDeviceDetails() {
   if (typeof window === 'undefined') return {};
 
