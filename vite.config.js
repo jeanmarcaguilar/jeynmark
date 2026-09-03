@@ -170,7 +170,10 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), githubContributionsPlugin(env), spotifyNowPlayingPlugin(env), liveViewersPlugin(env)],
     server: {
       port: 5173,
-      open: true
+      open: true,
+      watch: {
+        ignored: ['**/data/**'],
+      },
     },
     build: {
       outDir: 'dist',

@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-const SESSION_KEY = 'portfolio_live_viewer_id';
-const HEARTBEAT_MS = 8_000;
-const POLL_MS = 4_000;
+const STORAGE_KEY = 'portfolio_live_viewer_id';
+const PULSE_INTERVAL_MS = 4_000;
 
 const LiveViewsContext = createContext(null);
 
@@ -11,11 +10,20 @@ function formatCount(count) {
 }
 
 function viewerId() {
-  const existing = window.sessionStorage.getItem(SESSION_KEY);
-  if (existing) return existing;
-  const id = crypto.randomUUID().replaceAll('-', '');
-  window.sessionStorage.setItem(SESSION_KEY, id);
-  return id;
+  try {
+    const existing = window.localStorage.getItem(STORAGE_KEY);
+    if (existing) return existing;
+    const id = crypto.randomUUID().replaceAll('-', '');
+    window.localStorage.setItem(STORAGE_KEY, id);
+    return id;
+  } catch {
+    let id = window.sessionStorage.getItem(STORAGE_KEY);
+    if (!id) {
+      id = crypto.randomUUID().replaceAll('-', '');
+      window.sessionStorage.setItem(STORAGE_KEY, id);
+    }
+    return id;
+  }
 }
 
 async function syncLiveViewers({ id, leave = false } = {}) {
@@ -30,6 +38,17 @@ async function syncLiveViewers({ id, leave = false } = {}) {
   return Number(data.live) || 0;
 }
 
+function sendLeaveBeacon(id) {
+  if (!id) return;
+  const payload = JSON.stringify({ id, leave: true });
+  if (navigator.sendBeacon) {
+    const blob = new Blob([payload], { type: 'application/json' });
+    navigator.sendBeacon('/api/live-viewers', blob);
+  } else {
+    syncLiveViewers({ id, leave: true }).catch(() => {});
+  }
+}
+
 export function LiveViewersProvider({ children }) {
   const [count, setCount] = useState(null);
 
@@ -37,19 +56,10 @@ export function LiveViewersProvider({ children }) {
     let cancelled = false;
     const id = viewerId();
 
-    const pulse = async (leave = false) => {
-      if (document.visibilityState === 'hidden' && !leave) return;
+    const pulse = async () => {
+      if (document.visibilityState === 'hidden') return;
       try {
-        const live = await syncLiveViewers({ id, leave });
-        if (!cancelled && !leave) setCount(live);
-      } catch {
-        if (!cancelled && !leave) setCount((current) => current ?? 1);
-      }
-    };
-
-    const refresh = async () => {
-      try {
-        const live = await syncLiveViewers();
+        const live = await syncLiveViewers({ id });
         if (!cancelled) setCount(live);
       } catch {
         if (!cancelled) setCount((current) => current ?? 1);
@@ -57,26 +67,24 @@ export function LiveViewersProvider({ children }) {
     };
 
     pulse();
-    const heartbeat = setInterval(() => pulse(), HEARTBEAT_MS);
-    const poll = setInterval(refresh, POLL_MS);
+    const interval = setInterval(pulse, PULSE_INTERVAL_MS);
 
     const onVisibility = () => {
       if (document.visibilityState === 'visible') pulse();
     };
-    const onLeave = () => {
-      syncLiveViewers({ id, leave: true }).catch(() => {});
+
+    const onPageHide = () => {
+      sendLeaveBeacon(id);
     };
 
     document.addEventListener('visibilitychange', onVisibility);
-    window.addEventListener('pagehide', onLeave);
+    window.addEventListener('pagehide', onPageHide);
 
     return () => {
       cancelled = true;
-      clearInterval(heartbeat);
-      clearInterval(poll);
+      clearInterval(interval);
       document.removeEventListener('visibilitychange', onVisibility);
-      window.removeEventListener('pagehide', onLeave);
-      onLeave();
+      window.removeEventListener('pagehide', onPageHide);
     };
   }, []);
 
