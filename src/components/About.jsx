@@ -1,16 +1,32 @@
 // ==========================================
-// FILE 2: src/components/About.jsx
+// FILE: src/components/About.jsx
 // ==========================================
 
 import { useState, useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowUpRight, GitCommit, RefreshCw } from 'lucide-react';
-import profileImg from '../assets/images/profile.jpg';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUpRight, GitCommit, RefreshCw, ChevronLeft, ChevronRight, Layers } from 'lucide-react';
+
+// Import your profile images here
+import profileImg1 from '../assets/images/profile.jpg';
+import profileImg2 from '../assets/images/profile1.jpg';
+import profileImg3 from '../assets/images/profile2.jpg';
+import profileImg4 from '../assets/images/profile3.jpg';
+import profileImg5 from '../assets/images/profile4.jpg';
+
 import { CONTRIB_YEAR, prefetchContributions, readContribCache } from '../lib/contributions';
 
 const GITHUB_USERNAME = import.meta.env.VITE_GITHUB_USERNAME || 'jeanmarcaguilar';
 const YEAR = CONTRIB_YEAR;
 const initialCache = typeof window !== 'undefined' ? readContribCache() : null;
+
+// Add all your image imports to this array
+const PROFILE_IMAGES = [
+  { id: 1, src: profileImg1, alt: 'Profile 1' },
+  { id: 2, src: profileImg2, alt: 'Profile 2' },
+  { id: 3, src: profileImg3, alt: 'Profile 3' },
+  { id: 4, src: profileImg4, alt: 'Profile 4' },
+  { id: 5, src: profileImg5, alt: 'Profile 5' },
+];
 
 const COLOR_LEVELS = [
   'bg-zinc-900',      // 0 – none
@@ -114,6 +130,30 @@ const About = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
 
+  // Card Stack State
+  const [cards, setCards] = useState(PROFILE_IMAGES);
+
+  const shuffleNext = () => {
+    if (cards.length <= 1) return;
+    setCards((prev) => {
+      const newStack = [...prev];
+      const front = newStack.shift();
+      newStack.push(front);
+      return newStack;
+    });
+  };
+
+  const shufflePrev = (e) => {
+    e.stopPropagation();
+    if (cards.length <= 1) return;
+    setCards((prev) => {
+      const newStack = [...prev];
+      const back = newStack.pop();
+      newStack.unshift(back);
+      return newStack;
+    });
+  };
+
   const scrollToSection = (e, sectionId) => {
     e.preventDefault();
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
@@ -152,7 +192,7 @@ const About = () => {
       <div className="w-full flex-1 flex flex-col justify-center relative z-10 px-4 sm:px-8 lg:px-12">
         <div className="max-w-5xl mx-auto w-full">
 
-          {/* Top Grid: Bio + Headshot */}
+          {/* Top Grid: Bio + 3D Shuffle Card Stack */}
           <div className="grid lg:grid-cols-12 gap-8 items-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -185,6 +225,7 @@ const About = () => {
               </div>
             </motion.div>
 
+            {/* Interactive 3D Card Stack */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -192,13 +233,53 @@ const About = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="lg:col-span-5 flex justify-center lg:justify-end"
             >
-              <div className="relative group max-w-xs w-full rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-900/50 shadow-xl transition-all duration-300 hover:border-emerald-500/40">
-                <img
-                  src={profileImg}
-                  alt="Jean Marc Aguilar Profile"
-                  className="w-full h-56 sm:h-64 object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-60 pointer-events-none" />
+              <div 
+                onClick={shuffleNext}
+                className="relative w-full max-w-sm sm:max-w-md h-80 sm:h-96 cursor-pointer select-none group"
+              >
+                {cards.map((card, index) => {
+                  const isTop = index === 0;
+                  const isSecond = index === 1;
+                  const isThird = index === 2;
+
+                  return (
+                    <motion.div
+                      key={card.id}
+                      layout
+                      initial={false}
+                      animate={{
+                        scale: isTop ? 1 : isSecond ? 0.94 : 0.88,
+                        y: isTop ? 0 : isSecond ? 12 : 24,
+                        rotate: isTop ? 0 : isSecond ? -3 : 3,
+                        opacity: isTop ? 1 : isSecond ? 0.85 : 0.6,
+                        zIndex: cards.length - index,
+                      }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 260,
+                        damping: 20,
+                      }}
+                      className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-900 shadow-2xl hover:border-emerald-500/40"
+                    >
+                      <img
+                        src={card.src}
+                        alt={card.alt}
+                        className="w-full h-full object-cover object-top block"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-80 pointer-events-none" />
+                    </motion.div>
+                  );
+                })}
+
+                {/* Stack Control Overlay */}
+                {cards.length > 1 && (
+                  <>
+                    <div className="absolute top-3 right-3 z-30 flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-950/70 border border-zinc-800 text-[10px] text-zinc-300 font-code backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Layers size={12} className="text-emerald-400" />
+                      <span>Click to shuffle</span>
+                    </div>
+                  </>
+                )}
               </div>
             </motion.div>
           </div>
