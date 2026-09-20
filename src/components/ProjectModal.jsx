@@ -1,280 +1,351 @@
-import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Code2, ExternalLink, Sparkles, Target, Lightbulb, ArrowUpRight } from 'lucide-react';
-import { ExpandableList, FeatureGrid } from './ProjectInsights';
+import React, { useEffect, useMemo, useState } from 'react';
 
-const ProjectModal = ({ project, onClose }) => {
-  // Lock body scroll when modal is open
-  useEffect(() => {
-    if (!project) return;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, [project]);
+// Modern App Showcase Data
+// Screenshots live in public/images/mobile/ (the featured apps use the same files as the Mobile App tile).
+const myApps = [
+  {
+    id: 'fleetflow',
+    title: 'FleetFlow',
+    badge: 'BETA',
+    badgeTheme: 'bg-blue-600/90 text-white',
+    tagline: 'Smart fleet tracking and dynamic route optimization.',
+    taglineColor: 'text-blue-600',
+    description:
+      'Monitor vehicle locations in real time, cut unnecessary fuel consumption, and streamline daily dispatching across your entire fleet. Access predictive analytics, maintenance alerts, and driver performance metrics in a single, intuitive dashboard.',
+    gradient: 'from-blue-50/70 via-indigo-50/50 to-sky-50/80',
+    accentGlow: 'bg-blue-500/10',
+    badges: [
+      { primary: 'Android', subtitle: 'PLATFORM' },
+      { primary: 'Play Store', subtitle: 'OPEN BETA' },
+      { primary: 'PHP / MySQL', subtitle: 'BACKEND' },
+    ],
+    image: '/images/mobile/FleetFlow.jpg',
+  },
+  {
+    id: 'cartly',
+    title: 'Cartly',
+    badge: 'BETA',
+    badgeTheme: 'bg-purple-600/90 text-white',
+    tagline: 'Shop smarter. Curated local marketplace.',
+    taglineColor: 'text-purple-600',
+    description:
+      'Cartly brings your favorite verified local merchants, flash collections, and seamless checkout into a refined, lightning-fast mobile experience. Track deliveries in real time with end-to-end order transparency.',
+    gradient: 'from-purple-50/70 via-fuchsia-50/40 to-pink-50/60',
+    accentGlow: 'bg-purple-500/10',
+    badges: [
+      { primary: 'React Native', subtitle: 'FRAMEWORK' },
+      { primary: 'Multi-Vendor', subtitle: 'ECOSYSTEM' },
+      { primary: 'Direct Pay', subtitle: 'CHECKOUT' },
+    ],
+    image: '/images/mobile/Cartly.png',
+  },
+  {
+    id: 'sauyo',
+    title: 'Sauyo Rescue',
+    badge: 'COMMUNITY',
+    badgeTheme: 'bg-emerald-600/90 text-white',
+    tagline: 'Emergency help, just one tap away.',
+    taglineColor: 'text-emerald-600',
+    description:
+      'Community-focused emergency response app designed for Barangay Sauyo, connecting residents with verified local responders during medical emergencies, fires, and disaster relief with one-tap SOS and live GPS beacon sharing.',
+    gradient: 'from-emerald-50/70 via-teal-50/50 to-cyan-50/60',
+    accentGlow: 'bg-emerald-500/10',
+    badges: [
+      { primary: '1-Tap SOS', subtitle: 'DISPATCH' },
+      { primary: 'Real-Time', subtitle: 'GPS TELEMETRY' },
+      { primary: '100% Free', subtitle: 'PUBLIC SAFETY' },
+    ],
+    image: '/images/mobile/Rescue.png',
+  },
+];
 
-  // Close on escape key
-  useEffect(() => {
-    if (!project) return;
-    const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [project, onClose]);
+const referenceApps = [
+  {
+    id: 'pickles',
+    title: 'Pickles',
+    badge: 'BETA',
+    badgeTheme: 'bg-blue-600/90 text-white',
+    tagline: 'Filipino grocery tracker with budget control.',
+    taglineColor: 'text-blue-600',
+    description:
+      'Track prices across PH supermarkets, set per-trip budgets, and build a running product catalog. On Google Play - still in beta testing.',
+    gradient: 'from-blue-50/70 via-indigo-50/50 to-sky-50/80',
+    accentGlow: 'bg-blue-500/10',
+    badges: [
+      { primary: 'Android', subtitle: 'PLATFORM' },
+      { primary: 'Play Store', subtitle: 'PUBLISHED' },
+      { primary: 'PHP', subtitle: 'CURRENCY' },
+    ],
+    image: '/images/mobile/Pickles.png',
+  },
+  {
+    id: 'celery',
+    title: 'Celery Music',
+    badge: 'BETA',
+    badgeTheme: 'bg-purple-600/90 text-white',
+    tagline: 'Your playlists, your vibe, your device.',
+    taglineColor: 'text-purple-600',
+    description:
+      'Import music, pull tracks from YouTube, create playlists, and tune with a 10-band EQ. No ads, no cloud, no tracking. Everything stays on your phone.',
+    gradient: 'from-purple-50/70 via-fuchsia-50/40 to-pink-50/60',
+    accentGlow: 'bg-purple-500/10',
+    badges: [
+      { primary: '9', subtitle: 'AUDIO FORMATS' },
+      { primary: '10 Band', subtitle: 'EQUALIZER' },
+      { primary: 'Offline', subtitle: 'MODE' },
+    ],
+    image: '/images/mobile/Celery.png',
+  },
+  {
+    id: 'lettuce',
+    title: 'Lettuce Read',
+    badge: 'FREE',
+    badgeTheme: 'bg-emerald-600/90 text-white',
+    tagline: 'Your purrfect reading companion.',
+    taglineColor: 'text-emerald-600',
+    description:
+      'Free ebook reader that handles 21 file formats with no ads, no tracking, and no internet required. Just you and your books.',
+    gradient: 'from-emerald-50/70 via-teal-50/50 to-cyan-50/60',
+    accentGlow: 'bg-emerald-500/10',
+    badges: [
+      { primary: '21', subtitle: 'FILE FORMATS' },
+      { primary: '100%', subtitle: 'OFFLINE' },
+      { primary: 'Free', subtitle: 'FOREVER' },
+    ],
+    image: '/images/mobile/Lettuce.png',
+  },
+];
 
-  if (!project) return null;
+// ---- App screenshots ----
+// If an image fails to load, try the same file name with the other common extensions
+// (png / jpg / jpeg / webp), so switching a file from .png to .jpg never breaks it.
+// (Same helper as in Projects.jsx.)
+const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'webp'];
+
+const imageCandidates = (src) => {
+  if (!src) return [];
+  const match = /^(.*)\.(png|jpe?g|webp)$/i.exec(src);
+  if (!match) return [src];
+  const others = IMAGE_EXTENSIONS.map((ext) => `${match[1]}.${ext}`).filter((candidate) => candidate !== src);
+  return [src, ...others];
+};
+
+// Returns the src to render (null once every option has failed) and an onError handler.
+// The attempt counter belongs to `src`, so pointing an image at a new path starts fresh.
+const useImageWithFallback = (src) => {
+  const candidates = useMemo(() => imageCandidates(src), [src]);
+  const [state, setState] = useState({ src, attempt: 0 });
+  const attempt = state.src === src ? state.attempt : 0;
+
+  return {
+    current: candidates[attempt] ?? null,
+    onError: () => setState({ src, attempt: attempt + 1 }),
+  };
+};
+
+// The app's screenshot, shown as-is (no device frame) and fitted inside the banner without cropping.
+// If the file is missing, a small tile names the path it expected.
+const AppScreenshot = ({ src, alt }) => {
+  const { current, onError } = useImageWithFallback(src);
+
+  if (!current) {
+    return (
+      <div className="h-full w-40 rounded-2xl bg-white/60 flex items-center justify-center px-3 text-center text-xs font-medium text-slate-500 break-all">
+        {src ? `Image not found: ${src}` : 'No image set'}
+      </div>
+    );
+  }
 
   return (
-    <AnimatePresence>
-      {/* Backdrop */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        onClick={onClose}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-        style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.85)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-        }}
-      >
-        {/* Modal container */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92, y: 30 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: 30 }}
-          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-          onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-3xl max-h-[88vh] overflow-hidden rounded-2xl"
-          style={{
-            background: 'linear-gradient(180deg, #0f0f10 0%, #0a0a0b 100%)',
-            border: '1px solid rgba(255, 255, 255, 0.07)',
-            boxShadow: '0 40px 100px rgba(0, 0, 0, 0.6), 0 0 60px rgba(255, 255, 255, 0.02)',
-          }}
-        >
-          {/* Top edge highlight */}
-          <div className="absolute top-0 left-[15%] right-[15%] h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
-
-          {/* Scrollable content */}
-          <div className="overflow-y-auto max-h-[88vh] modal-scroll">
-
-            {/* Hero section with project image */}
-            <div className="relative">
-              <div className="relative h-56 sm:h-64 overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover object-top"
-                />
-                {/* Gradient overlays */}
-                <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0b] via-[#0a0a0b]/60 to-transparent" />
-                <div className="absolute inset-0 bg-linear-to-r from-[#0a0a0b]/30 to-transparent" />
-              </div>
-
-              {/* Close button */}
-              <motion.button
-                onClick={onClose}
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.2 }}
-                className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-300"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(10px)',
-                }}
-                aria-label="Close modal"
-              >
-                <X size={16} className="text-white/70" />
-              </motion.button>
-
-              {/* Category badge */}
-              <div className="absolute top-4 left-4 z-20">
-                <span
-                  className="px-3 py-1.5 rounded-full text-[0.7rem] font-semibold tracking-wider text-white/70"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.06)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(10px)',
-                  }}
-                >
-                  {project.category}
-                </span>
-              </div>
-
-              {/* Title overlapping image bottom */}
-              <div className="absolute bottom-0 left-0 right-0 px-7 sm:px-9 pb-6">
-                <span className="text-white/30 text-xs font-mono font-semibold tracking-[0.2em] mb-2 block">
-                  {project.number}
-                </span>
-                <h3 className="text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight">
-                  {project.title}
-                </h3>
-              </div>
-            </div>
-
-            {/* Content body */}
-            <div className="px-7 sm:px-9 pb-8 pt-2">
-
-              {/* Overview */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                className="mb-7"
-              >
-                <p className="text-[#a1a1aa] text-[0.9rem] leading-[1.7] ">
-                  {project.fullDescription}
-                </p>
-              </motion.div>
-
-              {/* Divider */}
-              <div className="h-px bg-linear-to-r from-transparent via-white/6 to-transparent mb-7" />
-
-              {/* Features */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="mb-7"
-              >
-                <div className="flex items-center gap-2.5 mb-4">
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.04)',
-                      border: '1px solid rgba(255, 255, 255, 0.06)',
-                    }}
-                  >
-                    <Sparkles size={13} className="text-white/50" />
-                  </div>
-                  <h4 className="text-sm font-semibold text-white/80 tracking-wide">Features</h4>
-                </div>
-                <FeatureGrid features={project.features} />
-              </motion.div>
-
-              {/* Divider */}
-              <div className="h-px bg-linear-to-r from-transparent via-white/6 to-transparent mb-7" />
-
-              {/* Technology Stack */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="mb-7"
-              >
-                <h4 className="text-sm font-semibold text-white/80 tracking-wide mb-4">Technology Stack</h4>
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech, i) => (
-                    <motion.span
-                      key={tech}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.35 + i * 0.04 }}
-                      className="modal-tech-badge"
-                    >
-                      {tech}
-                    </motion.span>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Challenges & Learnings - side by side on desktop */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8 items-stretch">
-                {/* Challenges */}
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 }}
-                  className="rounded-xl p-5 flex flex-col"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
-                  }}
-                >
-                  <div className="flex items-center gap-2.5 mb-3">
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.04)',
-                        border: '1px solid rgba(255, 255, 255, 0.06)',
-                      }}
-                    >
-                      <Target size={13} className="text-white/50" />
-                    </div>
-                    <h4 className="text-xs font-semibold text-white/70 tracking-wider uppercase">Challenges</h4>
-                  </div>
-                  <ExpandableList items={project.challenges} initialCount={3} />
-                </motion.div>
-
-                {/* What I Learned */}
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="rounded-xl p-5 flex flex-col"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
-                  }}
-                >
-                  <div className="flex items-center gap-2.5 mb-3">
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.04)',
-                        border: '1px solid rgba(255, 255, 255, 0.06)',
-                      }}
-                    >
-                      <Lightbulb size={13} className="text-white/50" />
-                    </div>
-                    <h4 className="text-xs font-semibold text-white/70 tracking-wider uppercase">What I Learned</h4>
-                  </div>
-                  <ExpandableList items={project.learned} initialCount={3} numbered />
-                </motion.div>
-              </div>
-
-              {/* Divider */}
-              <div className="h-px bg-linear-to-r from-transparent via-white/6 to-transparent mb-6" />
-
-              {/* Action buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.45 }}
-                className="flex flex-wrap gap-3"
-              >
-                {project.github && project.github !== '#' && (
-                  <motion.a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.03, y: -1 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="modal-btn-primary"
-                  >
-                    <Code2 size={15} />
-                    <span>View Source</span>
-                    <ArrowUpRight size={13} className="opacity-50" />
-                  </motion.a>
-                )}
-                {project.demo && project.demo !== '#' && (
-                  <motion.a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.03, y: -1 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="modal-btn-secondary"
-                  >
-                    <ExternalLink size={15} />
-                    <span>Live Demo</span>
-                    <ArrowUpRight size={13} className="opacity-50" />
-                  </motion.a>
-                )}
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+    <img
+      src={current}
+      alt={alt}
+      draggable={false}
+      onError={onError}
+      className="max-h-full max-w-full rounded-2xl shadow-[0_20px_40px_-12px_rgba(15,23,42,0.35)] transform group-hover:scale-[1.03] transition-transform duration-500 select-none"
+    />
   );
 };
 
+const ProjectModal = ({ isOpen, onClose }) => {
+  const [viewMode, setViewMode] = useState('myApps'); // 'myApps' or 'reference'
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  // Keyboard shortcut: Escape to close
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  const currentApps = viewMode === 'myApps' ? myApps : referenceApps;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-8 bg-[#0A1629]/75 backdrop-blur-sm transition-all duration-300 animate-in fade-in"
+      onClick={onClose}
+    >
+      {/* Outer Modern Frameless Window Container (No harsh outlines) */}
+      <div
+        className="w-[98vw] sm:w-[96vw] max-w-[1580px] max-h-[94vh] flex flex-col bg-[#FAF9F5] rounded-[32px] shadow-[0_25px_80px_-15px_rgba(0,0,0,0.3)] overflow-hidden relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Sleek Frameless Titlebar */}
+        <div className="h-12 bg-[#F1EFE8]/70 backdrop-blur-md px-5 sm:px-7 flex items-center justify-between shrink-0 select-none">
+          {/* Left: macOS Traffic Lights & Clean Tab */}
+          <div className="flex items-center gap-4">
+            {/* Traffic Dots without harsh borders */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                title="Close modal"
+                className="w-3 h-3 rounded-full bg-[#FF5F56] shadow-xs hover:brightness-90 transition flex items-center justify-center group/dot cursor-pointer"
+              >
+                <span className="text-[7px] font-black text-[#6B0C06] opacity-0 group-hover/dot:opacity-100 transition-opacity leading-none">
+                  ✕
+                </span>
+              </button>
+              <div
+                title="Minimize"
+                className="w-3 h-3 rounded-full bg-[#FFBD2E] shadow-xs opacity-90"
+              />
+              <div
+                title="Expand"
+                className="w-3 h-3 rounded-full bg-[#27C93F] shadow-xs opacity-90"
+              />
+            </div>
+
+            {/* Clean Tab */}
+            <div className="text-slate-800 font-bold text-xs sm:text-[13px] tracking-tight flex items-center gap-2">
+              <span>Mobile Apps</span>
+            </div>
+          </div>
+
+          {/* Right: Modern Segmented Switcher & Minimal Close */}
+          <div className="flex items-center gap-3">
+            <div className="bg-black/[0.04] p-1 rounded-full flex items-center text-[11px] font-semibold">
+              <button
+                type="button"
+                onClick={() => setViewMode('myApps')}
+                className={`px-3 py-0.5 rounded-full transition-all ${viewMode === 'myApps'
+                    ? 'bg-white text-slate-900 shadow-xs font-bold'
+                    : 'text-slate-500 hover:text-slate-800'
+                  }`}
+              >
+                Featured Apps
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-7 h-7 rounded-full bg-black/[0.04] hover:bg-black/[0.08] text-slate-500 hover:text-slate-900 flex items-center justify-center text-xs font-bold transition cursor-pointer"
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        {/* Modal Scrollable Body */}
+        <div className="flex-1 overflow-y-auto p-6 sm:p-9 lg:p-12 xl:p-14 custom-scrollbar">
+          <section className="mb-6">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
+              <h3 className="text-[11px] sm:text-xs font-bold tracking-[0.2em] text-slate-400 uppercase">
+                APPS I ALSO SHIP
+              </h3>
+              {viewMode === 'myApps' && (
+                <span className="text-[11px] font-medium text-slate-400 hidden sm:inline-block">
+                  Live Beta & Production Concepts
+                </span>
+              )}
+            </div>
+
+            {/* 3 Apps Grid (No harsh borders, subtle ambient shadows) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {currentApps.map((app) => (
+                <article
+                  key={app.id}
+                  className="group bg-white rounded-[28px] shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                >
+                  {/* Top Preview Banner */}
+                  <div
+                    className={`h-64 sm:h-76 xl:h-80 relative bg-gradient-to-br ${app.gradient} overflow-hidden flex items-center justify-center p-4`}
+                  >
+                    {/* Status Glass Pill */}
+                    <span
+                      className={`absolute top-4 right-4 z-20 ${app.badgeTheme} backdrop-blur-md text-[10px] font-extrabold tracking-widest uppercase px-3 py-1 rounded-full shadow-sm`}
+                    >
+                      {app.badge}
+                    </span>
+
+                    {/* App screenshot */}
+                    <AppScreenshot src={app.image} alt={`${app.title} screenshot`} />
+                  </div>
+
+                  {/* Bottom Content Area (Refined, outline-free) */}
+                  <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
+                    <div>
+                      {/* Title */}
+                      <h4 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-1.5 group-hover:text-blue-600 transition-colors">
+                        {app.title}
+                      </h4>
+
+                      {/* Tagline */}
+                      <p
+                        className={`text-xs sm:text-[13px] font-semibold ${app.taglineColor} mb-3 leading-snug`}
+                      >
+                        {app.tagline}
+                      </p>
+
+                      {/* Description */}
+                      <p className="text-[11.5px] sm:text-xs text-slate-500 leading-relaxed line-clamp-4 font-normal mb-6">
+                        {app.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom Clean Specs (No borders, subtle fills) */}
+                    <div className="grid grid-cols-3 gap-2.5 pt-4">
+                      {app.badges.map((b, i) => (
+                        <div
+                          key={i}
+                          className="bg-slate-50/90 group-hover:bg-slate-100/90 rounded-2xl p-2.5 text-center flex flex-col justify-center transition-colors"
+                        >
+                          <span className="text-[11px] sm:text-xs font-bold text-slate-800 leading-tight truncate">
+                            {b.primary}
+                          </span>
+                          <span className="text-[8px] sm:text-[9px] font-semibold tracking-wider text-slate-400 uppercase mt-0.5 truncate">
+                            {b.subtitle}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+};
 export default ProjectModal;

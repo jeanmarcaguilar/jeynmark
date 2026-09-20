@@ -6,6 +6,7 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-33.333%);
   }
@@ -16,8 +17,15 @@
 }
 
 @keyframes eq-bar {
-  0%, 100% { height: 4px; }
-  50% { height: 16px; }
+
+  0%,
+  100% {
+    height: 4px;
+  }
+
+  50% {
+    height: 16px;
+  }
 }
 
 .eq-bar {
@@ -25,9 +33,17 @@
   animation: eq-bar 0.9s ease-in-out infinite;
 }
 
-.eq-bar-1 { animation-delay: 0s; }
-.eq-bar-2 { animation-delay: 0.18s; }
-.eq-bar-3 { animation-delay: 0.36s; }
+.eq-bar-1 {
+  animation-delay: 0s;
+}
+
+.eq-bar-2 {
+  animation-delay: 0.18s;
+}
+
+.eq-bar-3 {
+  animation-delay: 0.36s;
+}
 
 * {
   border-color: #27272A;
@@ -42,8 +58,8 @@
 }
 
 body {
-  background-color: #050505;
-  color: #FFFFFF;
+  background-color: #ffffff;
+  color: #050505;
   font-family: 'Space Grotesk', 'Inter', 'Manrope', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -73,20 +89,21 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #27272A;
+  background: #a0a0a0;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3F3F46;
+  background: #808080;
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -150,13 +167,13 @@ html {
 
 /* Dark Neumorphic Skill Cards */
 :root {
-  --page-bg: #050505;
-  --card-top: #25262b;
-  --card-bottom: #101114;
-  --card-border: rgba(255, 255, 255, 0.16);
-  --card-border-hover: rgba(180, 174, 255, 0.42);
-  --text-primary: #ffffff;
-  --text-secondary: #a5a5ad;
+  --page-bg: #ffffff;
+  --card-top: #f5f5f5;
+  --card-bottom: #e5e5e5;
+  --card-border: rgba(0, 0, 0, 0.16);
+  --card-border-hover: rgba(105, 90, 255, 0.42);
+  --text-primary: #050505;
+  --text-secondary: #5a5a5a;
   --accent-violet: rgba(105, 90, 255, 0.20);
 }
 
@@ -164,11 +181,11 @@ html {
   min-height: 260px;
   padding: 28px;
   border-radius: 28px;
-  background: linear-gradient(145deg, #25262b 0%, #101114 100%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(145deg, #f5f5f5 0%, #e5e5e5 100%);
+  border: 1px solid rgba(0, 0, 0, 0.16);
   box-shadow:
-    -10px -10px 22px rgba(255, 255, 255, 0.035),
-    12px 14px 26px rgba(0, 0, 0, 0.72),
+    -10px -10px 22px rgba(255, 255, 255, 0.8),
+    12px 14px 26px rgba(0, 0, 0, 0.1),
     0 0 28px rgba(105, 90, 255, 0.12);
   transition:
     transform 220ms ease,
@@ -186,12 +203,10 @@ html {
   place-items: center;
   border-radius: 22px;
   background:
-    radial-gradient(
-      circle,
+    radial-gradient(circle,
       rgba(100, 88, 210, 0.18) 0%,
       rgba(255, 255, 255, 0.045) 42%,
-      rgba(0, 0, 0, 0.12) 100%
-    );
+      rgba(0, 0, 0, 0.12) 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
     inset 0 -10px 20px rgba(0, 0, 0, 0.22);
@@ -211,9 +226,9 @@ html {
   display: grid;
   place-items: center;
   border-radius: 14px;
-  background: #18191d;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #ffffff;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  color: #050505;
   font-weight: 600;
   text-align: center;
   font-size: 0.95rem;
@@ -248,19 +263,6 @@ html {
    Featured Projects — Premium Horizontal Cards
    ══════════════════════════════════════════════ */
 
-/* Scoped Aesthetic Typography for Projects Section */
-#projects {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-#projects .font-heading,
-#projects h2,
-#projects h3,
-#projects h4,
-#projects button,
-#projects a {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
 
 /* Portfolio pill badge */
 .portfolio-pill {
@@ -325,12 +327,10 @@ html {
   position: relative;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.025) 0%,
-    rgba(10, 10, 11, 0.95) 50%,
-    rgba(255, 255, 255, 0.01) 100%
-  );
+  background: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.025) 0%,
+      rgba(10, 10, 11, 0.95) 50%,
+      rgba(255, 255, 255, 0.01) 100%);
   overflow: hidden;
   transition: border-color 0.5s ease, box-shadow 0.5s ease;
 }
@@ -421,13 +421,16 @@ html {
 
 /* Glow pulse keyframe for active ring */
 @keyframes wheelGlowPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow:
       0 0 15px rgba(0, 255, 157, 0.4),
       0 0 30px rgba(0, 255, 157, 0.2),
       0 0 50px rgba(0, 255, 157, 0.1),
       inset 0 0 10px rgba(0, 255, 157, 0.15);
   }
+
   50% {
     box-shadow:
       0 0 20px rgba(0, 255, 157, 0.5),
@@ -454,9 +457,9 @@ html {
 }
 
 .wheel-nav-item:hover {
-  border-color: rgba(0, 255, 157, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.7);
-  background: rgba(0, 255, 157, 0.06);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Active state — large, glowing ring */
@@ -519,3 +522,40 @@ html {
   filter: drop-shadow(0 0 6px rgba(0, 255, 157, 0.08));
 }
 
+/* ══════════════════════════════════════════════
+   Hero Sidebar Layout Fixes
+   ══════════════════════════════════════════════ */
+
+/* Ensure proper sidebar positioning */
+#hero aside {
+  position: relative;
+  height: 100%;
+  max-height: 100vh;
+}
+
+/* Fix main content area overflow */
+#hero main {
+  position: relative;
+  height: 100%;
+  max-height: 100vh;
+}
+
+/* Responsive sidebar adjustments */
+@media (max-width: 1024px) {
+  #hero {
+    flex-direction: column;
+  }
+  
+  #hero aside {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    position: relative;
+  }
+  
+  #hero main {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+}
