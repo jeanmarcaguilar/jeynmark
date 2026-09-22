@@ -9,15 +9,8 @@ import CapstoneModal from './CapstoneModal';
 const projects = [
   {
     title: 'Website',
-    description: 'A collection of web-based projects built to provide practical digital experiences, from responsive interfaces and interactive platforms to custom tools and information-driven websites. Each project focuses on usability, functionality, and modern web development to create accessible and engaging solutions for different needs.',
-    fullDescription: 'A collection of web-based projects built to provide practical digital experiences, from responsive interfaces and interactive platforms to custom tools and information-driven websites. Each project focuses on usability, functionality, and modern web development to create accessible and engaging solutions for different needs.',
-    features: [
-      'QR-Based Item Identification — Assigns a unique QR code to each registered item, allowing finders to quickly scan and access recovery information without unnecessarily exposing the owner\'s personal details.',
-      'Lost & Found Item Management — Enables users to register personal belongings, manage item information, report found objects, and update the status of lost or recovered items through an organized platform.',
-      'Secure Owner-Finder Communication — Provides a simple communication process between item owners and finders, helping coordinate the safe return of lost belongings while keeping sensitive contact information protected.'
-    ],
-    technologies: ['PHP', 'MySQL', 'HTML5', 'CSS3', 'JavaScript', 'QR Code API / QR Code Library', 'Bootstrap / Tailwind CSS', 'XAMPP', 'Git & GitHub'],
-    github: 'https://github.com/jeanmarcaguilar/LOOK',
+    description:
+      'A full-stack web platform for tracking parking slot availability and transactions in real time, with a database-backed dashboard and API-driven data sync between the front end and server.',
     stack: ['', '', ''],
     liveUrl: '#',
     repoUrl: '#',
@@ -41,9 +34,12 @@ const projects = [
       {
         src: '/images/website/k.png',
         alt: 'Real-time slot tracker dashboard',
-        title: 'ParkSense',
+        title: 'Real-time slot tracker',
         badge: 'DASHBOARD',
         theme: 'blue',
+        tagline: 'Every parking slot, live at a glance.',
+        overview:
+          'The main dashboard shows the current availability of every parking slot in real time, with its data pulled from the database through the API.',
         specs: [
           { primary: 'Real-Time', subtitle: 'SLOTS' },
           { primary: 'Database', subtitle: 'BACKED' },
@@ -58,9 +54,12 @@ const projects = [
       {
         src: '/images/website/e.png',
         alt: 'Transaction overview dashboard',
-        title: 'FleetFlow',
+        title: 'Transaction overview',
         badge: 'TRANSACTIONS',
         theme: 'purple',
+        tagline: 'Parking transactions, all in one place.',
+        overview:
+          'A dashboard view of parking transactions, so activity can be reviewed alongside slot availability without switching screens.',
         specs: [
           { primary: 'Parking', subtitle: 'ACTIVITY' },
           { primary: 'Database', subtitle: 'BACKED' },
@@ -70,13 +69,12 @@ const projects = [
           { src: '/images/website/e-2.png', alt: 'Look – view 2' },
           { src: '/images/website/e-3.png', alt: 'Look – view 3' },
           { src: '/images/website/e-4.png', alt: 'Look – view 4' },
-          { src: '/images/website/e-5.png', alt: 'Look – view 5' },
         ],
       },
       {
         src: '/images/website/l.png',
         alt: 'RESTful API data sync view',
-        title: 'LOOK-Lost Object Kit',
+        title: 'API data sync',
         badge: 'REST API',
         theme: 'emerald',
         tagline: 'Front end and server, always in step.',
@@ -91,6 +89,7 @@ const projects = [
           { src: '/images/website/l-2.png', alt: 'FleetFlow – view 2' },
           { src: '/images/website/l-3.png', alt: 'FleetFlow – view 3' },
           { src: '/images/website/l-4.png', alt: 'FleetFlow – view 4' },
+          { src: '/images/website/l-5.png', alt: 'FleetFlow – view 5' },
         ],
       },
     ],
@@ -847,7 +846,7 @@ const WebsiteOverviewModal = ({ project, image, onClose }) => {
             </div>
 
             {/* Content */}
-            <div className="p-6 sm:p-7 lg:p-8 flex flex-col gap-6 min-w-0 overflow-y-auto custom-scrollbar">
+            <div className="p-6 sm:p-7 lg:p-8 flex flex-col justify-between gap-6 min-w-0">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-1.5 group-hover:text-blue-600 transition-colors">
                   {title}
@@ -857,44 +856,7 @@ const WebsiteOverviewModal = ({ project, image, onClose }) => {
                     {image.tagline}
                   </p>
                 )}
-                <p className="text-sm text-slate-500 leading-relaxed font-normal mb-4">{overview}</p>
-
-                {/* Full Description */}
-                {project.fullDescription && (
-                  <div className="mb-5">
-                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Full Description</h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">{project.fullDescription}</p>
-                  </div>
-                )}
-
-                {/* Key Features */}
-                {project.features && project.features.length > 0 && (
-                  <div className="mb-5">
-                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Key Features</h3>
-                    <ul className="text-xs text-slate-600 leading-relaxed space-y-1">
-                      {project.features.slice(0, 6).map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <span className="text-blue-600 mt-0.5">•</span>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Technologies */}
-                {project.technologies && project.technologies.length > 0 && (
-                  <div className="mb-5">
-                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Technologies</h3>
-                    <div className="flex flex-wrap gap-1.5">
-                      {project.technologies.map((tech, idx) => (
-                        <span key={idx} className="text-[10px] font-semibold text-[#263BAA] bg-blue-50/80 rounded-lg px-2 py-0.5">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <p className="text-sm text-slate-500 leading-relaxed font-normal">{overview}</p>
               </div>
 
               {specs.length > 0 && (
@@ -913,21 +875,6 @@ const WebsiteOverviewModal = ({ project, image, onClose }) => {
                     </div>
                   ))}
                 </div>
-              )}
-
-              {/* View Repository Button */}
-              {project.github && project.github !== '#' && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-[#263BAA] hover:bg-[#1a2d80] text-white text-xs font-bold rounded-xl transition-colors cursor-pointer"
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                  </svg>
-                  View Repository
-                </a>
               )}
             </div>
           </article>
@@ -1121,8 +1068,8 @@ const BentoProjectCard = ({ project, onOpenModal, onOpenImages, onOpenWebsiteMar
             <h3 className="text-base xl:text-lg font-black text-[#0A1629] tracking-tight leading-tight mb-1">
               {project.title}
             </h3>
-            <p className="text-[10px] text-slate-500 font-medium leading-snug line-clamp-6">
-              {project.fullDescription || project.description}
+            <p className="text-[10px] text-slate-500 font-medium leading-snug line-clamp-4">
+              {project.description}
             </p>
           </div>
 

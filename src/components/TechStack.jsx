@@ -270,7 +270,7 @@ const TechStack = ({ onBack, onNavigate }) => {
         </div>
 
         <main className="relative z-10 w-full py-8 px-4 sm:px-8 lg:px-12 xl:px-16">
-          <section className="bg-white rounded-[32px] main-card-shadow overflow-hidden relative">
+          <section className="bg-white dark:bg-card rounded-[32px] main-card-shadow overflow-hidden relative">
             <div className="p-6 sm:p-10 lg:p-12 flex flex-col gap-8">
 
               {/* ---- HEADER ---- */}
@@ -283,14 +283,14 @@ const TechStack = ({ onBack, onNavigate }) => {
                   <BackIcon />
                   <span>Back</span>
                 </button>
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50/80 text-[#263BAA] text-xs font-bold uppercase tracking-wider mb-3">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50/80 dark:bg-blue-500/20 text-[#263BAA] dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
                   <span className="w-2 h-2 rounded-full bg-[#FF6B00]"></span>
                   Technologies
                 </div>
-                <h1 className="text-3xl sm:text-4xl xl:text-5xl font-black text-[#0A1629] tracking-tight leading-tight mb-2">
+                <h1 className="text-3xl sm:text-4xl xl:text-5xl font-black text-[#0A1629] dark:text-white tracking-tight leading-tight mb-2">
                   Tech <span className="text-[#263BAA]">Stack</span>
                 </h1>
-                <p className="text-sm sm:text-base text-[#64748B] font-medium max-w-2xl leading-relaxed">
+                <p className="text-sm sm:text-base text-[#64748B] dark:text-secondary font-medium max-w-2xl leading-relaxed">
                   The technologies, frameworks, and tools I reach for when designing and engineering full-stack digital products.
                 </p>
               </div>
@@ -340,4 +340,4 @@ const TechStack = ({ onBack, onNavigate }) => {
   );
 };
 
-export default TechStack;
+export default TechStack;

@@ -5,13 +5,18 @@ import avatarImage from '../assets/avatar.jpg';
 import aboutCard1 from '../assets/images/about_card_1.jpg';
 import aboutCard2 from '../assets/images/about_card_2.jpg';
 import aboutCard3 from '../assets/images/about_card_3.jpg';
-import seminar1 from '../assets/images/seminar_1.jpg';
-import seminar2 from '../assets/images/seminar_2.jpg';
-import seminar3 from '../assets/images/seminar_3.jpg';
+import seminar1 from '../assets/For Seminar 1.png';
+import seminar2 from '../assets/images/For Seminar-2.png';
+import seminar3 from '../assets/images/Cert2.png';
+import project1 from '/images/website/e.png';
+import project2 from '/images/website/k.png';
+import project3 from '/images/website/l.jpg';
 import About from './About';
 import TechStack from './TechStack';
 import Seminars from './Seminars';
 import Projects from './Projects';
+import Gear from './Gear';
+import Contact from './Contact';
 
 // Custom Tech Icons
 const HTML5Icon = () => (
@@ -166,7 +171,7 @@ const MorphButton = ({ isDarkMode, toggleDarkMode }) => {
       onMouseLeave={() => setIsHovered(false)}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.96 }}
-      className="relative flex items-center justify-center h-9 w-9 rounded-full bg-slate-100 hover:bg-slate-800 text-slate-700 hover:text-white cursor-pointer transition-colors duration-150"
+      className="relative flex items-center justify-center h-9 w-9 rounded-full bg-slate-100 dark:bg-hover hover:bg-slate-800 dark:hover:bg-hover text-slate-700 dark:text-secondary hover:text-white cursor-pointer transition-colors duration-150"
     >
       <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
         <AnimatePresence mode="popLayout" initial={false}>
@@ -179,7 +184,7 @@ const MorphButton = ({ isDarkMode, toggleDarkMode }) => {
               transition={{ type: "spring", stiffness: 600, damping: 25 }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              <Moon className="w-5 h-5 text-slate-800" />
+              <Moon className="w-5 h-5 text-slate-800 dark:text-primary" />
             </motion.div>
           ) : (
             <motion.div
@@ -359,7 +364,7 @@ const BentoArrowButton = ({ label = "Open section", onClick }) => (
     type="button"
     onClick={onClick}
     aria-label={label}
-    className="w-7 h-7 xl:w-8 xl:h-8 rounded-full bg-white shadow-sm hover:shadow-md flex items-center justify-center text-slate-600 hover:bg-[#263BAA] hover:text-white transition-all duration-200 opacity-0 group-hover/bento:opacity-100 group-hover/bento:translate-y-0 group-hover/bento:scale-100 group-focus-within/bento:opacity-100 group-focus-within/bento:translate-y-0 group-focus-within/bento:scale-100 group/btn shrink-0 cursor-pointer"
+    className="w-7 h-7 xl:w-8 xl:h-8 rounded-full bg-white dark:bg-background shadow-sm hover:shadow-md flex items-center justify-center text-slate-600 dark:text-secondary hover:bg-[#263BAA] hover:text-white transition-all duration-200 opacity-0 group-hover/bento:opacity-100 group-hover/bento:translate-y-0 group-hover/bento:scale-100 group-focus-within/bento:opacity-100 group-focus-within/bento:translate-y-0 group-focus-within/bento:scale-100 group/btn shrink-0 cursor-pointer"
   >
     <svg
       className="w-3.5 h-3.5 xl:w-4 xl:h-4 stroke-[2.75] transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
@@ -390,10 +395,59 @@ export default function Hero() {
     }
   }, []);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDarkMode ? 'light' : 'dark');
+  const toggleDarkMode = (e) => {
+    const applyTheme = () => {
+      setIsDarkMode((prev) => {
+        const next = !prev;
+        document.documentElement.classList.toggle('dark', next);
+        localStorage.setItem('theme', next ? 'dark' : 'light');
+        return next;
+      });
+    };
+
+    // Figure out where the click happened so the reveal radiates from there.
+    // Falls back to the button's own center for keyboard-triggered clicks.
+    let x = e?.clientX;
+    let y = e?.clientY;
+    if (!x && !y && e?.currentTarget) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top + rect.height / 2;
+    }
+    x = x ?? window.innerWidth / 2;
+    y = y ?? window.innerHeight / 2;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!document.startViewTransition || prefersReducedMotion) {
+      applyTheme();
+      return;
+    }
+
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+      applyTheme();
+    });
+
+    transition.ready.then(() => {
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 650,
+          easing: 'ease-in-out',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      );
+    });
   };
 
   const handleNavClick = (section) => {
@@ -434,7 +488,7 @@ export default function Hero() {
   ];
 
   return (
-    <div className="h-screen w-full overflow-hidden bg-white text-slate-900 select-none flex flex-col selection:bg-[#263BAA] selection:text-white font-['Poppins',system-ui,sans-serif]">
+    <div className="h-screen w-full overflow-hidden bg-white dark:bg-background text-slate-900 dark:text-primary select-none flex flex-col selection:bg-[#263BAA] selection:text-white font-['Poppins',system-ui,sans-serif]">
       <style>{`
         *:focus-visible {
           outline: none;
@@ -468,13 +522,26 @@ export default function Hero() {
           background-image: radial-gradient(circle at 100% 0%, rgba(38, 59, 170, 0.05) 0%, transparent 60%),
                             radial-gradient(circle at 0% 100%, rgba(245, 158, 11, 0.06) 0%, transparent 50%);
         }
+
+        /* Radial Reveal Theme Toggle (View Transitions API) */
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+          animation: none;
+          mix-blend-mode: normal;
+        }
+        ::view-transition-old(root) {
+          z-index: 1;
+        }
+        ::view-transition-new(root) {
+          z-index: 2;
+        }
       `}</style>
 
       {/* Main Viewport Box */}
       <div id="hero" className="w-full h-full max-w-[1920px] mx-auto flex flex-row gap-10 overflow-hidden relative">
 
         {/* LEFT SIDEBAR */}
-        <aside aria-label="Kaizel Profile & Navigation" className="w-72 xl:w-80 shrink-0 bg-white flex flex-col justify-between px-6 pb-6 pt-4 xl:px-8 xl:pb-8 xl:pt-6 h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+        <aside aria-label="Kaizel Profile & Navigation" className="w-72 xl:w-80 shrink-0 bg-white dark:bg-background flex flex-col justify-between px-6 pb-6 pt-4 xl:px-8 xl:pb-8 xl:pt-6 h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
           <div className="flex flex-col items-center text-center">
             {/* Avatar Wrapper */}
             <div className="relative -mb-4">
@@ -491,17 +558,17 @@ export default function Hero() {
 
             {/* Name & Status */}
             <div className="flex items-center gap-2 mb-1">
-              <h1 className="text-2xl xl:text-2xl font-bold tracking-tight text-slate-900">JM Aguilar</h1>
+              <h1 className="text-2xl xl:text-2xl font-bold tracking-tight text-slate-900 dark:text-primary">JM Aguilar</h1>
               <i className="ph-fill ph-seal-check text-blue-600 text-xl" title="Verified Specialist"></i>
             </div>
-            <p className="text-sm xl:text-base text-slate-600 mb-3">@jeanmarcdev · 24,582 Total Visits</p>
+            <p className="text-sm xl:text-base text-slate-600 dark:text-secondary mb-3">@jeanmarcdev · 24,582 Total Visits</p>
 
             {/* Social Icons */}
-            <div className="flex items-center justify-center gap-3 pb-4 mb-4 border-b border-slate-200 w-full">
+            <div className="flex items-center justify-center gap-3 pb-4 mb-4 border-b border-slate-200 dark:border-border w-full">
               <a
                 aria-label="Facebook"
-                className="w-10 h-10 rounded-full bg-slate-100 hover:bg-[#0866ff] hover:text-white text-slate-700 flex items-center justify-center transition-colors"
-                href="https://facebook.com"
+                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-hover hover:bg-[#0866ff] hover:text-white text-slate-700 dark:text-secondary flex items-center justify-center transition-colors"
+                href="https://www.facebook.com/jiimmmmmmmmmmmmmmmmmmmmmmm/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -509,8 +576,8 @@ export default function Hero() {
               </a>
               <a
                 aria-label="Instagram"
-                className="w-10 h-10 rounded-full bg-slate-100 hover:bg-[#E1306C] hover:text-white text-slate-700 flex items-center justify-center transition-colors"
-                href="https://instagram.com"
+                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-hover hover:bg-[#E1306C] hover:text-white text-slate-700 dark:text-secondary flex items-center justify-center transition-colors"
+                href="https://www.instagram.com/whotfisjiim/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -518,8 +585,8 @@ export default function Hero() {
               </a>
               <a
                 aria-label="GitHub"
-                className="w-10 h-10 rounded-full bg-slate-100 hover:bg-[#1F2937] hover:text-white text-slate-700 flex items-center justify-center transition-colors"
-                href="https://github.com"
+                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-hover hover:bg-[#1F2937] hover:text-white text-slate-700 dark:text-secondary flex items-center justify-center transition-colors"
+                href="https://github.com/jeanmarcaguilar"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -527,8 +594,8 @@ export default function Hero() {
               </a>
               <a
                 aria-label="LinkedIn"
-                className="w-10 h-10 rounded-full bg-slate-100 hover:bg-[#0A66C2] hover:text-white text-slate-700 flex items-center justify-center transition-colors"
-                href="https://linkedin.com"
+                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-hover hover:bg-[#0A66C2] hover:text-white text-slate-700 dark:text-secondary flex items-center justify-center transition-colors"
+                href="https://www.linkedin.com/in/jiim/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -544,8 +611,8 @@ export default function Hero() {
                   key={idx}
                   onClick={() => handleNavClick(item.id)}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-sm xl:text-base transition-colors cursor-pointer ${activeSection === item.id
-                    ? 'bg-slate-200 text-slate-800 shadow-md'
-                    : 'text-slate-700 hover:bg-slate-100 hover:text-slate-600'
+                    ? 'bg-slate-200 dark:bg-hover text-slate-800 dark:text-primary shadow-md'
+                    : 'text-slate-700 dark:text-secondary hover:bg-slate-100 dark:hover:bg-hover hover:text-slate-600 dark:hover:text-primary'
                     }`}
                 >
                   {item.customIcon ? (
@@ -562,17 +629,17 @@ export default function Hero() {
           </div>
 
           {/* Bottom: Accessibility badge & copyright */}
-          <div className="pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+          <div className="pt-4 border-t border-slate-200 dark:border-border flex items-center justify-between text-xs text-slate-500 dark:text-secondary">
             <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
+              <span className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-hover text-slate-600 dark:text-secondary flex items-center justify-center">
                 <i className="ph-bold ph-wheelchair text-sm"></i>
               </span>
               <div className="leading-tight text-left">
-                <p className="font-semibold text-slate-700">WCAG AAA</p>
-                <p className="text-[10px] text-slate-400">Accessible</p>
+                <p className="font-semibold text-slate-700 dark:text-secondary">WCAG AAA</p>
+                <p className="text-[10px] text-slate-400 dark:text-secondary/70">Accessible</p>
               </div>
             </div>
-            <div className="text-right text-[10px] text-slate-400">
+            <div className="text-right text-[10px] text-slate-400 dark:text-secondary/70">
               <p>© 2026 Kaizel</p>
               <p>All rights reserved</p>
             </div>
@@ -580,595 +647,526 @@ export default function Hero() {
         </aside>
 
         {/* RIGHT CANVAS */}
-        <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-white p-1 xl:p-2 overflow-y-auto">
+        <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-white dark:bg-background p-1 xl:p-2 overflow-y-auto">
           {activeSection === 'home' && (
             <>
               {/* TOP HERO SECTION */}
               <header className="shrink-0 flex items-center justify-between gap-4 pb-2 pt-2">
-            <div className="max-w-4xl min-w-0">
-              <h2 className="text-3xl sm:text-5xl xl:text-[60px] font-extrabold text-[#263BAA] tracking-tight leading-[1.05] whitespace-nowrap">
-                Build smart. Ship with confidence.
-              </h2>
-              <p className="text-base sm:text-lg xl:text-xl text-slate-700 font-semibold mt-3 leading-snug">
-                I design and develop modern web applications that turn ideas into reliable, user-focused digital experiences.
-              </p>
-            </div>
-            <div className="shrink-0 mr-4 xl:mr-6">
-              <a
-                href="/resume.pdf"
-                download="Jean_Marc_Aguilar_Resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 px-3.5 py-1.5 xl:px-4 xl:py-2 rounded-full bg-[#111827] hover:bg-[#1f2937] text-white font-semibold text-xs xl:text-sm shadow-md hover:-translate-y-1 active:translate-y-0 active:scale-95 transition-all duration-300 ease-out focus-visible:ring-2 cursor-pointer"
-              >
-                <span>Resume</span>
-                <svg
-                  className="w-3.5 h-3.5 xl:w-4 xl:h-4 transition-transform duration-200 ease-out group-hover:translate-x-1 group-hover:-translate-y-1"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="7" y1="17" x2="17" y2="7" />
-                  <polyline points="7 7 17 7 17 17" />
-                </svg>
-              </a>
-            </div>
-          </header>
-
-          {/* TECH STACK BAR */}
-          <section aria-label="Tools and Technologies" className="shrink-0 my-6 xl:my-8">
-            <div className="bg-slate-50/80 rounded-2xl px-5 py-2.5 xl:py-3 shadow-xs flex items-center gap-4 overflow-hidden backdrop-blur-sm">
-              <div className="shrink-0 border-r border-slate-200/70 pr-4 leading-none">
-                <span className="block text-[10px] xl:text-[11px] font-bold uppercase tracking-widest text-slate-400">DAILY DRIVERS</span>
-                <span className="text-base xl:text-lg font-black text-[#263BAA] whitespace-nowrap">Tools I work with</span>
-              </div>
-              <div className="relative overflow-hidden w-full min-w-0 select-none py-1">
-                <div className="animate-marquee flex items-center gap-8 text-sm font-bold text-slate-800">
-                  {[...tools, ...tools].map((tool, idx) => (
-                    <span
-                      key={idx}
-                      className="inline-flex items-center gap-2 text-sm xl:text-base font-semibold text-slate-700 whitespace-nowrap"
+                <div className="max-w-4xl min-w-0">
+                  <h2 className="text-3xl sm:text-5xl xl:text-[60px] font-extrabold text-[#263BAA] tracking-tight leading-[1.05] whitespace-nowrap">
+                    Build smart. Ship with confidence.
+                  </h2>
+                  <p className="text-base sm:text-lg xl:text-xl text-slate-700 dark:text-secondary font-semibold mt-3 leading-snug">
+                    I design and develop modern web applications that turn ideas into reliable, user-focused digital experiences.
+                  </p>
+                </div>
+                <div className="shrink-0 mr-4 xl:mr-6">
+                  <a
+                    href="/resume.pdf"
+                    download="Jean_Marc_Aguilar_Resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 px-3.5 py-1.5 xl:px-4 xl:py-2 rounded-full bg-[#111827] hover:bg-[#1f2937] text-white font-semibold text-xs xl:text-sm shadow-md hover:-translate-y-1 active:translate-y-0 active:scale-95 transition-all duration-300 ease-out focus-visible:ring-2 cursor-pointer"
+                  >
+                    <span>Resume</span>
+                    <svg
+                      className="w-3.5 h-3.5 xl:w-4 xl:h-4 transition-transform duration-200 ease-out group-hover:translate-x-1 group-hover:-translate-y-1"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
-                      {tool.icon} {tool.text}
-                    </span>
-                  ))}
+                      <line x1="7" y1="17" x2="17" y2="7" />
+                      <polyline points="7 7 17 7 17 17" />
+                    </svg>
+                  </a>
                 </div>
-              </div>
-            </div>
-          </section>
+              </header>
 
-          {/* MASTER CONTAINER HOLDING THE 6 BENTO SECTIONS */}
-          <section className="flex-1 min-h-0 bg-[#FAF9F5] rounded-[32px] p-3 xl:p-4 shadow-xs flex flex-col overflow-hidden">
-            <div className="flex-1 min-h-0 grid grid-cols-12 grid-rows-2 gap-3">
-
-              {/* Bento 1: Projects (6 Cols) */}
-              <article
-                id="bento-projects"
-                onClick={() => handleNavClick('projects')}
-                className="col-span-12 lg:col-span-6 bg-white rounded-[26px] p-4 xl:p-5 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col justify-between min-h-0 overflow-hidden relative group/bento cursor-pointer"
-              >
-                <div className="absolute top-3.5 right-3.5 z-30">
-                  <BentoArrowButton
-                    label="View Projects"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleNavClick('projects');
-                    }}
-                  />
-                </div>
-                <div className="w-full h-full flex flex-row gap-3 min-h-0 relative overflow-hidden">
-                  <div className="w-5/12 flex flex-col justify-between h-full min-h-0 shrink-0 z-10 p-1">
-                    <div>
-                      <div className="flex items-center gap-2.5 mb-2">
-                        <div className="w-9 h-9 xl:w-10 xl:h-10 rounded-2xl bg-slate-50 text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
-                          <ProjectsIcon color="#FF6B00" />
-                        </div>
-                        <h3 className="text-lg xl:text-xl font-black text-[#263BAA] tracking-tight leading-tight">Projects</h3>
-                      </div>
-                      <p className="text-[10px] text-slate-500 font-medium mt-1.5">
-                        Funnels, workflows and apps built to solve real problems.
-                      </p>
-                    </div>
+              {/* TECH STACK BAR */}
+              <section aria-label="Tools and Technologies" className="shrink-0 my-6 xl:my-8">
+                <div className="bg-slate-50/80 dark:bg-card/80 rounded-2xl px-5 py-2.5 xl:py-3 shadow-xs flex items-center gap-4 overflow-hidden backdrop-blur-sm">
+                  <div className="shrink-0 border-r border-slate-200/70 dark:border-border/70 pr-4 leading-none">
+                    <span className="block text-[10px] xl:text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-secondary/70">DAILY DRIVERS</span>
+                    <span className="text-base xl:text-lg font-black text-[#263BAA] whitespace-nowrap">Tools I work with</span>
                   </div>
-
-                  <div className="w-7/12 h-full relative min-h-0 overflow-hidden rounded-2xl bg-white flex flex-col select-none">
-                    <div className="absolute inset-x-0 top-0 h-6 bg-linear-to-b from-white to-transparent z-20 pointer-events-none"></div>
-                    <div className="absolute inset-x-0 bottom-0 h-6 bg-linear-to-t from-white to-transparent z-20 pointer-events-none"></div>
-
-                    <div className="relative overflow-hidden w-full h-full">
-                      <div className="animate-marquee-up flex flex-col gap-2.5 p-2" style={{ animationDuration: '24s' }}>
-                        {[
-                          ...[0, 1, 2],
-                          ...[0, 1, 2],
-                          ...[0, 1, 2],
-                          ...[0, 1, 2]
-                        ].map((cardIdx, idx) => (
-                          <div key={idx} className="shrink-0 w-full">
-                            {cardIdx === 0 && (
-                              <div className="w-full rounded-2xl bg-slate-900 p-2.5 shadow-sm flex flex-col justify-between overflow-hidden relative">
-                                <div className="flex items-center justify-between text-[7px] text-slate-400 font-mono pb-1 border-b border-slate-800">
-                                  <div className="flex items-center gap-1">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                    <span className="text-[7px] text-slate-300 font-sans tracking-wide font-bold">COHORT 014 · ENROLLING NOW</span>
-                                  </div>
-                                  <span className="text-slate-400 font-mono text-[7px]">07:00 Apr 21</span>
-                                </div>
-                                <div className="my-1.5">
-                                  <h4 className="text-[11px] xl:text-xs font-serif text-white tracking-tight leading-tight italic">
-                                    Seven days to remember what <span className="font-sans not-italic font-extrabold text-[#FF6B00]">strong</span> feels like.
-                                  </h4>
-                                </div>
-                                <div className="flex items-center justify-between text-[7px] text-slate-400 pt-1 border-t border-slate-800">
-                                  <span className="text-slate-300 font-mono flex items-center gap-1">
-                                    <i className="ph-bold ph-brackets-curly text-blue-400"></i> fitness.kaizel.dev
-                                  </span>
-                                  <span className="px-1.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-[7px] font-bold">Project 01</span>
-                                </div>
-                              </div>
-                            )}
-
-                            {cardIdx === 1 && (
-                              <div className="w-full rounded-2xl bg-slate-50 p-2.5 shadow-xs flex flex-col justify-between overflow-hidden relative">
-                                <div className="flex items-center justify-between pb-1 border-b border-slate-200/70">
-                                  <div className="flex items-center gap-1">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00]"></span>
-                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                    <span className="text-[7px] text-slate-600 font-serif tracking-wider uppercase ml-1">
-                                      <span className="text-[#263BAA] font-bold">HALCYON</span> properties
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-1 text-[6px] text-slate-400 uppercase font-sans">
-                                    <span>RESIDENCE</span>
-                                  </div>
-                                </div>
-                                <div className="my-1.5 bg-white rounded-xl p-1.5 shadow-2xs">
-                                  <p className="text-[10px] font-extrabold text-slate-900 truncate">Curated Coastal Architecture</p>
-                                  <p className="text-[8px] text-slate-500 line-clamp-1">Interactive virtual tours & 3D showcase.</p>
-                                </div>
-                                <div className="flex items-center justify-between text-[7px] text-slate-500 pt-1 border-t border-slate-200/70">
-                                  <span className="font-mono text-[7px] text-slate-600 flex items-center gap-1">
-                                    <i className="ph-bold ph-browsers text-slate-400"></i> halcyon.estate
-                                  </span>
-                                  <span className="px-1.5 py-0.5 rounded-full bg-slate-200 text-slate-700 text-[7px] font-bold">Project 02</span>
-                                </div>
-                              </div>
-                            )}
-
-                            {cardIdx === 2 && (
-                              <div className="w-full rounded-2xl bg-slate-950 p-2.5 shadow-sm flex flex-col justify-between overflow-hidden relative">
-                                <div className="flex items-center justify-between pb-1 border-b border-slate-800">
-                                  <div className="flex items-center gap-1 text-[7px] font-mono text-cyan-400">
-                                    <i className="ph-bold ph-cpu text-cyan-400 text-[8px]"></i>
-                                    <span className="font-bold tracking-wide">NOVACORE DISTRIBUTED</span>
-                                  </div>
-                                  <span className="text-[7px] text-emerald-400 font-mono font-bold">99.99% SLA</span>
-                                </div>
-                                <div className="my-1.5">
-                                  <h4 className="text-[10px] font-black text-white tracking-tight leading-tight">
-                                    Enterprise API Engine
-                                  </h4>
-                                  <p className="text-[8px] text-slate-400 line-clamp-1">Event-driven microservices processing 45M+ events/day.</p>
-                                </div>
-                                <div className="flex items-center justify-between text-[7px] text-slate-400 pt-1 border-t border-slate-800">
-                                  <span className="font-mono text-slate-300">novacore.cloud</span>
-                                  <span className="px-1.5 py-0.5 rounded-full bg-cyan-950 text-cyan-300 text-[7px] font-bold">Project 03</span>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              {/* Bento 2: About (3 Cols) */}
-              <article
-                id="bento-about"
-                onClick={() => handleNavClick('about')}
-                className="col-span-12 lg:col-span-3 bg-white rounded-[26px] p-4 xl:p-5 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col justify-between min-h-0 overflow-hidden relative group/bento cursor-pointer"
-              >
-                <div className="absolute top-3.5 right-3.5 z-30">
-                  <BentoArrowButton
-                    label="View About"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleNavClick('about');
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col h-full justify-between">
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-2xl bg-slate-50 text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
-                        <AboutIcon color="#FF6B00" />
-                      </div>
-                      <h3 className="text-lg xl:text-xl font-black text-[#263BAA] leading-tight">About</h3>
-                    </div>
-                    <p className="text-xs text-slate-500 font-medium leading-snug mt-1.5">
-                      Who I am and how I work.
-                    </p>
-                  </div>
-
-                  <div className="my-auto relative w-full h-44 xl:h-52 flex items-center justify-center select-none pt-2">
-                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-44 xl:w-52 h-6 bg-slate-900/15 blur-lg rounded-full pointer-events-none"></div>
-                    <div className="relative flex items-center justify-center w-full h-full">
-                      <div className="w-28 xl:w-32 aspect-3/4 bg-white rounded-2xl shadow-md absolute transform transition-all duration-300 ease-out -rotate-12 -translate-x-9 translate-y-1 group-hover/bento:-rotate-16 group-hover/bento:-translate-x-12 group-hover/bento:-translate-y-1 z-0 overflow-hidden">
-                        <img src={aboutCard3} alt="About illustration 1" className="w-full h-full object-cover" />
-                      </div>
-                      <div className="w-28 xl:w-32 aspect-3/4 bg-white rounded-2xl shadow-lg absolute transform transition-all duration-300 ease-out -rotate-4 -translate-x-3 -translate-y-1 group-hover/bento:-rotate-6 group-hover/bento:-translate-x-5 group-hover/bento:-translate-y-2 z-10 overflow-hidden">
-                        <img src={aboutCard2} alt="About illustration 2" className="w-full h-full object-cover" />
-                      </div>
-                      <div className="w-30 xl:w-34 aspect-3/4 bg-white rounded-2xl shadow-xl absolute transform transition-all duration-300 ease-out rotate-8 translate-x-5 -translate-y-2 group-hover/bento:rotate-12 group-hover/bento:translate-x-7 group-hover/bento:-translate-y-3 z-20 overflow-hidden">
-                        <img src={aboutCard1} alt="About illustration 3" className="w-full h-full object-cover" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              {/* Bento 3: Development Approach (3 Cols) */}
-              <article
-                id="bento-approach"
-                className="col-span-12 lg:col-span-3 bg-white rounded-[26px] p-4 xl:p-5 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col justify-between min-h-0 overflow-hidden relative group/bento"
-              >
-                <div className="flex flex-col h-full justify-between min-h-0">
-                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 shrink-0 pr-9">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-2xl bg-slate-50 text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
-                        <DevelopmentIcon color="#FF6B00" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg xl:text-xl font-black text-[#263BAA] leading-tight">Development Approach</h3>
-                        <p className="text-[10px] text-slate-500 font-medium">How I turn ideas into working solutions.</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex-1 min-h-0 relative overflow-hidden my-2 select-none">
-                    <div className="absolute inset-x-0 top-0 h-4 bg-linear-to-b from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
-                    <div className="absolute inset-x-0 bottom-0 h-4 bg-linear-to-t from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
-
-                    <div className="animate-marquee-up flex flex-col gap-2" style={{ animationDuration: '18s' }}>
-                      {[
-                        ...[
-                          { step: '01', title: 'Understand', desc: 'Identify the problem and requirements.', icon: 'ph-magnifying-glass' },
-                          { step: '02', title: 'Design', desc: 'Plan a clean and intuitive user experience.', icon: 'ph-paint-brush' },
-                          { step: '03', title: 'Develop', desc: 'Build reliable frontend and backend systems.', icon: 'ph-code' },
-                          { step: '04', title: 'Integrate', desc: 'Connect APIs, databases, and services.', icon: 'ph-plugs-connected' },
-                          { step: '05', title: 'Refine', desc: 'Test, optimize, and improve the solution.', icon: 'ph-sparkle' },
-                          { step: '06', title: 'Deliver', desc: 'Deploy a polished, production-ready result.', icon: 'ph-rocket-launch' },
-                        ],
-                        ...[
-                          { step: '01', title: 'Understand', desc: 'Identify the problem and requirements.', icon: 'ph-magnifying-glass' },
-                          { step: '02', title: 'Design', desc: 'Plan a clean and intuitive user experience.', icon: 'ph-paint-brush' },
-                          { step: '03', title: 'Develop', desc: 'Build reliable frontend and backend systems.', icon: 'ph-code' },
-                          { step: '04', title: 'Integrate', desc: 'Connect APIs, databases, and services.', icon: 'ph-plugs-connected' },
-                          { step: '05', title: 'Refine', desc: 'Test, optimize, and improve the solution.', icon: 'ph-sparkle' },
-                          { step: '06', title: 'Deliver', desc: 'Deploy a polished, production-ready result.', icon: 'ph-rocket-launch' },
-                        ],
-                      ].map((item, idx) => (
-                        <div
+                  <div className="relative overflow-hidden w-full min-w-0 select-none py-1">
+                    <div className="animate-marquee flex items-center gap-8 text-sm font-bold text-slate-800 dark:text-primary">
+                      {[...tools, ...tools].map((tool, idx) => (
+                        <span
                           key={idx}
-                          className="flex items-start gap-2.5 p-2.5 rounded-2xl bg-slate-50/80 hover:bg-slate-100/90 transition-all duration-200 group shrink-0"
+                          className="inline-flex items-center gap-2 text-sm xl:text-base font-semibold text-slate-700 dark:text-secondary whitespace-nowrap"
                         >
-                          <div className="w-8 h-8 rounded-xl bg-white text-slate-800 flex items-center justify-center shrink-0 shadow-2xs font-mono text-[11px] font-black group-hover:bg-[#263BAA] group-hover:text-white transition-colors">
-                            {item.step}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <h4 className="text-xs font-bold text-[#263BAA] group-hover:text-[#FF6B00] transition-colors">
-                              {item.title}
-                            </h4>
-                            <p className="text-[10px] text-slate-500 leading-snug mt-0.5">
-                              {item.desc}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              {/* Bento 4: Seminars & Workshops (3 Cols) */}
-              <article
-                id="bento-credentials"
-                onClick={() => handleNavClick('seminars')}
-                className="col-span-12 lg:col-span-3 bg-white rounded-[26px] p-4 xl:p-5 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col justify-between min-h-0 overflow-hidden relative group/bento cursor-pointer"
-              >
-                <div className="absolute top-3.5 right-3.5 z-30">
-                  <BentoArrowButton
-                    label="View Seminars & Experience"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleNavClick('seminars');
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col h-full justify-between min-h-0">
-                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 shrink-0 pr-9">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-2xl bg-slate-50 text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
-                        <SeminarsIcon color="#FF6B00" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg xl:text-xl font-black text-[#263BAA] leading-tight">Seminars</h3>
-                        <p className="text-[10px] text-slate-500 font-medium">Events &amp; workshops attended.</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-orange-50 text-[#FF6B00] text-[9px] font-bold shrink-0">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] animate-pulse"></span>
-                      <span>Live Feed</span>
-                    </div>
-                  </div>
-
-                  <div className="flex-1 min-h-0 relative overflow-hidden my-2 select-none">
-                    <div className="absolute inset-x-0 top-0 h-4 bg-linear-to-b from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
-                    <div className="absolute inset-x-0 bottom-0 h-4 bg-linear-to-t from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
-
-                    <div className="animate-marquee-up flex flex-col gap-2.5" style={{ animationDuration: '14s' }}>
-                      {[seminar1, seminar2, seminar3, seminar1, seminar2, seminar3].map((img, idx) => (
-                        <div
-                          key={idx}
-                          className="w-full h-28 xl:h-32 rounded-2xl overflow-hidden shadow-xs shrink-0 group bg-slate-100"
-                        >
-                          <img
-                            src={img}
-                            alt={`Seminar workshop ${idx + 1}`}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              {/* Bento 5: Services (3 Cols) */}
-              <article
-                id="bento-services"
-                className="col-span-12 lg:col-span-3 bg-white rounded-[26px] p-3.5 xl:p-4 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col justify-between min-h-0 overflow-hidden relative group/bento"
-              >
-                <div className="flex flex-col h-full justify-between min-h-0">
-                  <div className="flex items-center justify-between pb-1.5 xl:pb-2 border-b border-slate-100 shrink-0 pr-8">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 xl:w-8.5 xl:h-8.5 rounded-2xl bg-slate-50 text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
-                        <ServicesIcon color="#FF6B00" />
-                      </div>
-                      <div>
-                        <h3 className="text-base xl:text-lg font-black text-[#263BAA] leading-tight">Services</h3>
-                        <p className="text-[9px] xl:text-[10px] text-slate-500 font-medium leading-none mt-0.5">What I build.</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex-1 flex flex-col justify-between pt-1.5 pb-0.5 gap-1 xl:gap-1.5 min-h-0">
-                    {[
-                      {
-                        label: 'Web Development',
-                        desc: 'Modern, high-performance web applications.',
-                        customIcon: (
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="w-3.5 h-3.5 text-[#FF6B00] fill-current group-hover:text-white transition-colors shrink-0">
-                            <path d="M128,26A102,102,0,1,0,230,128,102.12,102.12,0,0,0,128,26Zm81.57,64H169.19a132.58,132.58,0,0,0-25.73-50.67A90.29,90.29,0,0,1,209.57,90ZM218,128a89.7,89.7,0,0,1-3.83,26H171.81a155.43,155.43,0,0,0,0-52h42.36A89.7,89.7,0,0,1,218,128Zm-90,87.83a110,110,0,0,1-15.19-19.45A124.24,124.24,0,0,1,99.35,166h57.3a124.24,124.24,0,0,1-13.46,30.38A110,110,0,0,1,128,215.83ZM96.45,154a139.18,139.18,0,0,1,0-52h63.1a139.18,139.18,0,0,1,0,52ZM38,128a89.7,89.7,0,0,1,3.83-26H84.19a155.43,155.43,0,0,0,0,52H41.83A89.7,89.7,0,0,1,38,128Zm90-87.83a110,110,0,0,1,15.19,19.45A124.24,124.24,0,0,1,156.65,90H99.35a124.24,124.24,0,0,1,13.46-30.38A110,110,0,0,1,128,40.17Zm-15.46-.84A132.58,132.58,0,0,0,86.81,90H46.43A90.29,90.29,0,0,1,112.54,39.33ZM46.43,166H86.81a132.58,132.58,0,0,0,25.73,50.67A90.29,90.29,0,0,1,46.43,166Zm97,50.67A132.58,132.58,0,0,0,169.19,166h40.38A90.29,90.29,0,0,1,143.46,216.67Z" />
-                          </svg>
-                        ),
-                        num: '01',
-                      },
-                      {
-                        label: 'Full-Stack Development',
-                        desc: 'End-to-end frontend and backend systems.',
-                        customIcon: (
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="w-3.5 h-3.5 text-[#FF6B00] fill-current group-hover:text-white transition-colors shrink-0">
-                            <path d="M67.84,92.61,25.37,128l42.47,35.39a6,6,0,1,1-7.68,9.22l-48-40a6,6,0,0,1,0-9.22l48-40a6,6,0,0,1,7.68,9.22Zm176,30.78-48-40a6,6,0,1,0-7.68,9.22L230.63,128l-42.47,35.39a6,6,0,1,0,7.68,9.22l48-40a6,6,0,0,0,0-9.22Zm-81.79-89A6,6,0,0,0,154.36,38l-64,176A6,6,0,0,0,94,221.64a6.15,6.15,0,0,0,2,.36,6,6,0,0,0,5.64-3.95l64-176A6,6,0,0,0,162.05,34.36Z" />
-                          </svg>
-                        ),
-                        num: '02',
-                      },
-                      {
-                        label: 'Responsive Design',
-                        desc: 'Fluid layouts for mobile, tablet, and desktop.',
-                        customIcon: (
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="w-3.5 h-3.5 text-[#FF6B00] fill-current group-hover:text-white transition-colors shrink-0">
-                            <path d="M224,74H206V64a22,22,0,0,0-22-22H40A22,22,0,0,0,18,64v96a22,22,0,0,0,22,22H154v10a22,22,0,0,0,22,22h48a22,22,0,0,0,22-22V96A22,22,0,0,0,224,74ZM40,170a10,10,0,0,1-10-10V64A10,10,0,0,1,40,54H184a10,10,0,0,1,10,10V74H176a22,22,0,0,0-22,22v74Zm194,22a10,10,0,0,1-10,10H176a10,10,0,0,1-10-10V96a10,10,0,0,1,10-10h48a10,10,0,0,1,10,10ZM134,208a6,6,0,0,1-6,6H88a6,6,0,0,1,0-12h40A6,6,0,0,1,134,208Zm80-96a6,6,0,0,1-6,6H192a6,6,0,0,1,0-12h16A6,6,0,0,1,214,112Z" />
-                          </svg>
-                        ),
-                        num: '03',
-                      },
-                      {
-                        label: 'UI/UX Development',
-                        desc: 'Intuitive user experiences and design systems.',
-                        customIcon: (
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="w-3.5 h-3.5 text-[#FF6B00] fill-current group-hover:text-white transition-colors shrink-0">
-                            <path d="M188.45,96A38,38,0,0,0,168,26H96A38,38,0,0,0,75.55,96,38,38,0,0,0,77,160.89,42,42,0,1,0,142,196V155.68A38,38,0,1,0,188.45,96ZM194,64a26,26,0,0,1-26,26H142V38h26A26,26,0,0,1,194,64ZM70,64A26,26,0,0,1,96,38h34V90H96A26,26,0,0,1,70,64Zm26,90a26,26,0,0,1,0-52h34v52H96Zm34,42a30,30,0,1,1-30-30h30Zm38-42a26,26,0,1,1,26-26A26,26,0,0,1,168,154Z" />
-                          </svg>
-                        ),
-                        num: '04',
-                      },
-                      {
-                        label: 'API & Database Integration',
-                        desc: 'RESTful API connections and scalable databases.',
-                        customIcon: (
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="w-3.5 h-3.5 text-[#FF6B00] fill-current group-hover:text-white transition-colors shrink-0">
-                            <path d="M128,26C75.29,26,34,49.72,34,80v96c0,30.28,41.29,54,94,54s94-23.72,94-54V80C222,49.72,180.71,26,128,26Zm0,12c44.45,0,82,19.23,82,42s-37.55,42-82,42S46,102.77,46,80,83.55,38,128,38Zm82,138c0,22.77-37.55,42-82,42s-82-19.23-82-42V154.79C62,171.16,92.37,182,128,182s66-10.84,82-27.21Zm0-48c0,22.77-37.55,42-82,42s-82-19.23-82-42V106.79C62,123.16,92.37,134,128,134s66-10.84,82-27.21Z" />
-                          </svg>
-                        ),
-                        num: '05',
-                      },
-                    ].map((service, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center gap-2 p-1.5 xl:p-2 rounded-xl bg-slate-50/80 hover:bg-slate-100/90 transition-all duration-200 group shrink-0"
-                      >
-                        <div className="w-7 h-7 xl:w-7.5 xl:h-7.5 rounded-lg bg-white flex items-center justify-center shrink-0 shadow-2xs group-hover:bg-[#263BAA] transition-colors">
-                          {service.customIcon}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h4 className="text-[11px] xl:text-xs font-bold text-[#263BAA] group-hover:text-[#FF6B00] transition-colors truncate leading-tight">
-                            {service.label}
-                          </h4>
-                          <p className="text-[8.5px] xl:text-[9.5px] text-slate-500 leading-tight truncate mt-0.5">
-                            {service.desc}
-                          </p>
-                        </div>
-                        <span className="text-[8.5px] xl:text-[9px] text-slate-400 font-mono font-bold shrink-0 mr-0.5">
-                          {service.num}
+                          {tool.icon} {tool.text}
                         </span>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </article>
+              </section>
 
-              {/* Bento 6: GitHub Contributions (6 Cols) */}
-              {(() => {
-                const weeks = 52;
-                const days = 7;
-                const cellColors = ['#F1F5F9', '#FED7AA', '#FB923C', '#EA580C', '#C2410C'];
-                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                const dayLabels = ['Mon', '', 'Wed', '', 'Fri', '', ''];
+              {/* MASTER CONTAINER HOLDING THE 6 BENTO SECTIONS */}
+              <section className="flex-1 min-h-0 bg-[#FAF9F5] dark:bg-black/20 rounded-[32px] p-3 xl:p-4 shadow-xs flex flex-col overflow-hidden">
+                <div className="flex-1 min-h-0 grid grid-cols-12 grid-rows-2 gap-3">
 
-                const seed = (w, d) => {
-                  const x = Math.sin(w * 7 + d + 42) * 10000;
-                  return x - Math.floor(x);
-                };
-                const getLevel = (w, d) => {
-                  const r = seed(w, d);
-                  if (r < 0.45) return 0;
-                  if (r < 0.60) return 1;
-                  if (r < 0.75) return 2;
-                  if (r < 0.88) return 3;
-                  return 4;
-                };
-
-                const grid = Array.from({ length: weeks }, (_, w) =>
-                  Array.from({ length: days }, (_, d) => getLevel(w, d))
-                );
-
-                const monthPositions = months.map((m, i) => ({ label: m, col: Math.round(i * (weeks / 12)) }));
-                const totalContribs = grid.flat().reduce((acc, l) => acc + l * 3, 0);
-
-                return (
+                  {/* Bento 1: Projects (6 Cols) */}
                   <article
-                    id="bento-contributions"
-                    onClick={() => window.open('https://github.com/jeanmarcaguilar', '_blank', 'noopener,noreferrer')}
-                    className="col-span-12 lg:col-span-6 bg-white rounded-[26px] p-4 xl:p-5 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col min-h-0 overflow-hidden relative group/bento cursor-pointer"
+                    id="bento-projects"
+                    onClick={() => handleNavClick('projects')}
+                    className="col-span-12 lg:col-span-6 bg-white dark:bg-background rounded-[26px] p-4 xl:p-5 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col justify-between min-h-0 overflow-hidden relative group/bento cursor-pointer"
                   >
                     <div className="absolute top-3.5 right-3.5 z-30">
                       <BentoArrowButton
-                        label="Open GitHub Profile"
+                        label="View Projects"
                         onClick={(e) => {
                           e.stopPropagation();
-                          window.open('https://github.com/jeanmarcaguilar', '_blank', 'noopener,noreferrer');
+                          handleNavClick('projects');
                         }}
                       />
                     </div>
-                    <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 pr-9">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-2xl bg-slate-50 text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
-                          <ContributionsIcon color="#FF6B00" />
-                        </div>
+                    <div className="w-full h-full flex flex-row gap-3 min-h-0 relative overflow-hidden">
+                      <div className="w-5/12 flex flex-col justify-between h-full min-h-0 shrink-0 z-10 p-1">
                         <div>
-                          <h3 className="text-lg xl:text-xl font-black text-[#263BAA] leading-tight">Contributions</h3>
-                          <p className="text-[10px] text-slate-500 font-medium">Activity on GitHub this year.</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1.5 bg-slate-50 rounded-xl px-2.5 py-1">
-                        <i className="ph-fill ph-seal-check text-[#FF6B00] text-sm"></i>
-                        <span className="text-[10px] font-bold text-slate-800">{totalContribs.toLocaleString()} commits</span>
-                      </div>
-                    </div>
-
-                    <div className="flex-1 min-h-0 mt-2.5 rounded-2xl bg-slate-50/80 p-3 overflow-hidden flex items-center justify-center">
-                      <div
-                        className="grid gap-[2px] w-full"
-                        style={{
-                          gridTemplateColumns: `auto repeat(${weeks}, minmax(0, 1fr))`,
-                          gridTemplateRows: `auto repeat(${days}, auto)`,
-                        }}
-                      >
-                        {monthPositions.map((mp, i) => (
-                          <span
-                            key={`month-${i}`}
-                            className="text-[7px] text-slate-500 font-semibold whitespace-nowrap"
-                            style={{ gridColumn: mp.col + 2, gridRow: 1 }}
-                          >
-                            {mp.label}
-                          </span>
-                        ))}
-
-                        {dayLabels.map((label, i) => (
-                          <div
-                            key={`day-${i}`}
-                            className="text-[7px] leading-none text-slate-400 font-semibold text-right pr-1 self-center"
-                            style={{ gridColumn: 1, gridRow: i + 2 }}
-                          >
-                            {label}
+                          <div className="flex items-center gap-2.5 mb-2">
+                            <div className="w-9 h-9 xl:w-10 xl:h-10 rounded-2xl bg-slate-50 dark:bg-card text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
+                              <ProjectsIcon color="#FF6B00" />
+                            </div>
+                            <h3 className="text-lg xl:text-xl font-black text-[#263BAA] tracking-tight leading-tight">Projects</h3>
                           </div>
-                        ))}
-
-                        {grid.map((week, wIdx) =>
-                          week.map((level, dIdx) => (
-                            <div
-                              key={`${wIdx}-${dIdx}`}
-                              title={`${level * 3} contributions`}
-                              className="aspect-square w-full"
-                              style={{
-                                gridColumn: wIdx + 2,
-                                gridRow: dIdx + 2,
-                                backgroundColor: cellColors[level],
-                                borderRadius: '3px',
-                                transition: 'transform 0.12s, box-shadow 0.12s',
-                                boxShadow: level === 4 ? '0 0 7px 2px rgba(255,107,0,0.50)' : level === 3 ? '0 0 4px 1px rgba(255,107,0,0.20)' : 'none',
-                                cursor: 'pointer',
-                                position: 'relative',
-                              }}
-                              onMouseEnter={e => {
-                                e.currentTarget.style.transform = 'scale(1.5)';
-                                e.currentTarget.style.zIndex = '20';
-                                e.currentTarget.style.boxShadow = '0 0 10px 3px rgba(255,107,0,0.65)';
-                              }}
-                              onMouseLeave={e => {
-                                e.currentTarget.style.transform = 'scale(1)';
-                                e.currentTarget.style.zIndex = '0';
-                                e.currentTarget.style.boxShadow = level === 4 ? '0 0 7px 2px rgba(255,107,0,0.50)' : level === 3 ? '0 0 4px 1px rgba(255,107,0,0.20)' : 'none';
-                              }}
-                            />
-                          ))
-                        )}
-                      </div>
-                    </div>
-
-
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1">
-                          <i className="ph-fill ph-lightning text-amber-500 text-[11px]"></i>
-                          <span className="text-[9px] text-slate-500 font-medium">Streak: <span className="font-bold text-[#263BAA]">48d</span></span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <i className="ph-fill ph-fire text-[#FF6B00] text-[11px]"></i>
-                          <span className="text-[9px] text-slate-500 font-medium">Best day: <span className="font-bold text-[#263BAA]">24</span></span>
+                          <p className="text-[10px] text-slate-500 dark:text-secondary font-medium mt-1.5">
+                            Funnels, workflows and apps built to solve real problems.
+                          </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-[8px] text-slate-400 font-medium">Less</span>
-                        {cellColors.map((c, i) => (
-                          <div key={i} style={{ width: '12px', height: '12px', backgroundColor: c, borderRadius: '3px' }} />
-                        ))}
-                        <span className="text-[8px] text-slate-400 font-medium">More</span>
+
+                      <div className="w-7/12 h-full relative min-h-0 overflow-hidden rounded-2xl bg-white dark:bg-background flex flex-col select-none">
+                        <div className="absolute inset-x-0 top-0 h-6 bg-linear-to-b from-white to-transparent z-20 pointer-events-none"></div>
+                        <div className="absolute inset-x-0 bottom-0 h-6 bg-linear-to-t from-white to-transparent z-20 pointer-events-none"></div>
+
+                        <div className="relative overflow-hidden w-full h-full">
+                          <div className="animate-marquee-up flex flex-col gap-2.5 p-2" style={{ animationDuration: '24s' }}>
+                            {[project1, project2, project3, project1, project2, project3, project1, project2, project3, project1, project2, project3].map((img, idx) => (
+                              <div
+                                key={idx}
+                                className="w-full h-24 xl:h-28 rounded-2xl overflow-hidden shadow-xs shrink-0 group bg-slate-100 dark:bg-hover"
+                              >
+                                <img
+                                  src={img}
+                                  alt={`Project ${idx + 1}`}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </article>
-                );
-              })()}
 
-            </div>
-          </section>
+                  {/* Bento 2: About (3 Cols) */}
+                  <article
+                    id="bento-about"
+                    onClick={() => handleNavClick('about')}
+                    className="col-span-12 lg:col-span-3 bg-white dark:bg-background rounded-[26px] p-4 xl:p-5 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col justify-between min-h-0 overflow-hidden relative group/bento cursor-pointer"
+                  >
+                    <div className="absolute top-3.5 right-3.5 z-30">
+                      <BentoArrowButton
+                        label="View About"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleNavClick('about');
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-col h-full justify-between">
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-9 h-9 rounded-2xl bg-slate-50 dark:bg-card text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
+                            <AboutIcon color="#FF6B00" />
+                          </div>
+                          <h3 className="text-lg xl:text-xl font-black text-[#263BAA] leading-tight">About</h3>
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-secondary font-medium leading-snug mt-1.5">
+                          Who I am and how I work.
+                        </p>
+                      </div>
+
+                      <div className="my-auto relative w-full h-44 xl:h-52 flex items-center justify-center select-none pt-2">
+                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-44 xl:w-52 h-6 bg-slate-900/15 blur-lg rounded-full pointer-events-none"></div>
+                        <div className="relative flex items-center justify-center w-full h-full">
+                          <div className="w-28 xl:w-32 aspect-3/4 bg-white dark:bg-background rounded-2xl shadow-md absolute transform transition-all duration-300 ease-out -rotate-12 -translate-x-9 translate-y-1 group-hover/bento:-rotate-16 group-hover/bento:-translate-x-12 group-hover/bento:-translate-y-1 z-0 overflow-hidden">
+                            <img src={aboutCard3} alt="About illustration 1" className="w-full h-full object-cover" />
+                          </div>
+                          <div className="w-28 xl:w-32 aspect-3/4 bg-white dark:bg-background rounded-2xl shadow-lg absolute transform transition-all duration-300 ease-out -rotate-4 -translate-x-3 -translate-y-1 group-hover/bento:-rotate-6 group-hover/bento:-translate-x-5 group-hover/bento:-translate-y-2 z-10 overflow-hidden">
+                            <img src={aboutCard2} alt="About illustration 2" className="w-full h-full object-cover" />
+                          </div>
+                          <div className="w-30 xl:w-34 aspect-3/4 bg-white dark:bg-background rounded-2xl shadow-xl absolute transform transition-all duration-300 ease-out rotate-8 translate-x-5 -translate-y-2 group-hover/bento:rotate-12 group-hover/bento:translate-x-7 group-hover/bento:-translate-y-3 z-20 overflow-hidden">
+                            <img src={aboutCard1} alt="About illustration 3" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+
+                  {/* Bento 3: Development Approach (3 Cols) */}
+                  <article
+                    id="bento-approach"
+                    className="col-span-12 lg:col-span-3 bg-white dark:bg-background rounded-[26px] p-4 xl:p-5 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col justify-between min-h-0 overflow-hidden relative group/bento"
+                  >
+                    <div className="flex flex-col h-full justify-between min-h-0">
+                      <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-border shrink-0 pr-9">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-9 h-9 rounded-2xl bg-slate-50 dark:bg-card text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
+                            <DevelopmentIcon color="#FF6B00" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg xl:text-xl font-black text-[#263BAA] leading-tight">Development Approach</h3>
+                            <p className="text-[10px] text-slate-500 dark:text-secondary font-medium">How I turn ideas into working solutions.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex-1 min-h-0 relative overflow-hidden my-2 select-none">
+                        <div className="absolute inset-x-0 top-0 h-4 bg-linear-to-b from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
+                        <div className="absolute inset-x-0 bottom-0 h-4 bg-linear-to-t from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
+
+                        <div className="animate-marquee-up flex flex-col gap-2" style={{ animationDuration: '18s' }}>
+                          {[
+                            ...[
+                              { step: '01', title: 'Understand', desc: 'Identify the problem and requirements.', icon: 'ph-magnifying-glass' },
+                              { step: '02', title: 'Design', desc: 'Plan a clean and intuitive user experience.', icon: 'ph-paint-brush' },
+                              { step: '03', title: 'Develop', desc: 'Build reliable frontend and backend systems.', icon: 'ph-code' },
+                              { step: '04', title: 'Integrate', desc: 'Connect APIs, databases, and services.', icon: 'ph-plugs-connected' },
+                              { step: '05', title: 'Refine', desc: 'Test, optimize, and improve the solution.', icon: 'ph-sparkle' },
+                              { step: '06', title: 'Deliver', desc: 'Deploy a polished, production-ready result.', icon: 'ph-rocket-launch' },
+                            ],
+                            ...[
+                              { step: '01', title: 'Understand', desc: 'Identify the problem and requirements.', icon: 'ph-magnifying-glass' },
+                              { step: '02', title: 'Design', desc: 'Plan a clean and intuitive user experience.', icon: 'ph-paint-brush' },
+                              { step: '03', title: 'Develop', desc: 'Build reliable frontend and backend systems.', icon: 'ph-code' },
+                              { step: '04', title: 'Integrate', desc: 'Connect APIs, databases, and services.', icon: 'ph-plugs-connected' },
+                              { step: '05', title: 'Refine', desc: 'Test, optimize, and improve the solution.', icon: 'ph-sparkle' },
+                              { step: '06', title: 'Deliver', desc: 'Deploy a polished, production-ready result.', icon: 'ph-rocket-launch' },
+                            ],
+                          ].map((item, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-start gap-2.5 p-2.5 rounded-2xl bg-slate-50/80 dark:bg-card/80 hover:bg-slate-100/90 dark:hover:bg-hover/90 transition-all duration-200 group shrink-0"
+                            >
+                              <div className="w-8 h-8 rounded-xl bg-white dark:bg-background text-slate-800 dark:text-primary flex items-center justify-center shrink-0 shadow-2xs font-mono text-[11px] font-black group-hover:bg-[#263BAA] group-hover:text-white transition-colors">
+                                {item.step}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <h4 className="text-xs font-bold text-[#263BAA] group-hover:text-[#FF6B00] transition-colors">
+                                  {item.title}
+                                </h4>
+                                <p className="text-[10px] text-slate-500 dark:text-secondary leading-snug mt-0.5">
+                                  {item.desc}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+
+                  {/* Bento 4: Seminars & Workshops (3 Cols) */}
+                  <article
+                    id="bento-credentials"
+                    onClick={() => handleNavClick('seminars')}
+                    className="col-span-12 lg:col-span-3 bg-white dark:bg-background rounded-[26px] p-4 xl:p-5 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col justify-between min-h-0 overflow-hidden relative group/bento cursor-pointer"
+                  >
+                    <div className="absolute top-3.5 right-3.5 z-30">
+                      <BentoArrowButton
+                        label="View Seminars & Experience"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleNavClick('seminars');
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-col h-full justify-between min-h-0">
+                      <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-border shrink-0 pr-9">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-9 h-9 rounded-2xl bg-slate-50 dark:bg-card text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
+                            <SeminarsIcon color="#FF6B00" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg xl:text-xl font-black text-[#263BAA] leading-tight">Seminars</h3>
+                            <p className="text-[10px] text-slate-500 dark:text-secondary font-medium">Events &amp; workshops attended.</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-orange-50 text-[#FF6B00] text-[9px] font-bold shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] animate-pulse"></span>
+                          <span>Live Feed</span>
+                        </div>
+                      </div>
+
+                      <div className="flex-1 min-h-0 relative overflow-hidden my-2 select-none">
+                        <div className="absolute inset-x-0 top-0 h-4 bg-linear-to-b from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
+                        <div className="absolute inset-x-0 bottom-0 h-4 bg-linear-to-t from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
+
+                        <div className="animate-marquee-up flex flex-col gap-2.5" style={{ animationDuration: '14s' }}>
+                          {[seminar1, seminar2, seminar3, seminar1, seminar2, seminar3].map((img, idx) => (
+                            <div
+                              key={idx}
+                              className="w-full h-28 xl:h-32 rounded-2xl overflow-hidden shadow-xs shrink-0 group bg-slate-100 dark:bg-hover"
+                            >
+                              <img
+                                src={img}
+                                alt={`Seminar workshop ${idx + 1}`}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+
+                  {/* Bento 5: Services (3 Cols) */}
+                  <article
+                    id="bento-services"
+                    className="col-span-12 lg:col-span-3 bg-white dark:bg-background rounded-[26px] p-3.5 xl:p-4 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col justify-between min-h-0 overflow-hidden relative group/bento"
+                  >
+                    <div className="flex flex-col h-full justify-between min-h-0">
+                      <div className="flex items-center justify-between pb-1.5 xl:pb-2 border-b border-slate-100 dark:border-border shrink-0 pr-8">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 xl:w-8.5 xl:h-8.5 rounded-2xl bg-slate-50 dark:bg-card text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
+                            <ServicesIcon color="#FF6B00" />
+                          </div>
+                          <div>
+                            <h3 className="text-base xl:text-lg font-black text-[#263BAA] leading-tight">Services</h3>
+                            <p className="text-[9px] xl:text-[10px] text-slate-500 dark:text-secondary font-medium leading-none mt-0.5">What I build.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex-1 flex flex-col justify-between pt-1.5 pb-0.5 gap-1 xl:gap-1.5 min-h-0">
+                        {[
+                          {
+                            label: 'Web Development',
+                            desc: 'Modern, high-performance web applications.',
+                            customIcon: (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="w-3.5 h-3.5 text-[#FF6B00] fill-current group-hover:text-white transition-colors shrink-0">
+                                <path d="M128,26A102,102,0,1,0,230,128,102.12,102.12,0,0,0,128,26Zm81.57,64H169.19a132.58,132.58,0,0,0-25.73-50.67A90.29,90.29,0,0,1,209.57,90ZM218,128a89.7,89.7,0,0,1-3.83,26H171.81a155.43,155.43,0,0,0,0-52h42.36A89.7,89.7,0,0,1,218,128Zm-90,87.83a110,110,0,0,1-15.19-19.45A124.24,124.24,0,0,1,99.35,166h57.3a124.24,124.24,0,0,1-13.46,30.38A110,110,0,0,1,128,215.83ZM96.45,154a139.18,139.18,0,0,1,0-52h63.1a139.18,139.18,0,0,1,0,52ZM38,128a89.7,89.7,0,0,1,3.83-26H84.19a155.43,155.43,0,0,0,0,52H41.83A89.7,89.7,0,0,1,38,128Zm90-87.83a110,110,0,0,1,15.19,19.45A124.24,124.24,0,0,1,156.65,90H99.35a124.24,124.24,0,0,1,13.46-30.38A110,110,0,0,1,128,40.17Zm-15.46-.84A132.58,132.58,0,0,0,86.81,90H46.43A90.29,90.29,0,0,1,112.54,39.33ZM46.43,166H86.81a132.58,132.58,0,0,0,25.73,50.67A90.29,90.29,0,0,1,46.43,166Zm97,50.67A132.58,132.58,0,0,0,169.19,166h40.38A90.29,90.29,0,0,1,143.46,216.67Z" />
+                              </svg>
+                            ),
+                            num: '01',
+                          },
+                          {
+                            label: 'Full-Stack Development',
+                            desc: 'End-to-end frontend and backend systems.',
+                            customIcon: (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="w-3.5 h-3.5 text-[#FF6B00] fill-current group-hover:text-white transition-colors shrink-0">
+                                <path d="M67.84,92.61,25.37,128l42.47,35.39a6,6,0,1,1-7.68,9.22l-48-40a6,6,0,0,1,0-9.22l48-40a6,6,0,0,1,7.68,9.22Zm176,30.78-48-40a6,6,0,1,0-7.68,9.22L230.63,128l-42.47,35.39a6,6,0,1,0,7.68,9.22l48-40a6,6,0,0,0,0-9.22Zm-81.79-89A6,6,0,0,0,154.36,38l-64,176A6,6,0,0,0,94,221.64a6.15,6.15,0,0,0,2,.36,6,6,0,0,0,5.64-3.95l64-176A6,6,0,0,0,162.05,34.36Z" />
+                              </svg>
+                            ),
+                            num: '02',
+                          },
+                          {
+                            label: 'Responsive Design',
+                            desc: 'Fluid layouts for mobile, tablet, and desktop.',
+                            customIcon: (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="w-3.5 h-3.5 text-[#FF6B00] fill-current group-hover:text-white transition-colors shrink-0">
+                                <path d="M224,74H206V64a22,22,0,0,0-22-22H40A22,22,0,0,0,18,64v96a22,22,0,0,0,22,22H154v10a22,22,0,0,0,22,22h48a22,22,0,0,0,22-22V96A22,22,0,0,0,224,74ZM40,170a10,10,0,0,1-10-10V64A10,10,0,0,1,40,54H184a10,10,0,0,1,10,10V74H176a22,22,0,0,0-22,22v74Zm194,22a10,10,0,0,1-10,10H176a10,10,0,0,1-10-10V96a10,10,0,0,1,10-10h48a10,10,0,0,1,10,10ZM134,208a6,6,0,0,1-6,6H88a6,6,0,0,1,0-12h40A6,6,0,0,1,134,208Zm80-96a6,6,0,0,1-6,6H192a6,6,0,0,1,0-12h16A6,6,0,0,1,214,112Z" />
+                              </svg>
+                            ),
+                            num: '03',
+                          },
+                          {
+                            label: 'UI/UX Development',
+                            desc: 'Intuitive user experiences and design systems.',
+                            customIcon: (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="w-3.5 h-3.5 text-[#FF6B00] fill-current group-hover:text-white transition-colors shrink-0">
+                                <path d="M188.45,96A38,38,0,0,0,168,26H96A38,38,0,0,0,75.55,96,38,38,0,0,0,77,160.89,42,42,0,1,0,142,196V155.68A38,38,0,1,0,188.45,96ZM194,64a26,26,0,0,1-26,26H142V38h26A26,26,0,0,1,194,64ZM70,64A26,26,0,0,1,96,38h34V90H96A26,26,0,0,1,70,64Zm26,90a26,26,0,0,1,0-52h34v52H96Zm34,42a30,30,0,1,1-30-30h30Zm38-42a26,26,0,1,1,26-26A26,26,0,0,1,168,154Z" />
+                              </svg>
+                            ),
+                            num: '04',
+                          },
+                          {
+                            label: 'API & Database Integration',
+                            desc: 'RESTful API connections and scalable databases.',
+                            customIcon: (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="w-3.5 h-3.5 text-[#FF6B00] fill-current group-hover:text-white transition-colors shrink-0">
+                                <path d="M128,26C75.29,26,34,49.72,34,80v96c0,30.28,41.29,54,94,54s94-23.72,94-54V80C222,49.72,180.71,26,128,26Zm0,12c44.45,0,82,19.23,82,42s-37.55,42-82,42S46,102.77,46,80,83.55,38,128,38Zm82,138c0,22.77-37.55,42-82,42s-82-19.23-82-42V154.79C62,171.16,92.37,182,128,182s66-10.84,82-27.21Zm0-48c0,22.77-37.55,42-82,42s-82-19.23-82-42V106.79C62,123.16,92.37,134,128,134s66-10.84,82-27.21Z" />
+                              </svg>
+                            ),
+                            num: '05',
+                          },
+                        ].map((service, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center gap-2 p-1.5 xl:p-2 rounded-xl bg-slate-50/80 dark:bg-card/80 hover:bg-slate-100/90 dark:hover:bg-hover/90 transition-all duration-200 group shrink-0"
+                          >
+                            <div className="w-7 h-7 xl:w-7.5 xl:h-7.5 rounded-lg bg-white dark:bg-background flex items-center justify-center shrink-0 shadow-2xs group-hover:bg-[#263BAA] transition-colors">
+                              {service.customIcon}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <h4 className="text-[11px] xl:text-xs font-bold text-[#263BAA] group-hover:text-[#FF6B00] transition-colors truncate leading-tight">
+                                {service.label}
+                              </h4>
+                              <p className="text-[8.5px] xl:text-[9.5px] text-slate-500 dark:text-secondary leading-tight truncate mt-0.5">
+                                {service.desc}
+                              </p>
+                            </div>
+                            <span className="text-[8.5px] xl:text-[9px] text-slate-400 dark:text-secondary/70 font-mono font-bold shrink-0 mr-0.5">
+                              {service.num}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </article>
+
+                  {/* Bento 6: GitHub Contributions (6 Cols) */}
+                  {(() => {
+                    const weeks = 52;
+                    const days = 7;
+                    const cellColors = ['#EBEDF0', '#9BE9A8', '#40C463', '#30A14E', '#216E39'];
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const dayLabels = ['Mon', '', 'Wed', '', 'Fri', '', ''];
+
+                    const seed = (w, d) => {
+                      const x = Math.sin(w * 7 + d + 42) * 10000;
+                      return x - Math.floor(x);
+                    };
+                    const getLevel = (w, d) => {
+                      const r = seed(w, d);
+                      if (r < 0.45) return 0;
+                      if (r < 0.60) return 1;
+                      if (r < 0.75) return 2;
+                      if (r < 0.88) return 3;
+                      return 4;
+                    };
+
+                    const grid = Array.from({ length: weeks }, (_, w) =>
+                      Array.from({ length: days }, (_, d) => getLevel(w, d))
+                    );
+
+                    const monthPositions = months.map((m, i) => ({ label: m, col: Math.round(i * (weeks / 12)) }));
+                    const totalContribs = grid.flat().reduce((acc, l) => acc + l * 3, 0);
+
+                    return (
+                      <article
+                        id="bento-contributions"
+                        onClick={() => window.open('https://github.com/jeanmarcaguilar', '_blank', 'noopener,noreferrer')}
+                        className="col-span-12 lg:col-span-6 bg-white dark:bg-background rounded-[26px] p-4 xl:p-5 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] hover:-translate-y-1 hover:z-20 transition-all duration-300 ease-out flex flex-col min-h-0 overflow-hidden relative group/bento cursor-pointer"
+                      >
+                        <div className="absolute top-3.5 right-3.5 z-30">
+                          <BentoArrowButton
+                            label="Open GitHub Profile"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open('https://github.com/jeanmarcaguilar', '_blank', 'noopener,noreferrer');
+                            }}
+                          />
+                        </div>
+                        <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-border pr-9">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-9 h-9 rounded-2xl bg-slate-50 dark:bg-card text-[#FF6B00] flex items-center justify-center shrink-0 shadow-2xs">
+                              <ContributionsIcon color="#FF6B00" />
+                            </div>
+                            <div>
+                              <h3 className="text-lg xl:text-xl font-black text-[#263BAA] leading-tight">Contributions</h3>
+                              <p className="text-[10px] text-slate-500 dark:text-secondary font-medium">Activity on GitHub this year.</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-card rounded-xl px-2.5 py-1">
+                            <i className="ph-fill ph-seal-check text-[#FF6B00] text-sm"></i>
+                            <span className="text-[10px] font-bold text-slate-800 dark:text-primary">{totalContribs.toLocaleString()} commits</span>
+                          </div>
+                        </div>
+
+                        <div className="flex-1 min-h-0 mt-2.5 rounded-2xl bg-slate-50/80 dark:bg-background/80 p-3 overflow-hidden flex items-center justify-center">
+                          <div
+                            className="grid gap-[2px] w-full"
+                            style={{
+                              gridTemplateColumns: `auto repeat(${weeks}, minmax(0, 1fr))`,
+                              gridTemplateRows: `auto repeat(${days}, auto)`,
+                            }}
+                          >
+                            {monthPositions.map((mp, i) => (
+                              <span
+                                key={`month-${i}`}
+                                className="text-[7px] text-slate-500 dark:text-secondary font-semibold whitespace-nowrap"
+                                style={{ gridColumn: mp.col + 2, gridRow: 1 }}
+                              >
+                                {mp.label}
+                              </span>
+                            ))}
+
+                            {dayLabels.map((label, i) => (
+                              <div
+                                key={`day-${i}`}
+                                className="text-[7px] leading-none text-slate-400 dark:text-secondary/70 font-semibold text-right pr-1 self-center"
+                                style={{ gridColumn: 1, gridRow: i + 2 }}
+                              >
+                                {label}
+                              </div>
+                            ))}
+
+                            {grid.map((week, wIdx) =>
+                              week.map((level, dIdx) => (
+                                <div
+                                  key={`${wIdx}-${dIdx}`}
+                                  title={`${level * 3} contributions`}
+                                  className="aspect-square w-full"
+                                  style={{
+                                    gridColumn: wIdx + 2,
+                                    gridRow: dIdx + 2,
+                                    backgroundColor: cellColors[level],
+                                    borderRadius: '3px',
+                                    transition: 'transform 0.12s, box-shadow 0.12s',
+                                    boxShadow: level === 4 ? '0 0 7px 2px rgba(33,110,57,0.50)' : level === 3 ? '0 0 4px 1px rgba(33,110,57,0.20)' : 'none',
+                                    cursor: 'pointer',
+                                    position: 'relative',
+                                  }}
+                                  onMouseEnter={e => {
+                                    e.currentTarget.style.transform = 'scale(1.5)';
+                                    e.currentTarget.style.zIndex = '20';
+                                    e.currentTarget.style.boxShadow = '0 0 10px 3px rgba(33,110,57,0.65)';
+                                  }}
+                                  onMouseLeave={e => {
+                                    e.currentTarget.style.transform = 'scale(1)';
+                                    e.currentTarget.style.zIndex = '0';
+                                    e.currentTarget.style.boxShadow = level === 4 ? '0 0 7px 2px rgba(33,110,57,0.50)' : level === 3 ? '0 0 4px 1px rgba(33,110,57,0.20)' : 'none';
+                                  }}
+                                />
+                              ))
+                            )}
+                          </div>
+                        </div>
+
+
+                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-border">
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-1">
+                              <i className="ph-fill ph-lightning text-amber-500 text-[11px]"></i>
+                              <span className="text-[9px] text-slate-500 dark:text-secondary font-medium">Streak: <span className="font-bold text-[#263BAA]">48d</span></span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <i className="ph-fill ph-fire text-[#FF6B00] text-[11px]"></i>
+                              <span className="text-[9px] text-slate-500 dark:text-secondary font-medium">Best day: <span className="font-bold text-[#263BAA]">24</span></span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-[8px] text-slate-400 dark:text-secondary/70 font-medium">Less</span>
+                            {cellColors.map((c, i) => (
+                              <div key={i} style={{ width: '12px', height: '12px', backgroundColor: c, borderRadius: '3px' }} />
+                            ))}
+                            <span className="text-[8px] text-slate-400 dark:text-secondary/70 font-medium">More</span>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })()}
+
+                </div>
+              </section>
             </>
           )}
 
@@ -1184,28 +1182,16 @@ export default function Hero() {
             <Seminars onNavigate={handleNavClick} />
           )}
 
-{activeSection === 'projects' && (
-  <Projects onNavigate={handleNavClick} />
-)}
+          {activeSection === 'projects' && (
+            <Projects onNavigate={handleNavClick} />
+          )}
 
           {activeSection === 'gear' && (
-            <div className="flex-1 flex items-center justify-center p-8">
-              <div className="text-center max-w-lg">
-                <h2 className="text-3xl font-bold text-[#263BAA] mb-4">Gear</h2>
-                <p className="text-slate-600">
-                  The hardware and tools I use to build, create, and stay productive — my desk setup, everyday carry, and personal care essentials.
-                </p>
-              </div>
-            </div>
+            <Gear onNavigate={handleNavClick} />
           )}
 
           {activeSection === 'contact' && (
-            <div className="flex-1 flex items-center justify-center p-8">
-              <div className="text-center">
-                <h2 className="text-3xl font-bold text-[#263BAA] mb-4">Contact Section</h2>
-                <p className="text-slate-600">Contact content will be displayed here.</p>
-              </div>
-            </div>
+            <Contact onNavigate={handleNavClick} />
           )}
 
         </main>
